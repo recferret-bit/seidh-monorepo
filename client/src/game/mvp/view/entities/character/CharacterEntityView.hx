@@ -1,5 +1,7 @@
 package game.mvp.view.entities.character;
 
+import game.resource.animation.character.BasicCharacterAnimation;
+import engine.model.entities.EntityState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
 
@@ -20,10 +22,16 @@ class CharacterEntityView extends BaseGameEntityView {
     private var showName: Bool;
     private var showLevel: Bool;
     private var trailLength: Int;
+
+    private var animation:BasicCharacterAnimation;
     
-    public function new() {
+    public function new(animation:BasicCharacterAnimation) {
         super();
         
+        this.animation = animation;
+
+        addChild(animation.getAnimation());
+
         // Initialize character-specific properties
         showName = false;
         showLevel = true;
@@ -31,6 +39,120 @@ class CharacterEntityView extends BaseGameEntityView {
         movementTrail = [];
     }
     
+    public function changeState(state: EntityState) {
+        switch (state) {
+            case EntityState.IDLE:
+                animation.changeState(EntityState.IDLE);
+            case EntityState.RUN:
+                animation.changeState(EntityState.RUN);
+            case EntityState.DEATH:
+                animation.changeState(EntityState.DEATH);
+            case EntityState.SPAWN:
+                animation.changeState(EntityState.SPAWN);
+            case EntityState.ACTION_MAIN:
+                animation.changeState(EntityState.ACTION_MAIN);
+            case EntityState.ACTION_SPECIAL:
+                animation.changeState(EntityState.ACTION_SPECIAL);
+        }
+    }
+
+
+    /**
+     * Render movement trail
+     */
+     public function renderTrail(graphics: Graphics): Void {
+        if (movementTrail.length < 2) return;
+        
+        graphics.clear();
+        graphics.lineStyle(2, 0xFFFFFF, 0.5);
+        
+        for (i in 1...movementTrail.length) {
+            final prev = movementTrail[i - 1];
+            final curr = movementTrail[i];
+            
+            graphics.lineStyle(2, 0xFFFFFF, prev.alpha);
+            graphics.moveTo(prev.x, prev.y);
+            graphics.lineTo(curr.x, curr.y);
+        }
+    }
+    
+    /**
+     * Set name visibility
+     */
+    public function setNameVisible(visible: Bool): Void {
+        showName = visible;
+        if (nameText != null) {
+            nameText.visible = visible;
+        }
+    }
+    
+    /**
+     * Set level visibility
+     */
+    public function setLevelVisible(visible: Bool): Void {
+        showLevel = visible;
+        if (levelText != null) {
+            levelText.visible = visible;
+        }
+    }
+    
+    /**
+     * Set trail length
+     */
+    public function setTrailLength(length: Int): Void {
+        trailLength = length;
+        if (movementTrail.length > length) {
+            movementTrail = movementTrail.slice(-length);
+        }
+    }
+    
+    /**
+     * Get character model
+     */
+    public function getCharacterModel(): CharacterModel {
+        return cast(model, CharacterModel);
+    }
+    
+    /**
+     * Reset for object pooling
+     */
+    override public function reset(): Void {
+        // Clear character-specific visuals
+        if (nameText != null) {
+            nameText.remove();
+            nameText = null;
+        }
+        
+        if (levelText != null) {
+            levelText.remove();
+            levelText = null;
+        }
+        
+        movementTrail = [];
+        
+        // Call parent reset
+        super.reset();
+    }
+    
+    /**
+     * Destroy character view
+     */
+    override public function destroy(): Void {
+        if (nameText != null) {
+            nameText.remove();
+            nameText = null;
+        }
+        
+        if (levelText != null) {
+            levelText.remove();
+            levelText = null;
+        }
+        
+        movementTrail = [];
+        
+        super.destroy();
+    }
+
     /**
      * Initialize character view
      */
@@ -173,100 +295,10 @@ class CharacterEntityView extends BaseGameEntityView {
             return point.alpha > 0.1;
         });
     }
-    
-    /**
-     * Render movement trail
-     */
-    public function renderTrail(graphics: Graphics): Void {
-        if (movementTrail.length < 2) return;
-        
-        graphics.clear();
-        graphics.lineStyle(2, 0xFFFFFF, 0.5);
-        
-        for (i in 1...movementTrail.length) {
-            final prev = movementTrail[i - 1];
-            final curr = movementTrail[i];
-            
-            graphics.lineStyle(2, 0xFFFFFF, prev.alpha);
-            graphics.moveTo(prev.x, prev.y);
-            graphics.lineTo(curr.x, curr.y);
-        }
-    }
-    
-    /**
-     * Set name visibility
-     */
-    public function setNameVisible(visible: Bool): Void {
-        showName = visible;
-        if (nameText != null) {
-            nameText.visible = visible;
-        }
-    }
-    
-    /**
-     * Set level visibility
-     */
-    public function setLevelVisible(visible: Bool): Void {
-        showLevel = visible;
-        if (levelText != null) {
-            levelText.visible = visible;
-        }
-    }
-    
-    /**
-     * Set trail length
-     */
-    public function setTrailLength(length: Int): Void {
-        trailLength = length;
-        if (movementTrail.length > length) {
-            movementTrail = movementTrail.slice(-length);
-        }
-    }
-    
-    /**
-     * Get character model
-     */
-    public function getCharacterModel(): CharacterModel {
-        return cast(model, CharacterModel);
-    }
-    
-    /**
-     * Reset for object pooling
-     */
-    override public function reset(): Void {
-        // Clear character-specific visuals
-        if (nameText != null) {
-            nameText.remove();
-            nameText = null;
-        }
-        
-        if (levelText != null) {
-            levelText.remove();
-            levelText = null;
-        }
-        
-        movementTrail = [];
-        
-        // Call parent reset
-        super.reset();
-    }
-    
-    /**
-     * Destroy character view
-     */
-    override public function destroy(): Void {
-        if (nameText != null) {
-            nameText.remove();
-            nameText = null;
-        }
-        
-        if (levelText != null) {
-            levelText.remove();
-            levelText = null;
-        }
-        
-        movementTrail = [];
-        
-        super.destroy();
+
+    // Getters
+
+    public function getAnimation():BasicCharacterAnimation {
+        return animation;
     }
 }

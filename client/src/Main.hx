@@ -1,8 +1,8 @@
 package;
 
+import game.resource.Res;
 import game.mvp.view.scene.basic.BasicScene;
 import game.mvp.view.scene.SceneManager;
-import game.resource.Res;
 
 import hxd.App;
 

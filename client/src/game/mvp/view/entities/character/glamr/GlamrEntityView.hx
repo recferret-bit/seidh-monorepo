@@ -4,6 +4,6 @@ import game.mvp.view.entities.character.CharacterEntityView;
 
 class GlamrEntityView extends CharacterEntityView {
     public function new() {
-        super();
+        super(null);
     }
 }
