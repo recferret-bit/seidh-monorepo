@@ -13,9 +13,9 @@ class EngineEntitySpecs {
     /**
      * Get player character spec
      */
-    public static function getPlayerCharacterSpec(): EngineEntitySpec {
+    public static function getRagnarSpec(): EngineEntitySpec {
         return {
-            type: EntityType.CHARACTER,
+            type: EntityType.RAGNAR,
             pos: {x: 100, y: 100},
             ownerId: "player1",
             level: 1,
@@ -32,109 +32,39 @@ class EngineEntitySpecs {
             aiProfile: "player"
         };
     }
-    
-    /**
-     * Get idle acolyte spec
-     */
-    public static function getIdleAcolyteSpec(): EngineEntitySpec {
+
+    public static function getZombieBoySpec(): EngineEntitySpec {
         return {
-            type: EntityType.CHARACTER,
-            pos: {x: 150, y: 100},
-            ownerId: "ai",
+            type: EntityType.ZOMBIE_BOY,
+            pos: {x: 100, y: 100},
+            ownerId: "player1",
             level: 1,
-            maxHp: 80,
-            hp: 80,
-            stats: {
-                speed: 8,
-                power: 20,
-                armor: 10,
-                castSpeed: 1
-            },
-            attackDefs: [],
-            spellBook: [],
-            aiProfile: "idle"
+            maxHp: 100,
+            hp: 100,
         };
     }
-    
-    /**
-     * Get monster spec
-     */
-    public static function getMonsterSpec(): EngineEntitySpec {
+
+    public static function getZombieGirlSpec(): EngineEntitySpec {
         return {
-            type: EntityType.CHARACTER,
-            pos: {x: 200, y: 200},
-            ownerId: "ai",
+            type: EntityType.ZOMBIE_GIRL,
+            pos: {x: 100, y: 100},
+            ownerId: "player1",
             level: 1,
-            maxHp: 50,
-            hp: 50,
-            stats: {
-                speed: 8,
-                power: 15,
-                armor: 5,
-                castSpeed: 1
-            },
-            attackDefs: [],
-            spellBook: [],
-            aiProfile: "aggressive"
+            maxHp: 100,
+            hp: 100,
         };
     }
-    
-    /**
-     * Get health potion consumable spec
-     */
-    public static function getHealthPotionSpec(): EngineEntitySpec {
+
+    public static function getGlamrSpec(): EngineEntitySpec {
         return {
-            type: EntityType.CONSUMABLE,
-            pos: {x: 250, y: 150},
-            ownerId: "world",
-            consumableType: "health_potion",
-            quantity: 1,
-            effectValue: 25
+            type: EntityType.GLAMR,
+            pos: {x: 100, y: 100},
+            ownerId: "player1",
+            level: 1,
+            maxHp: 100,
+            hp: 100,
         };
     }
-    
-    /**
-     * Get mana potion consumable spec
-     */
-    public static function getManaPotionSpec(): EngineEntitySpec {
-        return {
-            type: EntityType.CONSUMABLE,
-            pos: {x: 300, y: 150},
-            ownerId: "world",
-            consumableType: "mana_potion",
-            quantity: 1,
-            effectValue: 20
-        };
-    }
-    
-    /**
-     * Get speed boost effect spec
-     */
-    public static function getSpeedBoostEffectSpec(): EngineEntitySpec {
-        return {
-            type: EntityType.EFFECT,
-            pos: {x: 200, y: 100},
-            ownerId: "world",
-            effectType: "speed_boost",
-            duration: 10,
-            effectValue: 1.5
-        };
-    }
-    
-    /**
-     * Get damage effect spec
-     */
-    public static function getDamageEffectSpec(): EngineEntitySpec {
-        return {
-            type: EntityType.EFFECT,
-            pos: {x: 250, y: 200},
-            ownerId: "world",
-            effectType: "damage",
-            duration: 2,
-            effectValue: 10,
-        };
-    }
-    
     /**
      * Get spawn positions for different entity types
      */
@@ -218,30 +148,20 @@ class EngineEntitySpecs {
     /**
      * Get entity spec by type and index
      */
-    public static function getDefaultEntitySpec(type: EntityType, index: Int = 0): EngineEntitySpec {
+    public static function getDefaultEntitySpec(type: EntityType): EngineEntitySpec {
         switch (type) {
-            case CHARACTER:
-                switch (index) {
-                    case 0: return getPlayerCharacterSpec();
-                    case 1: return getIdleAcolyteSpec();
-                    default: return getMonsterSpec();
-                }
-            case CONSUMABLE:
-                switch (index) {
-                    case 0: return getHealthPotionSpec();
-                    case 1: return getManaPotionSpec();
-                    default: return getHealthPotionSpec();
-                }
-            case EFFECT:
-                switch (index) {
-                    case 0: return getSpeedBoostEffectSpec();
-                    case 1: return getDamageEffectSpec();
-                    default: return getSpeedBoostEffectSpec();
-                }
+            case EntityType.RAGNAR:
+                return getRagnarSpec();
+            case EntityType.ZOMBIE_BOY:
+                return getZombieBoySpec();
+            case EntityType.ZOMBIE_GIRL:
+                return getZombieGirlSpec();
+            case EntityType.GLAMR:
+                return getGlamrSpec();
             case COLLIDER:
                 return getColliderSpec(0, 0, false, false);
             default:
-                return getPlayerCharacterSpec();
+                return getColliderSpec(0, 0, false, false);
         }
     }
 }

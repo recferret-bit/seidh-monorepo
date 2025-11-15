@@ -5,8 +5,6 @@ import engine.presenter.InputMessage;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
 import game.mvp.model.entities.ColliderModel;
-import game.mvp.model.entities.ConsumableModel;
-import game.mvp.model.entities.EffectModel;
 
 /**
  * Game client state manager
@@ -18,11 +16,12 @@ class GameClientState {
     private var entities: Map<Int, BaseEntityModel>;
     
     // Typed entity collections for quick access
-    private var characters: Map<Int, CharacterModel>;
+    private var ragnars: Map<Int, CharacterModel>;
+    private var zombieBoys: Map<Int, CharacterModel>;
+    private var zombieGirls: Map<Int, CharacterModel>;
+    private var glamrs: Map<Int, CharacterModel>;
     private var colliders: Map<Int, ColliderModel>;
-    private var consumables: Map<Int, ConsumableModel>;
-    private var effects: Map<Int, EffectModel>;
-    
+
     // State tracking
     private var nextLocalId: Int;
     private var lastUpdateTick: Int;
@@ -36,11 +35,12 @@ class GameClientState {
     
     public function new() {
         entities = new Map<Int, BaseEntityModel>();
-        characters = new Map<Int, CharacterModel>();
+        ragnars = new Map<Int, CharacterModel>();
+        zombieBoys = new Map<Int, CharacterModel>();
+        zombieGirls = new Map<Int, CharacterModel>();
+        glamrs = new Map<Int, CharacterModel>();
         colliders = new Map<Int, ColliderModel>();
-        consumables = new Map<Int, ConsumableModel>();
-        effects = new Map<Int, EffectModel>();
-        
+
         nextLocalId = 1;
         lastUpdateTick = 0;
         
@@ -59,16 +59,18 @@ class GameClientState {
         
         // Add to typed collection
         switch (model.type) {
-            case CHARACTER:
-                characters.set(model.engineEntity.id, cast model);
-            case CONSUMABLE:
-                consumables.set(model.engineEntity.id, cast model);
-            case EFFECT:
-                effects.set(model.engineEntity.id, cast model);
+            case RAGNAR:
+                ragnars.set(model.engineEntity.id, cast model);
+            case ZOMBIE_BOY:
+                zombieBoys.set(model.engineEntity.id, cast model);
+            case ZOMBIE_GIRL:
+                zombieGirls.set(model.engineEntity.id, cast model);
+            case GLAMR:
+                glamrs.set(model.engineEntity.id, cast model);
             case COLLIDER:
                 colliders.set(model.engineEntity.id, cast model);
             default:
-                trace("Unknown entity type: " + model.type);
+                trace("addEntity: unknown entity type: " + model.type);
                 // Handle unknown types if needed
         }
     }
@@ -81,15 +83,18 @@ class GameClientState {
         if (model != null) {
             // Remove from typed collection
             switch (model.type) {
-                case CHARACTER:
-                    characters.remove(entityId);
+                case RAGNAR:
+                    ragnars.remove(entityId);
+                case ZOMBIE_BOY:
+                    zombieBoys.remove(entityId);
+                case ZOMBIE_GIRL:
+                    zombieGirls.remove(entityId);
+                case GLAMR:
+                    glamrs.remove(entityId);
                 case COLLIDER:
                     colliders.remove(entityId);
-                case CONSUMABLE:
-                    consumables.remove(entityId);
-                case EFFECT:
-                    effects.remove(entityId);
                 default:
+                    trace("removeEntity: unknown entity type: " + model.type);
                     // Handle unknown types if needed
             }
             
@@ -107,10 +112,33 @@ class GameClientState {
     /**
      * Get character model by ID
      */
-    public function getCharacter(entityId: Int): CharacterModel {
-        return characters.get(entityId);
+    public function getRagnar(entityId: Int): CharacterModel {
+        return ragnars.get(entityId);
     }
     
+
+    /**
+     * Get zombie boy model by ID
+     */
+    public function getZombieBoy(entityId: Int): CharacterModel {
+        return zombieBoys.get(entityId);
+    }
+    
+    /**
+     * Get zombie girl model by ID
+     */
+    public function getZombieGirl(entityId: Int): CharacterModel {
+        return zombieGirls.get(entityId);
+    }
+
+    /**
+     * Get glamr model by ID
+     */
+    public function getGlamr(entityId: Int): CharacterModel {
+        return glamrs.get(entityId);
+    }
+
+
     /**
      * Get collider model by ID
      */
@@ -119,24 +147,10 @@ class GameClientState {
     }
 
     /**
-     * Get consumable model by ID
-     */
-    public function getConsumable(entityId: Int): ConsumableModel {
-        return consumables.get(entityId);
-    }
-    
-    /**
-     * Get effect model by ID
-     */
-    public function getEffect(entityId: Int): EffectModel {
-        return effects.get(entityId);
-    }
-    
-    /**
      * Get all entities of a specific type
      */
     public function getEntitiesByType(type: EntityType): Array<BaseEntityModel> {
-        var result = [];
+        final result = [];
         for (entity in entities) {
             if (entity.type == type) {
                 result.push(entity);
@@ -149,9 +163,18 @@ class GameClientState {
      * Get all characters
      */
     public function getAllCharacters(): Array<CharacterModel> {
-        var result = [];
-        for (character in characters) {
-            result.push(character);
+        final result = [];
+        for (ragnar in ragnars) {
+            result.push(ragnar);
+        }
+        for (zombieBoy in zombieBoys) {
+            result.push(zombieBoy);
+        }
+        for (zombieGirl in zombieGirls) {
+            result.push(zombieGirl);
+        }
+        for (glamr in glamrs) {
+            result.push(glamr);
         }
         return result;
     }
@@ -160,35 +183,13 @@ class GameClientState {
      * Get all colliders
      */
     public function getAllColliders(): Array<ColliderModel> {
-        var result = [];
+        final result = [];
         for (collider in colliders) {
             result.push(collider);
         }
         return result;
     }
 
-    /**
-     * Get all consumables
-     */
-    public function getAllConsumables(): Array<ConsumableModel> {
-        var result = [];
-        for (consumable in consumables) {
-            result.push(consumable);
-        }
-        return result;
-    }
-    
-    /**
-     * Get all effects
-     */
-    public function getAllEffects(): Array<EffectModel> {
-        var result = [];
-        for (effect in effects) {
-            result.push(effect);
-        }
-        return result;
-    }
-    
     /**
      * Get all alive entities
      */
@@ -216,29 +217,16 @@ class GameClientState {
     }
     
     /**
-     * Get player character (ownerId = "player1")
+     * Get player character (ownerId = "playerControlledEntityId")
      */
-    public function getPlayerCharacter(): CharacterModel {
-        for (character in characters) {
-            if (character.ownerId == "player1") {
-                return character;
-            }
-        }
-        return null;
-    }
-    
-    /**
-     * Get AI characters (ownerId = "ai")
-     */
-    public function getAICharacters(): Array<CharacterModel> {
-        var result = [];
-        for (character in characters) {
-            if (character.ownerId == "ai") {
-                result.push(character);
-            }
-        }
-        return result;
-    }
+    // public function getPlayerCharacter(): CharacterModel {
+    //     for (ragnar in ragnars) {
+    //         if (ragnar.ownerId == playerControlledEntityId) {
+    //             return ragnar;
+    //         }
+    //     }
+    //     return null;
+    // }
     
     /**
      * Set player controlled entity ID
@@ -252,7 +240,7 @@ class GameClientState {
      */
     public function getPlayerControlledEntity(): CharacterModel {
         if (playerControlledEntityId != null) {
-            return characters.get(playerControlledEntityId);
+            return ragnars.get(playerControlledEntityId);
         }
         return null;
     }
@@ -271,24 +259,24 @@ class GameClientState {
         }
         
         // Update consumables (they have animations)
-        for (consumable in consumables) {
-            if (consumable.isAlive) {
-                consumable.update(dt);
-            }
-        }
+        // for (consumable in consumables) {
+        //     if (consumable.isAlive) {
+        //         consumable.update(dt);
+        //     }
+        // }
         
         // Update effects (they have animations and duration)
-        for (effect in effects) {
-            if (effect.isAlive) {
-                effect.update(dt);
-                if (effect.isExpired()) {
-                    // Mark effect as dead through engine entity
-                    if (effect.effectEntity != null) {
-                        effect.effectEntity.isAlive = false;
-                    }
-                }
-            }
-        }
+        // for (effect in effects) {
+        //     if (effect.isAlive) {
+        //         effect.update(dt);
+        //         if (effect.isExpired()) {
+        //             // Mark effect as dead through engine entity
+        //             if (effect.effectEntity != null) {
+        //                 effect.effectEntity.isAlive = false;
+        //             }
+        //         }
+        //     }
+        // }
     }
     
     /**
@@ -332,10 +320,12 @@ class GameClientState {
      */
     public function clear(): Void {
         entities.clear();
-        characters.clear();
+        ragnars.clear();
+        zombieBoys.clear();
+        zombieGirls.clear();
+        glamrs.clear();
         colliders.clear();
-        consumables.clear();
-        effects.clear();
+
         nextLocalId = 1;
         playerControlledEntityId = null;
         
@@ -398,13 +388,14 @@ class GameClientState {
     /**
      * Get state summary for debugging
      */
+    // TODO do not use Dynamic
     public function getStateSummary(): Dynamic {
         return {
             totalEntities: getTotalEntityCount(),
-            characters: getEntityCount(CHARACTER),
-            colliders: getEntityCount(COLLIDER),
-            consumables: getEntityCount(CONSUMABLE),
-            effects: getEntityCount(EFFECT),
+            ragnars: getEntityCount(RAGNAR),
+            zombieBoys: getEntityCount(ZOMBIE_BOY),
+            zombieGirls: getEntityCount(ZOMBIE_GIRL),
+            glamrs: getEntityCount(GLAMR),
             aliveEntities: getAliveEntities().length,
             lastUpdateTick: lastUpdateTick,
             pendingInputs: pendingInputs.length,
@@ -434,6 +425,7 @@ class GameClientState {
     /**
      * Deserialize state
      */
+    // TODO do not use Dynamic
     public function deserialize(data: Dynamic): Void {
         clear();
         
@@ -454,25 +446,27 @@ class GameClientState {
     /**
      * Create model from serialized data
      */
+    // TODO do not use Dynamic
     private function createModelFromData(data: Dynamic): BaseEntityModel {
         var model: BaseEntityModel = null;
         
-        switch (data.type) {
-            case CHARACTER:
-                model = new CharacterModel();
-            case COLLIDER:
-                model = new ColliderModel();
-            case CONSUMABLE:
-                model = new ConsumableModel();
-            case EFFECT:
-                model = new EffectModel();
-            default:
-                return null;
-        }
+        // switch (data.type) {
+        //     case CHARACTER:
+        //         model = new CharacterModel();
+        //     case COLLIDER:
+        //         model = new ColliderModel();
+        //     case CONSUMABLE:
+        //         model = new ConsumableModel();
+        //     case EFFECT:
+        //         model = new EffectModel();
+        //     default:
+        //         return null;
+        // }
         
         if (model.engineEntity != null) {
             model.engineEntity.deserialize(data);
         }
+
         return model;
     }
 }

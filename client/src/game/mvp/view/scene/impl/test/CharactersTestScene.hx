@@ -8,6 +8,8 @@ class CharactersTestScene extends BasicScene {
 
     public function new() {
         super();
+
+        
     }
 
     public function start():Void {

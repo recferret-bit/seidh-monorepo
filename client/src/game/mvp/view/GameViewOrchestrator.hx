@@ -1,13 +1,17 @@
 package game.mvp.view;
 
+import game.mvp.view.entities.character.ragnar.RagnarEntityView;
+import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
+import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
+import game.mvp.view.entities.character.glamr.GlamrEntityView;
 import engine.model.entities.EntityType;
 import game.mvp.model.GameClientState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.view.entities.BaseGameEntityView;
 import game.mvp.view.entities.character.CharacterEntityView;
 import game.mvp.view.entities.collider.ColliderEntityView;
-import game.mvp.view.entities.consumable.ConsumableEntityView;
-import game.mvp.view.entities.effect.EffectEntityView;
+// import game.mvp.view.entities.consumable.ConsumableEntityView;
+// import game.mvp.view.entities.effect.EffectEntityView;
 import game.mvp.view.camera.CameraController;
 import game.mvp.view.camera.CameraConfig;
 import h2d.Graphics;
@@ -70,17 +74,21 @@ class GameViewOrchestrator {
      * Create view layers for organization
      */
     private function createViewLayers(): Void {
-        // Character layer
+        // Ragnar layer
         final characterLayer = new Object(parent);
-        viewLayers.set(EntityType.CHARACTER, characterLayer);
+        viewLayers.set(EntityType.RAGNAR, characterLayer);
         
-        // Consumable layer
+        // Zombie boy layer
         final consumableLayer = new Object(parent);
-        viewLayers.set(EntityType.CONSUMABLE, consumableLayer);
+        viewLayers.set(EntityType.ZOMBIE_BOY, consumableLayer);
         
-        // Effect layer
+        // Zombie girl layer
         final effectLayer = new Object(parent);
-        viewLayers.set(EntityType.EFFECT, effectLayer);
+        viewLayers.set(EntityType.ZOMBIE_GIRL, effectLayer);
+
+        // Glamr layer
+        final glamrLayer = new Object(parent);
+        viewLayers.set(EntityType.GLAMR, glamrLayer);
         
         // Collider layer
         final colliderLayer = new Object(parent);
@@ -169,19 +177,7 @@ class GameViewOrchestrator {
         var layer: Object = null;
         
         // Get appropriate layer
-        switch (model.type) {
-            case CHARACTER:
-                layer = viewLayers.get(EntityType.CHARACTER);
-            case CONSUMABLE:
-                layer = viewLayers.get(EntityType.CONSUMABLE);
-            case EFFECT:
-                layer = viewLayers.get(EntityType.EFFECT);
-            case COLLIDER:
-                layer = viewLayers.get(EntityType.COLLIDER);
-            default:
-                layer = viewLayers.get(EntityType.CHARACTER); // Default fallback
-        }
-        
+        layer = viewLayers.get(model.type);
         if (layer == null) return;
         
         // Acquire view from pool or create new
@@ -190,16 +186,16 @@ class GameViewOrchestrator {
             view = entityViewPool.acquire(model.type, layer);
         } else {
             switch (model.type) {
-                case EntityType.CHARACTER:
-                    view = new CharacterEntityView(layer);
-                case EntityType.CONSUMABLE:
-                    view = new ConsumableEntityView(layer);
-                case EntityType.EFFECT:
-                    view = new EffectEntityView(layer);
-                case EntityType.COLLIDER:
-                    view = new ColliderEntityView(layer);
+                case EntityType.RAGNAR:
+                    view = new RagnarEntityView();
+                case EntityType.ZOMBIE_BOY:
+                    view = new ZombieBoyEntityView();
+                case EntityType.ZOMBIE_GIRL:
+                    view = new ZombieGirlEntityView();
+                case EntityType.GLAMR:
+                    view = new GlamrEntityView();
                 default:
-                    view = new CharacterEntityView(layer); // Default fallback
+                    view = new RagnarEntityView(); // Default fallback
             }
         }
         
@@ -251,38 +247,12 @@ class GameViewOrchestrator {
     }
     
     /**
-     * Get character views
+     * Get ragnar views
      */
-    public function getCharacterViews(): Array<CharacterEntityView> {
+    public function getRagnarViews(): Array<RagnarEntityView> {
         final result = [];
         for (view in entityViews) {
-            if (Std.isOfType(view, CharacterEntityView)) {
-                result.push(cast view);
-            }
-        }
-        return result;
-    }
-    
-    /**
-     * Get consumable views
-     */
-    public function getConsumableViews(): Array<ConsumableEntityView> {
-        final result = [];
-        for (view in entityViews) {
-            if (Std.isOfType(view, ConsumableEntityView)) {
-                result.push(cast view);
-            }
-        }
-        return result;
-    }
-    
-    /**
-     * Get effect views
-     */
-    public function getEffectViews(): Array<EffectEntityView> {
-        final result = [];
-        for (view in entityViews) {
-            if (Std.isOfType(view, EffectEntityView)) {
+            if (Std.isOfType(view, RagnarEntityView)) {
                 result.push(cast view);
             }
         }
@@ -398,9 +368,10 @@ class GameViewOrchestrator {
     public function getOrchestratorSummary(): Dynamic {
         return {
             viewCount: getViewCount(),
-            characterViews: getViewCountByType(CHARACTER),
-            consumableViews: getViewCountByType(CONSUMABLE),
-            effectViews: getViewCountByType(EFFECT),
+            ragnarViews: getViewCountByType(RAGNAR),
+            zombieBoyViews: getViewCountByType(ZOMBIE_BOY),
+            zombieGirlViews: getViewCountByType(ZOMBIE_GIRL),
+            glamrViews: getViewCountByType(GLAMR),
             poolSummary: entityViewPool.getPoolSummary(),
             objectPoolingEnabled: enableObjectPooling,
             interpolationEnabled: enableInterpolation,

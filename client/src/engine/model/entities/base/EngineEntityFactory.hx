@@ -6,15 +6,13 @@ import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.base.EngineEntitySpec;
 import engine.model.entities.impl.EngineCharacterEntity;
 import engine.model.entities.impl.EngineColliderEntity;
-import engine.model.entities.impl.EngineConsumableEntity;
-import engine.model.entities.impl.EngineEffectEntity;
 
 /**
  * Factory for creating entities with registration pattern
  */
 class EngineEntityFactory {
-    private var factories: Map<EntityType, Void->BaseEngineEntity>;
-    private var pool: ObjectPool;
+    private final factories: Map<EntityType, Void->BaseEngineEntity>;
+    private final pool: ObjectPool;
     
     public function new(pool: ObjectPool) {
         this.pool = pool;
@@ -61,9 +59,10 @@ class EngineEntityFactory {
     
     private function registerCoreTypes(): Void {
         // Register core entity types
-        register(EntityType.CHARACTER, function() return new EngineCharacterEntity());
-        register(EntityType.CONSUMABLE, function() return new EngineConsumableEntity());
-        register(EntityType.EFFECT, function() return new EngineEffectEntity());
+        register(EntityType.RAGNAR, function() return new EngineCharacterEntity());
+        register(EntityType.ZOMBIE_BOY, function() return new EngineCharacterEntity());
+        register(EntityType.ZOMBIE_GIRL, function() return new EngineCharacterEntity());
+        register(EntityType.GLAMR, function() return new EngineCharacterEntity());
         register(EntityType.COLLIDER, function() return new EngineColliderEntity());
     }
 }

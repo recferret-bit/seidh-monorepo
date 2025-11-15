@@ -157,7 +157,7 @@ class GamePresenter {
      */
     private function spawnInitialEntities(): Void {
         // Spawn player character
-        var playerSpec = EngineEntitySpecs.getPlayerCharacterSpec();
+        var playerSpec = EngineEntitySpecs.getRagnarSpec();
         var playerId = engine.spawnEntity(playerSpec);
         
         // Set up player controlled entity tracking

@@ -1,6 +1,5 @@
 package engine.modules;
 
-import engine.EngineConfig;
 import engine.model.entities.EntityType;
 import engine.model.GameModelState;
 import engine.model.entities.impl.EngineCharacterEntity;
@@ -77,13 +76,13 @@ class InputModule implements IModule {
      * @param dt Delta time
      */
     public function applyInputs(inputs: Array<InputMessage>, state: GameModelState, dt: Float): Void {
-        final characterManager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.CHARACTER);
+        final ragnarManager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.RAGNAR);
         
         for (input in inputs) {
             // Get entity ID from client mapping
             final entityId = clientEntityMap.get(input.clientId);
-            if (entityId != null && characterManager != null) {
-                final character = characterManager.find(entityId);
+            if (entityId != null && ragnarManager != null) {
+                final character = ragnarManager.find(entityId);
                 if (character != null) {
                     // Apply step-based movement directly to position
                     character.applyMovementStep(input.movement.x, input.movement.y, dt);

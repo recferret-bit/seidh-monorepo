@@ -43,7 +43,7 @@ class BaseGameEntityView extends Object {
         lastModelUpdate = 0;
         isInitialized = false;
         isInPool = false;
-        poolType = CHARACTER;
+        // poolType = CHARACTER;
     }
     
     /**
@@ -79,7 +79,7 @@ class BaseGameEntityView extends Object {
         // Calculate size based on model collider dimensions
         final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
         final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
-        var tile = Tile.fromColor(model.color, width, height);
+        var tile = Tile.fromColor(0xFF0000, width, height);
         bitmap = new Bitmap(tile, this);
         
         // Center the bitmap
@@ -174,10 +174,10 @@ class BaseGameEntityView extends Object {
      * Update health bar (for characters)
      */
     private function updateHealthBar(): Void {
-        if (model.type != CHARACTER) {
-            healthBar.clear();
-            return;
-        }
+        // if (model.type != CHARACTER) {
+        //     healthBar.clear();
+        //     return;
+        // }
         
         var characterModel = cast(model, game.mvp.model.entities.CharacterModel);
         if (characterModel == null) return;

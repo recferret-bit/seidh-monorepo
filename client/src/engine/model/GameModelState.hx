@@ -110,27 +110,35 @@ class GameModelState {
     }
     
     /**
-     * Get character manager with explicit type
-     * @return Character entity manager
+     * Get ragnar manager with explicit type
+     * @return Ragnar entity manager
      */
-    public function getCharacterManager(): IEngineEntityManager<EngineCharacterEntity> {
-        return cast managers.get(EntityType.CHARACTER);
+    public function getRagnarManager(): IEngineEntityManager<EngineCharacterEntity> {
+        return cast managers.get(EntityType.RAGNAR);
     }
     
     /**
-     * Get consumable manager with explicit type
-     * @return Consumable entity manager
+     * Get zombie boy manager with explicit type
+     * @return Zombie boy entity manager
      */
-    public function getConsumableManager(): IEngineEntityManager<EngineConsumableEntity> {
-        return cast managers.get(EntityType.CONSUMABLE);
+    public function getZombieBoyManager(): IEngineEntityManager<EngineCharacterEntity> {
+        return cast managers.get(EntityType.ZOMBIE_BOY);
     }
     
     /**
-     * Get effect manager with explicit type
-     * @return Effect entity manager
+     * Get zombie girl manager with explicit type
+     * @return Zombie girl entity manager
      */
-    public function getEffectManager(): IEngineEntityManager<EngineEffectEntity> {
-        return cast managers.get(EntityType.EFFECT);
+    public function getZombieGirlManager(): IEngineEntityManager<EngineCharacterEntity> {
+        return cast managers.get(EntityType.ZOMBIE_GIRL);
+    }
+
+    /**
+     * Get glamr manager with explicit type
+     * @return Glamr entity manager
+     */
+    public function getGlamrManager(): IEngineEntityManager<EngineCharacterEntity> {
+        return cast managers.get(EntityType.GLAMR);
     }
     
     /**
@@ -143,9 +151,10 @@ class GameModelState {
     
     private function setupManagers(): Void {
         // Register core entity managers
-        managers.register(EntityType.CHARACTER, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
-        managers.register(EntityType.CONSUMABLE, new BaseEngineEntityManager<EngineConsumableEntity>(entityFactory));
-        managers.register(EntityType.EFFECT, new BaseEngineEntityManager<EngineEffectEntity>(entityFactory));
+        managers.register(EntityType.RAGNAR, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
+        managers.register(EntityType.ZOMBIE_BOY, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
+        managers.register(EntityType.ZOMBIE_GIRL, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
+        managers.register(EntityType.GLAMR, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
         managers.register(EntityType.COLLIDER, new BaseEngineEntityManager<EngineColliderEntity>(entityFactory));
     }
 

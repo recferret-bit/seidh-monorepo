@@ -251,14 +251,46 @@ class SeidhEngine {
     }
     
     /**
-     * Get character by ID
-     * @return Character entity id
+     * Get ragnar by ID
+     * @param id Ragnar ID
+     * @return Ragnar entity
      */
-    public function getCharacterById(id: Int): EngineCharacterEntity {
-        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.CHARACTER);
+    public function getRagnarById(id: Int): EngineCharacterEntity {
+        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.RAGNAR);
         return manager.find(id);
     }
     
+
+    /**
+     * Get zombie boy by ID
+     * @param id Zombie boy ID
+     * @return Zombie boy entity
+     */
+    public function getZombieBoyById(id: Int): EngineCharacterEntity {
+        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.ZOMBIE_BOY);
+        return manager.find(id);
+    }
+
+    /**
+     * Get zombie girl by ID
+     * @param id Zombie girl ID
+     * @return Zombie girl entity
+     */
+    public function getZombieGirlById(id: Int): EngineCharacterEntity {
+        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.ZOMBIE_GIRL);
+        return manager.find(id);
+    }
+
+    /**
+     * Get glamr by ID
+     * @param id Glamr ID
+     * @return Glamr entity
+     */
+    public function getGlamrById(id: Int): EngineCharacterEntity {
+        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.GLAMR);
+        return manager.find(id);
+    }
+
     /**
      * Get collider by ID
      * @param id Collider ID

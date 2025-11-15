@@ -21,8 +21,8 @@ class CharacterEntityView extends BaseGameEntityView {
     private var showLevel: Bool;
     private var trailLength: Int;
     
-    public function new(parent: Object = null) {
-        super(parent);
+    public function new() {
+        super();
         
         // Initialize character-specific properties
         showName = false;

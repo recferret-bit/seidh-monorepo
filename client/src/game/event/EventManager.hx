@@ -12,6 +12,9 @@ class EventManager {
 	public static final EVENT_LOAD_HOME_SCENE = 'EVENT_LOAD_HOME_SCENE';
 	public static final EVENT_LOAD_GAME_SCENE = 'EVENT_LOAD_GAME_SCENE';
 
+	// Animation events
+	public static final EVENT_CHARACTER_DEATH_ANIM_END = 'EVENT_CHARACTER_DEATH_ANIM_END';
+
 	private final listeners = new Map<String, List<EventListener>>();
 
 	public static final instance:EventManager = new EventManager();

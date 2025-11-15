@@ -12,7 +12,6 @@ class BaseEntityModel {
     public var engineEntity: BaseEngineEntity;
     
     // Visual properties
-    public var color: Int;
     public var visualScale: Float;
     
     // Interpolation support
@@ -26,7 +25,6 @@ class BaseEntityModel {
     public var lastUpdateTick: Int;
     
     public function new() {
-        color = 0xFFFFFF;
         visualScale = 1.0;
         
         // Initialize interpolation fields
@@ -44,7 +42,6 @@ class BaseEntityModel {
      */
     public function initialize(engineEntity: BaseEngineEntity): Void {
         this.engineEntity = engineEntity;
-        setVisualProperties();
         
         // Initialize interpolation with current position
         previousPos = engine.geometry.Vec2Utils.create(engineEntity.pos.x, engineEntity.pos.y);
@@ -67,29 +64,10 @@ class BaseEntityModel {
     }
     
     /**
-     * Set visual properties based on entity type
-     */
-    public function setVisualProperties(): Void {
-        if (engineEntity == null) return;
-        
-        switch (engineEntity.type) {
-            case CHARACTER:
-                color = 0x00FF00;  // Green
-            case CONSUMABLE:
-                color = 0xFFFF00;  // Yellow
-            case EFFECT:
-                color = 0xFF00FF;  // Magenta
-            default:
-                color = 0xFFFFFF;  // White
-        }
-    }
-    
-    /**
      * Reset for reuse in object pool
      */
     public function reset(): Void {
         engineEntity = null;
-        color = 0xFFFFFF;
         visualScale = 1.0;
         
         // Reset interpolation fields
@@ -114,7 +92,7 @@ class BaseEntityModel {
     public var colliderHeight(get, never): Float;
     
     private function get_id(): Int return engineEntity != null ? engineEntity.id : 0;
-    private function get_type(): EntityType return engineEntity != null ? engineEntity.type : CHARACTER;
+    private function get_type(): EntityType return engineEntity != null ? engineEntity.type : GENERIC;
     private function get_pos(): engine.geometry.Vec2 return engineEntity != null ? engineEntity.pos : engine.geometry.Vec2Utils.create(0, 0);
     private function get_vel(): engine.geometry.Vec2 return engineEntity != null ? engineEntity.vel : engine.geometry.Vec2Utils.create(0, 0);
     private function get_rotation(): Float return engineEntity != null ? engineEntity.rotation : 0;

@@ -11,8 +11,6 @@ import game.mvp.model.GameClientState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
 import game.mvp.model.entities.ColliderModel;
-import game.mvp.model.entities.ConsumableModel;
-import game.mvp.model.entities.EffectModel;
 
 /**
  * Entity synchronization presenter
@@ -259,10 +257,14 @@ class EntitySyncPresenter {
         final ownerId = event.ownerId;
         
         final engineEntity:BaseEngineEntity = switch (entityType) {
-            case EntityType.CHARACTER:
-                engine.getCharacterById(entityId);
-            case EntityType.COLLIDER:
-                engine.getColliderById(entityId);
+            case EntityType.RAGNAR:
+                engine.getRagnarById(entityId);
+            case EntityType.ZOMBIE_BOY:
+                engine.getZombieBoyById(entityId);
+            case EntityType.ZOMBIE_GIRL:
+                engine.getZombieGirlById(entityId);
+            case EntityType.GLAMR:
+                engine.getGlamrById(entityId);
             default:
                 null;
         }
@@ -288,9 +290,6 @@ class EntitySyncPresenter {
             model.engineEntity.ownerId = ownerId;
             model.engineEntity.isAlive = true;
         }
-        
-        // Set visual properties
-        model.setVisualProperties();
         
         // Add to game client state
         gameClientState.addEntity(model);
@@ -395,65 +394,65 @@ class EntitySyncPresenter {
         
         if (model1 == null || model2 == null) return;
         
-        // Handle character vs consumable collision
-        if (Std.isOfType(model1, CharacterModel) && Std.isOfType(model2, ConsumableModel)) {
-            handleCharacterConsumableCollision(cast(model1, CharacterModel), cast(model2, ConsumableModel));
-        } else if (Std.isOfType(model2, CharacterModel) && Std.isOfType(model1, ConsumableModel)) {
-            handleCharacterConsumableCollision(cast(model2, CharacterModel), cast(model1, ConsumableModel));
-        }
+        // // Handle character vs consumable collision
+        // if (Std.isOfType(model1, CharacterModel) && Std.isOfType(model2, ConsumableModel)) {
+        //     handleCharacterConsumableCollision(cast(model1, CharacterModel), cast(model2, ConsumableModel));
+        // } else if (Std.isOfType(model2, CharacterModel) && Std.isOfType(model1, ConsumableModel)) {
+        //     handleCharacterConsumableCollision(cast(model2, CharacterModel), cast(model1, ConsumableModel));
+        // }
         
-        // Handle character vs effect collision
-        if (Std.isOfType(model1, CharacterModel) && Std.isOfType(model2, EffectModel)) {
-            handleCharacterEffectCollision(cast(model1, CharacterModel), cast(model2, EffectModel));
-        } else if (Std.isOfType(model2, CharacterModel) && Std.isOfType(model1, EffectModel)) {
-            handleCharacterEffectCollision(cast(model2, CharacterModel), cast(model1, EffectModel));
-        }
+        // // Handle character vs effect collision
+        // if (Std.isOfType(model1, CharacterModel) && Std.isOfType(model2, EffectModel)) {
+        //     handleCharacterEffectCollision(cast(model1, CharacterModel), cast(model2, EffectModel));
+        // } else if (Std.isOfType(model2, CharacterModel) && Std.isOfType(model1, EffectModel)) {
+        //     handleCharacterEffectCollision(cast(model2, CharacterModel), cast(model1, EffectModel));
+        // }
     }
     
     /**
      * Handle character consuming consumable
      */
-    private function handleCharacterConsumableCollision(character: CharacterModel, consumable: ConsumableModel): Void {
-        if (consumable.canConsume()) {
-            // Apply consumable effect
-            switch (consumable.consumableType) {
-                case "health_potion":
-                    character.heal(Std.int(consumable.effectValue));
-                case "mana_potion":
-                    // Handle mana restoration
-                case "strength_potion":
-                    // Handle strength boost
-            }
+    // private function handleCharacterConsumableCollision(character: CharacterModel, consumable: ConsumableModel): Void {
+    //     if (consumable.canConsume()) {
+    //         // Apply consumable effect
+    //         switch (consumable.consumableType) {
+    //             case "health_potion":
+    //                 character.heal(Std.int(consumable.effectValue));
+    //             case "mana_potion":
+    //                 // Handle mana restoration
+    //             case "strength_potion":
+    //                 // Handle strength boost
+    //         }
             
-            // Consume the item
-            consumable.consume();
+    //         // Consume the item
+    //         consumable.consume();
             
-            trace("Character " + character.id + " consumed " + consumable.consumableType);
-        }
-    }
+    //         trace("Character " + character.id + " consumed " + consumable.consumableType);
+    //     }
+    // }
     
     /**
      * Handle character touching effect
      */
-    private function handleCharacterEffectCollision(character: CharacterModel, effect: EffectModel): Void {
-        if (!effect.isExpired()) {
-            // Apply effect to character
-            var effectValue = effect.applyEffect();
+    // private function handleCharacterEffectCollision(character: CharacterModel, effect: EffectModel): Void {
+    //     if (!effect.isExpired()) {
+    //         // Apply effect to character
+    //         var effectValue = effect.applyEffect();
             
-            switch (effect.effectType) {
-                case "damage":
-                    character.takeDamage(Std.int(effectValue));
-                case "heal":
-                    character.heal(Std.int(effectValue));
-                case "speed_boost":
-                    // Handle speed boost
-                case "shield":
-                    // Handle shield effect
-            }
+    //         switch (effect.effectType) {
+    //             case "damage":
+    //                 character.takeDamage(Std.int(effectValue));
+    //             case "heal":
+    //                 character.heal(Std.int(effectValue));
+    //             case "speed_boost":
+    //                 // Handle speed boost
+    //             case "shield":
+    //                 // Handle shield effect
+    //         }
             
-            trace("Character " + character.id + " affected by " + effect.effectType);
-        }
-    }
+    //         trace("Character " + character.id + " affected by " + effect.effectType);
+    //     }
+    // }
     
     /**
      * Handle collider trigger event
@@ -475,12 +474,14 @@ class EntitySyncPresenter {
     private function createModelForTypeAndInitialize(entityType: EntityType, engineEntity: BaseEngineEntity): BaseEntityModel {
         var clientModel:BaseEntityModel = null;
         switch (entityType) {
-            case CHARACTER:
+            case RAGNAR:
                 clientModel = new CharacterModel();
-            case CONSUMABLE:
-                clientModel = new ConsumableModel();
-            case EFFECT:
-                clientModel = new EffectModel();
+            case ZOMBIE_BOY:
+                clientModel = new CharacterModel();
+            case ZOMBIE_GIRL:
+                clientModel = new CharacterModel();
+            case GLAMR:
+                clientModel = new CharacterModel();
             case COLLIDER:
                 clientModel = new ColliderModel();
             default:

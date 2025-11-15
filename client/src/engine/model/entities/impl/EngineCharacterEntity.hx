@@ -1,8 +1,8 @@
 package engine.model.entities.impl;
 
+import engine.SeidhEngine;
 import engine.geometry.Vec2Utils;
 import engine.geometry.Vec2;
-import engine.SeidhEngine;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.base.EngineEntitySpec;
 

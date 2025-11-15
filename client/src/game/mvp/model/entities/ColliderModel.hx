@@ -16,7 +16,7 @@ class ColliderModel extends BaseEntityModel {
 
         // Colliders are static, no position updates needed
         // Just ensure visual properties are set
-        setVisualProperties();
+        // setVisualProperties();
     }
     
     private function get_colliderEntity(): EngineColliderEntity {
@@ -47,19 +47,6 @@ class ColliderModel extends BaseEntityModel {
         super.updateFromEngine();
         
         if (colliderEntity == null) return;
-    }
-    
-    /**
-     * Set visual properties based on collider type
-     */
-    override public function setVisualProperties(): Void {
-        if (engineEntity == null) return;
-        
-        // Set red color for colliders
-        color = 0xFF0000; // Red
-        
-        // Set visual scale
-        visualScale = 1.0;
     }
     
     // Convenience getters that delegate to collider entity

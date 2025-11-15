@@ -45,17 +45,17 @@ class AIModule implements IModule {
     
     private function updateEntityAI(entity: Dynamic, state: GameModelState, tick: Int): Void {
         // Simple AI behavior - random movement
-        if (entity.type == EntityType.CHARACTER) {
-            final character = cast(entity, EngineCharacterEntity);
+        // if (entity.type == EntityType.CHARACTER) {
+        //     final character = cast(entity, EngineCharacterEntity);
             
-            if (character.aiProfile != "" && aiProfiles.exists(character.aiProfile)) {
-                final profile = aiProfiles.get(character.aiProfile);
-                applyAIBehavior(character, profile, state);
-            } else {
-                // Default wander behavior
-                wanderBehavior(character, state);
-            }
-        }
+        //     if (character.aiProfile != "" && aiProfiles.exists(character.aiProfile)) {
+        //         final profile = aiProfiles.get(character.aiProfile);
+        //         applyAIBehavior(character, profile, state);
+        //     } else {
+        //         // Default wander behavior
+        //         wanderBehavior(character, state);
+        //     }
+        // }
     }
     
     private function applyAIBehavior(character: Dynamic, profile: Dynamic, state: GameModelState): Void {

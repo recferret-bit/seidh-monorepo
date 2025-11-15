@@ -25,10 +25,6 @@ enum SeidhResource {
     RAGNAR_ATTACK;
     RAGNAR_DEATH;
 
-    RAGNAR_NORM;
-    RAGNAR_DUDE;
-    RAGNAR_BASE;
-
     // ------------------------------------
     // SOUND
     // ------------------------------------
@@ -248,10 +244,6 @@ class Res {
                 remoteResourceMap.set(RAGNAR_ATTACK, url + 'ragnar/RAGNAR_ATTACK.png');
                 remoteResourceMap.set(RAGNAR_DEATH, url + 'ragnar/RAGNAR_DEATH.png');
 
-                remoteResourceMap.set(RAGNAR_DUDE, url + 'ragnar/RAGNAR_DUDE.png');
-                remoteResourceMap.set(RAGNAR_NORM, url + 'ragnar/RAGNAR_NORM.png');
-                remoteResourceMap.set(RAGNAR_BASE, url + 'ragnar/RAGNAR_BASE.png');
-            
                 // ------------------------------------
                 // SOUND
                 // ------------------------------------
@@ -344,6 +336,7 @@ class Res {
                 remoteResourceMap.set(ZOMBIE_BOY_RUN, url + 'zombie-boy/ZOMBIE_BOY_RUN.png');
                 remoteResourceMap.set(ZOMBIE_BOY_ATTACK, url + 'zombie-boy/ZOMBIE_BOY_ATTACK.png');
                 remoteResourceMap.set(ZOMBIE_BOY_DEATH, url + 'zombie-boy/ZOMBIE_BOY_DEATH.png');
+                remoteResourceMap.set(ZOMBIE_BOY_SPAWN, url + 'zombie-boy/ZOMBIE_BOY_SPAWN.png');
 
                 // ------------------------------------
                 // ZOMBIE GIRL
@@ -353,6 +346,7 @@ class Res {
                 remoteResourceMap.set(ZOMBIE_GIRL_RUN, url + 'zombie-girl/ZOMBIE_GIRL_RUN.png');
                 remoteResourceMap.set(ZOMBIE_GIRL_ATTACK, url + 'zombie-boy/ZOMBIE_GIRL_ATTACK.png');
                 remoteResourceMap.set(ZOMBIE_GIRL_DEATH, url + 'zombie-girl/ZOMBIE_GIRL_DEATH.png');
+                remoteResourceMap.set(ZOMBIE_GIRL_SPAWN, url + 'zombie-girl/ZOMBIE_GIRL_SPAWN.png');
 
                 loadRemoteResources();
             } else if (GameClientConfig.DefaultResourceProvider == ResourceProvider.LOCAL) {
