@@ -37,6 +37,8 @@ class CharacterEntityView extends BaseGameEntityView {
         showLevel = true;
         trailLength = 10;
         movementTrail = [];
+
+        changeState(EntityState.IDLE);
     }
     
     public function changeState(state: EntityState) {

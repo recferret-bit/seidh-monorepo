@@ -114,7 +114,7 @@ class GameModelState {
      * @return Ragnar entity manager
      */
     public function getRagnarManager(): IEngineEntityManager<EngineCharacterEntity> {
-        return cast managers.get(EntityType.RAGNAR);
+        return managers.get(EntityType.RAGNAR);
     }
     
     /**
@@ -122,7 +122,7 @@ class GameModelState {
      * @return Zombie boy entity manager
      */
     public function getZombieBoyManager(): IEngineEntityManager<EngineCharacterEntity> {
-        return cast managers.get(EntityType.ZOMBIE_BOY);
+        return managers.get(EntityType.ZOMBIE_BOY);
     }
     
     /**
@@ -130,7 +130,7 @@ class GameModelState {
      * @return Zombie girl entity manager
      */
     public function getZombieGirlManager(): IEngineEntityManager<EngineCharacterEntity> {
-        return cast managers.get(EntityType.ZOMBIE_GIRL);
+        return managers.get(EntityType.ZOMBIE_GIRL);
     }
 
     /**
@@ -138,7 +138,7 @@ class GameModelState {
      * @return Glamr entity manager
      */
     public function getGlamrManager(): IEngineEntityManager<EngineCharacterEntity> {
-        return cast managers.get(EntityType.GLAMR);
+        return managers.get(EntityType.GLAMR);
     }
     
     /**
@@ -146,7 +146,7 @@ class GameModelState {
      * @return Collider entity manager
      */
     public function getColliderManager(): IEngineEntityManager<EngineColliderEntity> {
-        return cast managers.get(EntityType.COLLIDER);
+        return managers.get(EntityType.COLLIDER);
     }
     
     private function setupManagers(): Void {

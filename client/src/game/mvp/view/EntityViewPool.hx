@@ -1,5 +1,6 @@
 package game.mvp.view;
 
+import game.mvp.view.entities.collider.ColliderEntityView;
 import game.mvp.view.entities.character.ragnar.RagnarEntityView;
 import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
 import game.mvp.view.entities.character.glamr.GlamrEntityView;
@@ -24,6 +25,7 @@ class EntityViewPool {
     private var zombieBoyPool: Array<BaseGameEntityView>;
     private var zombieGirlPool: Array<BaseGameEntityView>;
     private var glamrPool: Array<BaseGameEntityView>;
+    private var colliderPool: Array<BaseGameEntityView>;
     
     // Pool statistics
     private var poolStats: Map<EntityType, PoolStats>;
@@ -41,14 +43,16 @@ class EntityViewPool {
         zombieBoyPool = [];
         zombieGirlPool = [];
         glamrPool = [];
-        
+        colliderPool = [];
+
         // Initialize statistics
         poolStats = new Map<EntityType, PoolStats>();
         poolStats.set(EntityType.RAGNAR, new PoolStats());
         poolStats.set(EntityType.ZOMBIE_BOY, new PoolStats());
         poolStats.set(EntityType.ZOMBIE_GIRL, new PoolStats());
         poolStats.set(EntityType.GLAMR, new PoolStats());
-        
+        poolStats.set(EntityType.COLLIDER, new PoolStats());
+
         // Pre-populate pools
         initializePools();
     }
@@ -96,6 +100,12 @@ class EntityViewPool {
                 if (view == null) {
                     view = new GlamrEntityView();
                     view.setPoolType(EntityType.GLAMR);
+                }
+            case EntityType.COLLIDER:
+                view = getFromPool(colliderPool);
+                if (view == null) {
+                    view = new ColliderEntityView();
+                    view.setPoolType(EntityType.COLLIDER);
                 }
             default:
                 view = null;

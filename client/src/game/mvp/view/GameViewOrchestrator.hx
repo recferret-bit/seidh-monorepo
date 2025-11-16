@@ -75,24 +75,13 @@ class GameViewOrchestrator {
      * Create view layers for organization
      */
     private function createViewLayers(): Void {
-        // Ragnar layer
         final characterLayer = new Object(parent);
-        viewLayers.set(EntityType.RAGNAR, characterLayer);
-        
-        // Zombie boy layer
-        final consumableLayer = new Object(parent);
-        viewLayers.set(EntityType.ZOMBIE_BOY, consumableLayer);
-        
-        // Zombie girl layer
-        final effectLayer = new Object(parent);
-        viewLayers.set(EntityType.ZOMBIE_GIRL, effectLayer);
-
-        // Glamr layer
-        final glamrLayer = new Object(parent);
-        viewLayers.set(EntityType.GLAMR, glamrLayer);
-        
-        // Collider layer
         final colliderLayer = new Object(parent);
+
+        viewLayers.set(EntityType.RAGNAR, characterLayer);
+        viewLayers.set(EntityType.ZOMBIE_BOY, characterLayer);
+        viewLayers.set(EntityType.ZOMBIE_GIRL, characterLayer);
+        viewLayers.set(EntityType.GLAMR, characterLayer);
         viewLayers.set(EntityType.COLLIDER, colliderLayer);
     }
     
@@ -195,6 +184,8 @@ class GameViewOrchestrator {
                     view = new ZombieGirlEntityView();
                 case EntityType.GLAMR:
                     view = new GlamrEntityView();
+                case EntityType.COLLIDER:
+                    view = new ColliderEntityView();
                 default:
                     view = new RagnarEntityView(); // Default fallback
             }

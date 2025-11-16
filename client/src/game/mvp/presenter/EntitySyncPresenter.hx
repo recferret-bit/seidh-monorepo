@@ -59,13 +59,13 @@ class EntitySyncPresenter {
         this.eventBus = eventBus;
         
         // Subscribe to entity events with typed handlers
-        var spawnToken = eventBus.subscribe(EventBusConstants.ENTITY_SPAWN, onEntitySpawn);
-        var deathToken = eventBus.subscribe(EventBusConstants.ENTITY_DEATH, onEntityDeath);
-        var moveToken = eventBus.subscribe(EventBusConstants.ENTITY_MOVE, onEntityMove);
-        var correctionToken = eventBus.subscribe(EventBusConstants.ENTITY_CORRECTION, onEntityCorrection);
-        var damageToken = eventBus.subscribe(EventBusConstants.ENTITY_DAMAGE, onEntityDamage);
-        var collisionToken = eventBus.subscribe(EventBusConstants.ENTITY_COLLISION, onEntityCollision);
-        var triggerToken = eventBus.subscribe(EventBusConstants.COLLIDER_TRIGGER, onColliderTrigger);
+        final spawnToken = eventBus.subscribe(EventBusConstants.ENTITY_SPAWN, onEntitySpawn);
+        final deathToken = eventBus.subscribe(EventBusConstants.ENTITY_DEATH, onEntityDeath);
+        final moveToken = eventBus.subscribe(EventBusConstants.ENTITY_MOVE, onEntityMove);
+        final correctionToken = eventBus.subscribe(EventBusConstants.ENTITY_CORRECTION, onEntityCorrection);
+        final damageToken = eventBus.subscribe(EventBusConstants.ENTITY_DAMAGE, onEntityDamage);
+        final collisionToken = eventBus.subscribe(EventBusConstants.ENTITY_COLLISION, onEntityCollision);
+        final triggerToken = eventBus.subscribe(EventBusConstants.COLLIDER_TRIGGER, onColliderTrigger);
         
         // Store tokens for cleanup
         eventTokens.push(spawnToken);
@@ -265,6 +265,8 @@ class EntitySyncPresenter {
                 engine.getZombieGirlById(entityId);
             case EntityType.GLAMR:
                 engine.getGlamrById(entityId);
+            case EntityType.COLLIDER:
+                engine.getColliderById(entityId);
             default:
                 null;
         }
@@ -401,7 +403,7 @@ class EntitySyncPresenter {
         //     handleCharacterConsumableCollision(cast(model2, CharacterModel), cast(model1, ConsumableModel));
         // }
         
-        // // Handle character vs effect collision
+        // Handle character vs effect collision
         // if (Std.isOfType(model1, CharacterModel) && Std.isOfType(model2, EffectModel)) {
         //     handleCharacterEffectCollision(cast(model1, CharacterModel), cast(model2, EffectModel));
         // } else if (Std.isOfType(model2, CharacterModel) && Std.isOfType(model1, EffectModel)) {
@@ -475,8 +477,6 @@ class EntitySyncPresenter {
         var clientModel:BaseEntityModel = null;
         switch (entityType) {
             case RAGNAR:
-                clientModel = new CharacterModel();
-            case ZOMBIE_BOY:
                 clientModel = new CharacterModel();
             case ZOMBIE_GIRL:
                 clientModel = new CharacterModel();

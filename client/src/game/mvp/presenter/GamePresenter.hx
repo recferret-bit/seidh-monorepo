@@ -157,21 +157,21 @@ class GamePresenter {
      */
     private function spawnInitialEntities(): Void {
         // Spawn player character
-        var playerSpec = EngineEntitySpecs.getRagnarSpec();
-        var playerId = engine.spawnEntity(playerSpec);
+        final playerSpec = EngineEntitySpecs.getRagnarSpec();
+        final playerId = engine.spawnEntity(playerSpec);
         
         // Set up player controlled entity tracking
         gameClientState.setPlayerControlledEntity(playerId);
         inputPresenter.setControlledEntity(playerId, "player1");
         
         // Set up InputModule client-entity mapping
-        var inputModule = engine.getInputModule();
+        final inputModule = engine.getInputModule();
         if (inputModule != null) {
             inputModule.setClientEntity("player1", playerId);
         }
         
         // Set up camera to follow player
-        var cameraController = viewOrchestrator.getCameraController();
+        final cameraController = viewOrchestrator.getCameraController();
         if (cameraController != null) {
             cameraController.followEntity(playerId);
         }
@@ -204,7 +204,7 @@ class GamePresenter {
         // }
         
         // Spawn map colliders in chess pattern
-        spawnMapColliders();
+        // spawnMapColliders();
         
         // // Spawn effects
         // var effectPositions = EntitySpecs.getSpawnPositions().effects;

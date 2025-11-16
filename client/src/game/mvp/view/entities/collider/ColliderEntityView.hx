@@ -1,5 +1,8 @@
 package game.mvp.view.entities.collider;
 
+import h2d.Bitmap;
+import h2d.Tile;
+import game.mvp.presenter.GamePresenter;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.ColliderModel;
 
@@ -18,8 +21,17 @@ class ColliderEntityView extends BaseGameEntityView {
      */
     override public function initialize(model: BaseEntityModel): Void {
         super.initialize(model);
+
+        // Calculate size based on model collider dimensions
+        final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
+        final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
+        var tile = Tile.fromColor(0xFF0000, width, height);
+        bitmap = new Bitmap(tile, this);
+        
+        // Center the bitmap
+        bitmap.x = -width * 0.5;
+        bitmap.y = -height * 0.5;
     }
-    
     
     /**
      * Update collider view
