@@ -1,7 +1,8 @@
-package engine.model.entities;
+package engine.model.entities.specs;
 
-import engine.model.entities.EntityType;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.SeidhEngine;
+import engine.model.entities.types.EntityType;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
  * EntitySpecs - Entity specification seed data for the engine
@@ -65,6 +66,61 @@ class EngineEntitySpecs {
             hp: 100,
         };
     }
+    
+    /**
+     * Get health potion spec
+     */
+    public static function getHealthPotionSpec(x: Int, y: Int): EngineEntitySpec {
+        return {
+            type: EntityType.HEALTH_POTION,
+            pos: {x: x, y: y},
+            ownerId: "world",
+            isAlive: true,
+            effectId: "heal",
+            durationTicks: 0,
+            stackable: true,
+            charges: 1,
+            useRange: 16,
+            effectValue: 50
+        };
+    }
+    
+    /**
+     * Get armor potion spec
+     */
+    public static function getArmorPotionSpec(x: Int, y: Int): EngineEntitySpec {
+        return {
+            type: EntityType.ARMOR_POTION,
+            pos: {x: x, y: y},
+            ownerId: "world",
+            isAlive: true,
+            effectId: "armor_boost",
+            durationTicks: 300,
+            stackable: true,
+            charges: 1,
+            useRange: 16,
+            effectValue: 10
+        };
+    }
+    
+    /**
+     * Get salmon spec
+     */
+    public static function getSalmonSpec(x: Int, y: Int): EngineEntitySpec {
+        return {
+            type: EntityType.SALMON,
+            pos: {x: x, y: y},
+            ownerId: "world",
+            isAlive: true,
+            effectId: "health_restore",
+            durationTicks: 0,
+            stackable: true,
+            charges: 1,
+            useRange: 16,
+            effectValue: 25
+        };
+    }
+    
     /**
      * Get spawn positions for different entity types
      */
@@ -158,10 +214,17 @@ class EngineEntitySpecs {
                 return getZombieGirlSpec();
             case EntityType.GLAMR:
                 return getGlamrSpec();
-            case COLLIDER:
+            case EntityType.COLLIDER:
                 return getColliderSpec(0, 0, false, false);
+            case EntityType.HEALTH_POTION:
+                return getHealthPotionSpec(0, 0);
+            case EntityType.ARMOR_POTION:
+                return getArmorPotionSpec(0, 0);
+            case EntityType.SALMON:
+                return getSalmonSpec(0, 0);
             default:
                 return getColliderSpec(0, 0, false, false);
         }
     }
 }
+

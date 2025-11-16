@@ -2,9 +2,9 @@ package engine.model.entities.base;
 
 import engine.geometry.Vec2;
 import engine.geometry.Vec2Utils;
-import engine.model.entities.EntityType;
-import engine.model.entities.base.AbstractEngineEntity;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.model.entities.types.EntityType;
+import engine.model.entities.abs.AbstractEngineEntity;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
  * Abstract base entity with common fields and default implementations

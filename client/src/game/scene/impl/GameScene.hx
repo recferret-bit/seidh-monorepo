@@ -1,12 +1,12 @@
-package game.mvp.view.scene.impl;
+package game.scene.impl;
 
 import h3d.Engine;
 
-import game.mvp.view.scene.basic.BasicScene;
-import game.mvp.view.scene.ui.GameUiScene;
+import game.scene.base.BaseScene;
+import game.scene.ui.GameUiScene;
 import game.mvp.presenter.GamePresenter;
 
-class GameScene extends BasicScene {
+class GameScene extends BaseScene {
 	private var gameUiScene:GameUiScene;
 	private var gamePresenter:GamePresenter;
 	
@@ -72,3 +72,4 @@ class GameScene extends BasicScene {
 	}
 
 }
+

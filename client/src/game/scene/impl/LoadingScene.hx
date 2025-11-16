@@ -1,9 +1,9 @@
-package game.mvp.view.scene.impl;
+package game.scene.impl;
 
-import game.mvp.view.scene.basic.BasicScene;
+import game.scene.base.BaseScene;
 import game.event.EventManager;
 
-class LoadingScene extends BasicScene {
+class LoadingScene extends BaseScene {
 	public function new() {
 		super();
 		trace("LoadingScene created");
@@ -22,3 +22,4 @@ class LoadingScene extends BasicScene {
 		trace("LoadingScene updated");
 	}
 }
+

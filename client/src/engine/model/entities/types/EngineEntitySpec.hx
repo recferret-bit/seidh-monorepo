@@ -1,6 +1,6 @@
-package engine.model.entities.base;
+package engine.model.entities.types;
 
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 
 /**
  * Entity specification type definitions for type-safe entity creation
@@ -50,3 +50,4 @@ typedef EngineEntitySpec = {
     ?passable: Bool,
     ?isTrigger: Bool
 }
+

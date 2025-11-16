@@ -1,17 +1,17 @@
-package game.mvp.view.scene.impl.test;
+package game.scene.impl.test;
 
 import game.mvp.view.entities.character.glamr.GlamrEntityView;
 import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
 import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
 import game.mvp.view.entities.character.CharacterEntityView;
-import engine.model.entities.EntityState;
+import engine.model.entities.types.EntityState;
 import h2d.Bitmap;
 
 import game.mvp.view.entities.character.ragnar.RagnarEntityView;
-import game.mvp.view.scene.basic.BasicScene;
+import game.scene.base.BaseScene;
 import game.event.EventManager;
 
-class CharactersTestScene extends BasicScene implements EventListener {
+class CharactersTestScene extends BaseScene implements EventListener {
     private var bitmaps:Array<Bitmap> = [];
 
     private final charactersMap:Map<String, CharacterEntityView> = new Map();
@@ -253,3 +253,4 @@ class CharactersTestScene extends BasicScene implements EventListener {
         }
     }
 }
+

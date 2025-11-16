@@ -1,19 +1,19 @@
-package game.mvp.view.scene;
+package game.scene;
 
-import game.mvp.view.scene.impl.test.TerrainTestScene;
-import game.mvp.view.scene.impl.test.ObjectsTilemapTestScene;
-import game.mvp.view.scene.impl.test.CharactersTestScene;
-import game.mvp.view.scene.impl.GameScene;
-import game.mvp.view.scene.impl.LoadingScene;
-import game.mvp.view.scene.impl.HomeScene;
-import game.mvp.view.scene.basic.BasicScene;
+import game.scene.impl.test.TerrainTestScene;
+import game.scene.impl.test.ObjectsTilemapTestScene;
+import game.scene.impl.test.CharactersTestScene;
+import game.scene.impl.GameScene;
+import game.scene.impl.LoadingScene;
+import game.scene.impl.HomeScene;
+import game.scene.base.BaseScene;
 import game.event.EventManager;
 
 class SceneManager implements EventListener {
-	private var sceneChangedCallback:BasicScene->Void;
-	private var currentScene:BasicScene;
+	private var sceneChangedCallback:BaseScene->Void;
+	private var currentScene:BaseScene;
 	
-	public function new(sceneChangedCallback:BasicScene->Void) {
+	public function new(sceneChangedCallback:BaseScene->Void) {
 		this.sceneChangedCallback = sceneChangedCallback;
 
 		EventManager.instance.subscribe(EventManager.EVENT_LOAD_HOME_SCENE, this);
@@ -70,3 +70,4 @@ class SceneManager implements EventListener {
 		}
 	}
 }
+

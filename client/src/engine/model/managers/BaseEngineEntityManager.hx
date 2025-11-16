@@ -2,8 +2,8 @@ package engine.model.managers;
 
 import engine.model.GameModelState;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.base.EngineEntityFactory;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.model.entities.factory.EngineEntityFactory;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
  * Generic entity manager implementation

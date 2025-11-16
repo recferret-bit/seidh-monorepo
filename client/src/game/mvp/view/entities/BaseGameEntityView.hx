@@ -1,7 +1,7 @@
 package game.mvp.view.entities;
 
 import engine.geometry.RectUtils;
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.presenter.GamePresenter;
 import h2d.Bitmap;
@@ -101,8 +101,11 @@ class BaseGameEntityView extends Object {
         final width = model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels;
         final height = model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels;
         
+        final pxOffsetX = model.colliderPxOffsetX;
+        final pxOffsetY = model.colliderPxOffsetY;
+
         borderGraphics.lineStyle(2, 0x0000FF, 1);
-        borderGraphics.drawRect(-width * 0.5, -height * 0.5, width, height);
+        borderGraphics.drawRect(-width * 0.5 + pxOffsetX, -height * 0.5 + pxOffsetY, width, height);
     }
     
     // public function setPosition() {

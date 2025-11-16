@@ -3,10 +3,10 @@ package engine.modules;
 import engine.geometry.Rect;
 import engine.geometry.RectUtils;
 import engine.geometry.Vec2Utils;
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import engine.model.GameModelState;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.impl.EngineColliderEntity;
+import engine.model.entities.collider.ColliderEntity;
 import engine.SeidhEngine;
 
 /**
@@ -147,7 +147,7 @@ class PhysicsModule implements IModule {
         
         // If either entity is a collider, we need to prevent them from moving into each other
         if (aIsCollider || bIsCollider) {
-            final collider = cast(aIsCollider ? entityA : entityB, EngineColliderEntity);
+            final collider = cast(aIsCollider ? entityA : entityB, ColliderEntity);
             final entity = aIsCollider ? entityB : entityA;
             
             // If collider is not passable, we need to prevent the entity from moving into it

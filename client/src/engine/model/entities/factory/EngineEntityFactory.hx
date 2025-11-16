@@ -1,11 +1,17 @@
-package engine.model.entities.base;
+package engine.model.entities.factory;
 
 import engine.model.ObjectPool;
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.base.EngineEntitySpec;
-import engine.model.entities.impl.EngineCharacterEntity;
-import engine.model.entities.impl.EngineColliderEntity;
+import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.character.RagnarEntity;
+import engine.model.entities.character.GlamrEntity;
+import engine.model.entities.character.ZombieBoyEntity;
+import engine.model.entities.character.ZombieGirlEntity;
+import engine.model.entities.collider.ColliderEntity;
+import engine.model.entities.consumable.HealthPotionEntity;
+import engine.model.entities.consumable.ArmorPotionEntity;
+import engine.model.entities.consumable.SalmonEntity;
 
 /**
  * Factory for creating entities with registration pattern
@@ -58,11 +64,19 @@ class EngineEntityFactory {
     }
     
     private function registerCoreTypes(): Void {
-        // Register core entity types
-        register(EntityType.RAGNAR, function() return new EngineCharacterEntity());
-        register(EntityType.ZOMBIE_BOY, function() return new EngineCharacterEntity());
-        register(EntityType.ZOMBIE_GIRL, function() return new EngineCharacterEntity());
-        register(EntityType.GLAMR, function() return new EngineCharacterEntity());
-        register(EntityType.COLLIDER, function() return new EngineColliderEntity());
+        // Register character types
+        register(EntityType.RAGNAR, function() return new RagnarEntity());
+        register(EntityType.ZOMBIE_BOY, function() return new ZombieBoyEntity());
+        register(EntityType.ZOMBIE_GIRL, function() return new ZombieGirlEntity());
+        register(EntityType.GLAMR, function() return new GlamrEntity());
+        
+        // Register collider type
+        register(EntityType.COLLIDER, function() return new ColliderEntity());
+        
+        // Register consumable types
+        register(EntityType.HEALTH_POTION, function() return new HealthPotionEntity());
+        register(EntityType.ARMOR_POTION, function() return new ArmorPotionEntity());
+        register(EntityType.SALMON, function() return new SalmonEntity());
     }
 }
+

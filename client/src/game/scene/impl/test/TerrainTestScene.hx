@@ -1,10 +1,10 @@
-package game.mvp.view.scene.impl.test;
+package game.scene.impl.test;
 
 import game.mvp.view.camera.DebugCamera;
 import game.resource.terrain.TerrainManager;
-import game.mvp.view.scene.basic.BasicScene;
+import game.scene.base.BaseScene;
 
-class TerrainTestScene extends BasicScene {
+class TerrainTestScene extends BaseScene {
 
     private final debugCamera:DebugCamera;
 
@@ -28,3 +28,4 @@ class TerrainTestScene extends BasicScene {
         debugCamera.update();
     }
 }
+

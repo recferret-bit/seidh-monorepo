@@ -1,6 +1,6 @@
-package game.mvp.view.scene.basic;
+package game.scene.base;
 
-abstract class BasicScene extends h2d.Scene {
+abstract class BaseScene extends h2d.Scene {
     public var debugGraphics:h2d.Graphics;
 
     public function new() {
@@ -18,6 +18,7 @@ abstract class BasicScene extends h2d.Scene {
     }
     
     public function onResize():Void {
-        trace("BasicScene onResize");
+        trace("BaseScene onResize");
     }
 }
+

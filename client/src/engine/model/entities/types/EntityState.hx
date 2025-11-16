@@ -1,4 +1,4 @@
-package engine.model.entities;
+package engine.model.entities.types;
 
 /**
  * Entity state definitions as abstract string enum
@@ -11,3 +11,4 @@ enum abstract EntityState(String) from String to String {
     var ACTION_MAIN = "action_main";
     var ACTION_SPECIAL = "action_special";
 }
+

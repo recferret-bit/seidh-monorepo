@@ -1,7 +1,7 @@
 package game.mvp.model.entities;
 
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.impl.EngineColliderEntity;
+import engine.model.entities.collider.ColliderEntity;
 
 /**
  * Collider entity model extending BaseEntityModel
@@ -9,7 +9,7 @@ import engine.model.entities.impl.EngineColliderEntity;
  */
 class ColliderModel extends BaseEntityModel {
     // Reference to engine collider entity
-    public var colliderEntity(get, never): EngineColliderEntity;
+    public var colliderEntity(get, never): ColliderEntity;
     
     public function new() {
         super();
@@ -19,8 +19,8 @@ class ColliderModel extends BaseEntityModel {
         // setVisualProperties();
     }
     
-    private function get_colliderEntity(): EngineColliderEntity {
-        return cast(engineEntity, EngineColliderEntity);
+    private function get_colliderEntity(): ColliderEntity {
+        return cast(engineEntity, ColliderEntity);
     }
     
     /**

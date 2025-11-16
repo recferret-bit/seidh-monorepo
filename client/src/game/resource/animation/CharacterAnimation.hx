@@ -3,9 +3,9 @@ package game.resource.animation;
 import h2d.Anim;
 import h2d.Tile;
 
-import engine.model.entities.EntityDirection;
-import engine.model.entities.EntityType;
-import engine.model.entities.EntityState;
+import engine.model.entities.types.EntityDirection;
+import engine.model.entities.types.EntityType;
+import engine.model.entities.types.EntityState;
 
 import game.event.EventManager;
 import game.resource.Res.SeidhResource;

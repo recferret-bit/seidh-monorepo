@@ -1,8 +1,8 @@
 package;
 
 import game.resource.Res;
-import game.mvp.view.scene.basic.BasicScene;
-import game.mvp.view.scene.SceneManager;
+import game.scene.base.BaseScene;
+import game.scene.SceneManager;
 
 import hxd.App;
 
@@ -16,7 +16,7 @@ class Main extends App {
 		Res.instance.init(function(c:ResLoadingProgressCallback):Void {
 		});
 
-		sceneManager = new SceneManager(function(scene:BasicScene) {
+		sceneManager = new SceneManager(function(scene:BaseScene) {
 			setScene2D(scene);
 		});
 	}

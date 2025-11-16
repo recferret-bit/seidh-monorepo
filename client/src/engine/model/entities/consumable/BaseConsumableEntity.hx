@@ -1,13 +1,13 @@
-package engine.model.entities.impl;
+package engine.model.entities.consumable;
 
-import engine.model.entities.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
- * Consumable item entity (potions, food, etc.)
+ * Base consumable item entity (potions, food, etc.)
+ * All consumable types extend this class
  */
-class EngineConsumableEntity extends BaseEngineEntity {
+class BaseConsumableEntity extends BaseEngineEntity {
     public var effectId: String;
     public var durationTicks: Int;
     public var stackable: Bool;
@@ -48,3 +48,4 @@ class EngineConsumableEntity extends BaseEngineEntity {
         useRange = spec.useRange != null ? spec.useRange : 16;
     }
 }
+

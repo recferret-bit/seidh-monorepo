@@ -1,7 +1,7 @@
 package game.mvp.view.entities.character;
 
 import game.resource.animation.character.BasicCharacterAnimation;
-import engine.model.entities.EntityState;
+import engine.model.entities.types.EntityState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
 

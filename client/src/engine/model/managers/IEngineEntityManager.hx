@@ -2,7 +2,7 @@ package engine.model.managers;
 
 import engine.model.GameModelState;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
  * Entity manager contract

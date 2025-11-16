@@ -4,7 +4,7 @@ import game.mvp.view.entities.character.ragnar.RagnarEntityView;
 import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
 import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
 import game.mvp.view.entities.character.glamr.GlamrEntityView;
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import game.mvp.model.GameClientState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.view.entities.BaseGameEntityView;

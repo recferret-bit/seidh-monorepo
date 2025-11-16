@@ -1,10 +1,10 @@
-package game.mvp.view.scene.impl.test;
+package game.scene.impl.test;
 
 import h2d.Bitmap;
 import game.resource.tilemap.ObjectsTilemapManager;
-import game.mvp.view.scene.basic.BasicScene;
+import game.scene.base.BaseScene;
 
-class ObjectsTilemapTestScene extends BasicScene {
+class ObjectsTilemapTestScene extends BaseScene {
     private var bitmaps:Array<Bitmap> = [];
 
     public function new() {
@@ -162,3 +162,4 @@ class ObjectsTilemapTestScene extends BasicScene {
 
     public function customUpdate(dt:Float, fps:Float) {}
 }
+

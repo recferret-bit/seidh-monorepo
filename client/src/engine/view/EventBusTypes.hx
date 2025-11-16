@@ -1,7 +1,7 @@
 package engine.view;
 
 import engine.geometry.Vec2;
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 
 /**
  * Event type definitions for the event bus

@@ -1,15 +1,16 @@
-package engine.model.entities.impl;
+package engine.model.entities.character;
 
 import engine.SeidhEngine;
 import engine.geometry.Vec2Utils;
 import engine.geometry.Vec2;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
- * Character entity with combat stats and abilities
+ * Base character entity with combat stats and abilities
+ * All character types extend this class
  */
-class EngineCharacterEntity extends BaseEngineEntity {
+class BaseCharacterEntity extends BaseEngineEntity {
     public var maxHp: Int;
     public var hp: Int;
     public var level: Int;
@@ -65,6 +66,8 @@ class EngineCharacterEntity extends BaseEngineEntity {
             // Character-specific collider dimensions (smaller than default)
             colliderWidth = 3;
             colliderHeight = 5;
+            colliderPxOffsetX = 0;
+            colliderPxOffsetY = 0;
             
             // Characters are input-driven by default
             isInputDriven = true;
@@ -87,7 +90,6 @@ class EngineCharacterEntity extends BaseEngineEntity {
         // Characters are input-driven by default
         isInputDriven = spec.isInputDriven != null ? spec.isInputDriven : true;
     }
-    
 
     /**
      * Apply movement step to position
@@ -125,3 +127,4 @@ class EngineCharacterEntity extends BaseEngineEntity {
     }
     
 }
+

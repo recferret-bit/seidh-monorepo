@@ -2,12 +2,11 @@ package engine.model;
 
 import engine.model.DeterministicRng;
 import engine.model.ObjectPool;
-import engine.model.entities.EntityType;
-import engine.model.entities.base.EngineEntityFactory;
-import engine.model.entities.impl.EngineCharacterEntity;
-import engine.model.entities.impl.EngineColliderEntity;
-import engine.model.entities.impl.EngineConsumableEntity;
-import engine.model.entities.impl.EngineEffectEntity;
+import engine.model.entities.types.EntityType;
+import engine.model.entities.factory.EngineEntityFactory;
+import engine.model.entities.character.BaseCharacterEntity;
+import engine.model.entities.collider.ColliderEntity;
+import engine.model.entities.consumable.BaseConsumableEntity;
 import engine.model.managers.BaseEngineEntityManager;
 import engine.model.managers.EngineEntityManagerRegistry;
 import engine.model.managers.IEngineEntityManager;
@@ -113,7 +112,7 @@ class GameModelState {
      * Get ragnar manager with explicit type
      * @return Ragnar entity manager
      */
-    public function getRagnarManager(): IEngineEntityManager<EngineCharacterEntity> {
+    public function getRagnarManager(): IEngineEntityManager<BaseCharacterEntity> {
         return managers.get(EntityType.RAGNAR);
     }
     
@@ -121,7 +120,7 @@ class GameModelState {
      * Get zombie boy manager with explicit type
      * @return Zombie boy entity manager
      */
-    public function getZombieBoyManager(): IEngineEntityManager<EngineCharacterEntity> {
+    public function getZombieBoyManager(): IEngineEntityManager<BaseCharacterEntity> {
         return managers.get(EntityType.ZOMBIE_BOY);
     }
     
@@ -129,7 +128,7 @@ class GameModelState {
      * Get zombie girl manager with explicit type
      * @return Zombie girl entity manager
      */
-    public function getZombieGirlManager(): IEngineEntityManager<EngineCharacterEntity> {
+    public function getZombieGirlManager(): IEngineEntityManager<BaseCharacterEntity> {
         return managers.get(EntityType.ZOMBIE_GIRL);
     }
 
@@ -137,7 +136,7 @@ class GameModelState {
      * Get glamr manager with explicit type
      * @return Glamr entity manager
      */
-    public function getGlamrManager(): IEngineEntityManager<EngineCharacterEntity> {
+    public function getGlamrManager(): IEngineEntityManager<BaseCharacterEntity> {
         return managers.get(EntityType.GLAMR);
     }
     
@@ -145,17 +144,20 @@ class GameModelState {
      * Get collider manager with explicit type
      * @return Collider entity manager
      */
-    public function getColliderManager(): IEngineEntityManager<EngineColliderEntity> {
+    public function getColliderManager(): IEngineEntityManager<ColliderEntity> {
         return managers.get(EntityType.COLLIDER);
     }
     
     private function setupManagers(): Void {
         // Register core entity managers
-        managers.register(EntityType.RAGNAR, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
-        managers.register(EntityType.ZOMBIE_BOY, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
-        managers.register(EntityType.ZOMBIE_GIRL, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
-        managers.register(EntityType.GLAMR, new BaseEngineEntityManager<EngineCharacterEntity>(entityFactory));
-        managers.register(EntityType.COLLIDER, new BaseEngineEntityManager<EngineColliderEntity>(entityFactory));
+        managers.register(EntityType.RAGNAR, new BaseEngineEntityManager<BaseCharacterEntity>(entityFactory));
+        managers.register(EntityType.ZOMBIE_BOY, new BaseEngineEntityManager<BaseCharacterEntity>(entityFactory));
+        managers.register(EntityType.ZOMBIE_GIRL, new BaseEngineEntityManager<BaseCharacterEntity>(entityFactory));
+        managers.register(EntityType.GLAMR, new BaseEngineEntityManager<BaseCharacterEntity>(entityFactory));
+        managers.register(EntityType.COLLIDER, new BaseEngineEntityManager<ColliderEntity>(entityFactory));
+        managers.register(EntityType.HEALTH_POTION, new BaseEngineEntityManager<BaseConsumableEntity>(entityFactory));
+        managers.register(EntityType.ARMOR_POTION, new BaseEngineEntityManager<BaseConsumableEntity>(entityFactory));
+        managers.register(EntityType.SALMON, new BaseEngineEntityManager<BaseConsumableEntity>(entityFactory));
     }
 
 }

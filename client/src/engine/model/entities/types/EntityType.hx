@@ -1,4 +1,4 @@
-package engine.model.entities;
+package engine.model.entities.types;
 
 /**
  * Entity type definitions as abstract string enum
@@ -9,5 +9,9 @@ enum abstract EntityType(String) from String to String {
     var ZOMBIE_GIRL = "zombie_girl";
     var GLAMR = "glamr";
     var COLLIDER = "collider";
+    var HEALTH_POTION = "health_potion";
+    var ARMOR_POTION = "armor_potion";
+    var SALMON = "salmon";
     var GENERIC = "generic";
 }
+

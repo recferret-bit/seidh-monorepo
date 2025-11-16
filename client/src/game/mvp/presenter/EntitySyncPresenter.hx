@@ -1,7 +1,7 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.presenter.InputMessage;
 import engine.view.EventBusConstants;

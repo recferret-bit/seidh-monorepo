@@ -1,4 +1,4 @@
-package game.mvp.view.scene.ui;
+package game.scene.ui;
 
 class GameUiScene extends h2d.Scene {
 
@@ -19,3 +19,4 @@ class GameUiScene extends h2d.Scene {
     }
 
 }
+

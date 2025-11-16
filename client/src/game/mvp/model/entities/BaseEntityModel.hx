@@ -1,6 +1,6 @@
 package game.mvp.model.entities;
 
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
 
 /**
@@ -90,6 +90,8 @@ class BaseEntityModel {
     public var isAlive(get, never): Bool;
     public var colliderWidth(get, never): Float;
     public var colliderHeight(get, never): Float;
+    public var colliderPxOffsetX(get, never): Float;
+    public var colliderPxOffsetY(get, never): Float;
     
     private function get_id(): Int return engineEntity != null ? engineEntity.id : 0;
     private function get_type(): EntityType return engineEntity != null ? engineEntity.type : GENERIC;
@@ -100,4 +102,6 @@ class BaseEntityModel {
     private function get_isAlive(): Bool return engineEntity != null ? engineEntity.isAlive : false;
     private function get_colliderWidth(): Float return engineEntity != null ? engineEntity.colliderWidth : 1.0;
     private function get_colliderHeight(): Float return engineEntity != null ? engineEntity.colliderHeight : 1.0;
+    private function get_colliderPxOffsetX(): Float return engineEntity != null ? engineEntity.colliderPxOffsetX : 0.0;
+    private function get_colliderPxOffsetY(): Float return engineEntity != null ? engineEntity.colliderPxOffsetY : 0.0;
 }

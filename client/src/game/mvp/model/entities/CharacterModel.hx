@@ -1,6 +1,6 @@
 package game.mvp.model.entities;
 
-import engine.model.entities.impl.EngineCharacterEntity;
+import engine.model.entities.character.BaseCharacterEntity;
 
 /**
  * Character entity model extending BaseEntityModel
@@ -8,7 +8,7 @@ import engine.model.entities.impl.EngineCharacterEntity;
  */
 class CharacterModel extends BaseEntityModel {
     // Reference to engine character entity
-    public var characterEntity(get, never): EngineCharacterEntity;
+    public var characterEntity(get, never): BaseCharacterEntity;
     
     // Visual state
     public var isMoving: Bool;
@@ -21,8 +21,8 @@ class CharacterModel extends BaseEntityModel {
         lastMoveTime = 0;
     }
     
-    private function get_characterEntity(): EngineCharacterEntity {
-        return cast(engineEntity, EngineCharacterEntity);
+    private function get_characterEntity(): BaseCharacterEntity {
+        return cast(engineEntity, BaseCharacterEntity);
     }
     
     /**

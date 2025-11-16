@@ -1,8 +1,8 @@
 package engine.modules;
 
 import engine.model.GameModelState;
-import engine.model.entities.EntityType;
-import engine.model.entities.impl.EngineCharacterEntity;
+import engine.model.entities.types.EntityType;
+import engine.model.entities.character.BaseCharacterEntity;
 
 /**
  * AI module for entity behavior
@@ -46,7 +46,7 @@ class AIModule implements IModule {
     private function updateEntityAI(entity: Dynamic, state: GameModelState, tick: Int): Void {
         // Simple AI behavior - random movement
         // if (entity.type == EntityType.CHARACTER) {
-        //     final character = cast(entity, EngineCharacterEntity);
+        //     final character = cast(entity, BaseCharacterEntity);
             
         //     if (character.aiProfile != "" && aiProfiles.exists(character.aiProfile)) {
         //         final profile = aiProfiles.get(character.aiProfile);

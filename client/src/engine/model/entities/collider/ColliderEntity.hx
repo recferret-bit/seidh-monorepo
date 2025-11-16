@@ -1,13 +1,13 @@
-package engine.model.entities.impl;
+package engine.model.entities.collider;
 
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
  * Collider entity for map building and collision detection
  * Static entities that can be passable or impassable, with optional trigger functionality
  */
-class EngineColliderEntity extends BaseEngineEntity {
+class ColliderEntity extends BaseEngineEntity {
     public var passable: Bool;
     public var isTrigger: Bool;
     
@@ -56,3 +56,4 @@ class EngineColliderEntity extends BaseEngineEntity {
         colliderHeight = spec.colliderHeight != null ? spec.colliderHeight : 1;
     }
 }
+

@@ -1,8 +1,8 @@
-package game.mvp.view.scene.impl;
+package game.scene.impl;
 
-import game.mvp.view.scene.basic.BasicScene;
+import game.scene.base.BaseScene;
 
-class HomeScene extends BasicScene {
+class HomeScene extends BaseScene {
 	public function new() {
 		super();
 		trace("HomeScene created");
@@ -20,3 +20,4 @@ class HomeScene extends BasicScene {
 		trace("HomeScene updated");
 	}
 }
+

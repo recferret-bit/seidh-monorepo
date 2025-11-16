@@ -1,8 +1,8 @@
-package engine.model.entities.base;
+package engine.model.entities.abs;
 
 import engine.geometry.Vec2;
-import engine.model.entities.EntityType;
-import engine.model.entities.base.EngineEntitySpec;
+import engine.model.entities.types.EntityType;
+import engine.model.entities.types.EngineEntitySpec;
 
 /**
  * Entity contract for all game entities
@@ -37,6 +37,12 @@ abstract class AbstractEngineEntity {
 
     /** Collider height */
     public var colliderHeight: Float;
+
+    /** Collider pixel offset X */
+    public var colliderPxOffsetX: Float;
+
+    /** Collider pixel offset Y */
+    public var colliderPxOffsetY: Float;
     
     /**
      * Serialize entity to JSON-serializable object
@@ -56,3 +62,4 @@ abstract class AbstractEngineEntity {
      */
     public abstract function reset(spec: EngineEntitySpec): Void;
 }
+

@@ -1,8 +1,8 @@
 package engine.modules;
 
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import engine.model.GameModelState;
-import engine.model.entities.impl.EngineCharacterEntity;
+import engine.model.entities.character.BaseCharacterEntity;
 import engine.model.managers.IEngineEntityManager;
 import engine.presenter.InputBuffer;
 import engine.presenter.InputMessage;
@@ -76,7 +76,7 @@ class InputModule implements IModule {
      * @param dt Delta time
      */
     public function applyInputs(inputs: Array<InputMessage>, state: GameModelState, dt: Float): Void {
-        final ragnarManager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.RAGNAR);
+        final ragnarManager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.RAGNAR);
         
         for (input in inputs) {
             // Get entity ID from client mapping

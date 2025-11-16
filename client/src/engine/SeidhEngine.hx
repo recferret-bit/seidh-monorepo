@@ -2,11 +2,11 @@ package engine;
 
 import engine.EngineConfig;
 import engine.model.GameModelState;
-import engine.model.entities.EntityType;
+import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.base.EngineEntitySpec;
-import engine.model.entities.impl.EngineCharacterEntity;
-import engine.model.entities.impl.EngineColliderEntity;
+import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.character.BaseCharacterEntity;
+import engine.model.entities.collider.ColliderEntity;
 import engine.model.managers.IEngineEntityManager;
 import engine.modules.AIModule;
 import engine.modules.InputModule;
@@ -255,8 +255,8 @@ class SeidhEngine {
      * @param id Ragnar ID
      * @return Ragnar entity
      */
-    public function getRagnarById(id: Int): EngineCharacterEntity {
-        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.RAGNAR);
+    public function getRagnarById(id: Int): BaseCharacterEntity {
+        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.RAGNAR);
         return manager.find(id);
     }
     
@@ -266,8 +266,8 @@ class SeidhEngine {
      * @param id Zombie boy ID
      * @return Zombie boy entity
      */
-    public function getZombieBoyById(id: Int): EngineCharacterEntity {
-        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.ZOMBIE_BOY);
+    public function getZombieBoyById(id: Int): BaseCharacterEntity {
+        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.ZOMBIE_BOY);
         return manager.find(id);
     }
 
@@ -276,8 +276,8 @@ class SeidhEngine {
      * @param id Zombie girl ID
      * @return Zombie girl entity
      */
-    public function getZombieGirlById(id: Int): EngineCharacterEntity {
-        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.ZOMBIE_GIRL);
+    public function getZombieGirlById(id: Int): BaseCharacterEntity {
+        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.ZOMBIE_GIRL);
         return manager.find(id);
     }
 
@@ -286,8 +286,8 @@ class SeidhEngine {
      * @param id Glamr ID
      * @return Glamr entity
      */
-    public function getGlamrById(id: Int): EngineCharacterEntity {
-        final manager: IEngineEntityManager<EngineCharacterEntity> = state.managers.get(EntityType.GLAMR);
+    public function getGlamrById(id: Int): BaseCharacterEntity {
+        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.GLAMR);
         return manager.find(id);
     }
 
@@ -296,8 +296,8 @@ class SeidhEngine {
      * @param id Collider ID
      * @return Entity manager
      */
-    public function getColliderById(id: Int): EngineColliderEntity {
-        final manager: IEngineEntityManager<EngineColliderEntity> = state.managers.get(EntityType.COLLIDER);
+    public function getColliderById(id: Int): ColliderEntity {
+        final manager: IEngineEntityManager<ColliderEntity> = state.managers.get(EntityType.COLLIDER);
         return manager.find(id);
     }
     
