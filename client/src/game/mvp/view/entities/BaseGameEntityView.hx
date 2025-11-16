@@ -155,6 +155,8 @@ class BaseGameEntityView extends Object {
             // Use interpolated render position for smooth movement
             x = model.renderPos.x;
             y = model.renderPos.y;
+
+            trace(x, y);
         }
     }
     

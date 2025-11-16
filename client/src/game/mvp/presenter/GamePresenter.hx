@@ -204,7 +204,7 @@ class GamePresenter {
         // }
         
         // Spawn map colliders in chess pattern
-        // spawnMapColliders();
+        spawnMapColliders();
         
         // // Spawn effects
         // var effectPositions = EntitySpecs.getSpawnPositions().effects;

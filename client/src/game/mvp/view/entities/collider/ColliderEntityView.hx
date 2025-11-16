@@ -25,58 +25,15 @@ class ColliderEntityView extends BaseGameEntityView {
         // Calculate size based on model collider dimensions
         final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
         final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
-        var tile = Tile.fromColor(0xFF0000, width, height);
+        var tile = Tile.fromColor(0xFF0000, width, height).center();
         bitmap = new Bitmap(tile, this);
-        
-        // Center the bitmap
-        bitmap.x = -width * 0.5;
-        bitmap.y = -height * 0.5;
     }
-    
-    /**
-     * Update collider view
-     */
-    override public function update(): Void {
-        if (!isInitialized || model == null || !model.isAlive) {
-            return;
-        }
-        
-        // Colliders are static, no interpolation needed
-        // Just update position directly
-        updatePosition();
-    }
-    
-    /**
-     * Update position from model (no interpolation for static colliders)
-     */
-    override private function updatePosition(): Void {
-        if (model != null) {
-            // Use direct position for static colliders
-            x = model.pos.x;
-            y = model.pos.y;
-        }
-    }
-    
-    
+
     /**
      * Get collider model
      */
     public function getColliderModel(): ColliderModel {
         return cast(model, ColliderModel);
     }
-    
-    /**
-     * Reset for object pooling
-     */
-    override public function reset(): Void {
-        // Call parent reset
-        super.reset();
-    }
-    
-    /**
-     * Destroy collider view
-     */
-    override public function destroy(): Void {
-        super.destroy();
-    }
+
 }

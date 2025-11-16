@@ -17,7 +17,7 @@ class EngineEntitySpecs {
     public static function getRagnarSpec(): EngineEntitySpec {
         return {
             type: EntityType.RAGNAR,
-            pos: {x: 100, y: 100},
+            pos: {x: 200, y: 200},
             ownerId: "player1",
             level: 1,
             maxHp: 100,

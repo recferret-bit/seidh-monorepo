@@ -189,6 +189,7 @@ class GameViewOrchestrator {
                 default:
                     view = new RagnarEntityView(); // Default fallback
             }
+            parent.addChild(view);
         }
         
         if (view != null) {

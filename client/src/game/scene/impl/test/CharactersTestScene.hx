@@ -1,5 +1,7 @@
 package game.scene.impl.test;
 
+import format.tools.ArcFour;
+import game.mvp.view.entities.collider.ColliderEntityView;
 import game.mvp.view.entities.character.glamr.GlamrEntityView;
 import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
 import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
@@ -20,6 +22,10 @@ class CharactersTestScene extends BaseScene implements EventListener {
         super();
 
         EventManager.instance.subscribe(EventManager.EVENT_CHARACTER_ANIM_END, this);
+        
+        final xxx = new ColliderEntityView();
+        addChild(xxx);
+        xxx.setPosition(320, 320);
         
         // ------------------------------------
         // Ragnar

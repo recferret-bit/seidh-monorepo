@@ -73,7 +73,7 @@ class EntityViewPool {
     /**
      * Acquire view from pool
      */
-    public function acquire(type: EntityType, parent: Object = null): BaseGameEntityView {
+    public function acquire(type: EntityType, parent: Object): BaseGameEntityView {
         var view: BaseGameEntityView = null;
         
         switch (type) {
