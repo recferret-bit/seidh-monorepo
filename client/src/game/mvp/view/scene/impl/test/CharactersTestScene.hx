@@ -1,5 +1,6 @@
 package game.mvp.view.scene.impl.test;
 
+import game.mvp.view.entities.character.glamr.GlamrEntityView;
 import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
 import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
 import game.mvp.view.entities.character.CharacterEntityView;
@@ -101,6 +102,77 @@ class CharactersTestScene extends BasicScene implements EventListener {
         zombieGirlIdle.getAnimation().setCharacterId("zombieGirlIdle");
         addChild(zombieGirlIdle);
         charactersMap.set("zombieGirlIdle", zombieGirlIdle);
+
+        final zombieGirlRun = new ZombieGirlEntityView();
+        zombieGirlRun.setPosition(150 + (332 / 2), 332 * 2.5);
+        zombieGirlRun.changeState(EntityState.RUN);
+        zombieGirlRun.getAnimation().setCharacterId("zombieGirlRun");
+        addChild(zombieGirlRun);
+        charactersMap.set("zombieGirlRun", zombieGirlRun);
+
+        final zombieGirlDeath = new ZombieGirlEntityView();
+        zombieGirlDeath.setPosition(150 + (332), 332 * 2.5);
+        zombieGirlDeath.changeState(EntityState.DEATH);
+        zombieGirlDeath.getAnimation().setCharacterId("zombieGirlDeath");
+        addChild(zombieGirlDeath);
+        charactersMap.set("zombieGirlDeath", zombieGirlDeath);
+
+        final zombieGirlSpawn = new ZombieGirlEntityView();
+        zombieGirlSpawn.setPosition(150 + (332 * 1.5), 332 * 2.5);
+        zombieGirlSpawn.changeState(EntityState.SPAWN);
+        zombieGirlSpawn.getAnimation().setCharacterId("zombieGirlSpawn");
+        addChild(zombieGirlSpawn);
+        charactersMap.set("zombieGirlSpawn", zombieGirlSpawn);
+
+        final zombieGirlActionMain = new ZombieGirlEntityView();
+        zombieGirlActionMain.setPosition(150 + (332 * 2), 332 * 2.5);
+        zombieGirlActionMain.changeState(EntityState.ACTION_MAIN);
+        zombieGirlActionMain.getAnimation().setCharacterId("zombieGirlActionMain");
+        addChild(zombieGirlActionMain);
+        charactersMap.set("zombieGirlActionMain", zombieGirlActionMain);
+
+        // Glamr
+        final glamrIdle = new GlamrEntityView();
+        glamrIdle.setPosition(150, 332 * 3.5);
+        glamrIdle.changeState(EntityState.IDLE);
+        glamrIdle.getAnimation().setCharacterId("glamrIdle");
+        addChild(glamrIdle);
+        charactersMap.set("glamrIdle", glamrIdle);
+        
+        final glamrRun = new GlamrEntityView();
+        glamrRun.setPosition(150 + (500 / 2), 332 * 3.5);
+        glamrRun.changeState(EntityState.RUN);
+        glamrRun.getAnimation().setCharacterId("glamrRun");
+        addChild(glamrRun);
+        charactersMap.set("glamrRun", glamrRun);
+        
+        final glamrDeath = new GlamrEntityView();
+        glamrDeath.setPosition(150 + (500), 332 * 3.5);
+        glamrDeath.changeState(EntityState.DEATH);
+        glamrDeath.getAnimation().setCharacterId("glamrDeath");
+        addChild(glamrDeath);
+        charactersMap.set("glamrDeath", glamrDeath);
+        
+        final glamrSpawn = new GlamrEntityView();
+        glamrSpawn.setPosition(150 + (500 * 1.5), 332 * 3.5);
+        glamrSpawn.changeState(EntityState.SPAWN);
+        glamrSpawn.getAnimation().setCharacterId("glamrSpawn");
+        addChild(glamrSpawn);
+        charactersMap.set("glamrSpawn", glamrSpawn);
+        
+        final glamrActionMain = new GlamrEntityView();
+        glamrActionMain.setPosition(150 + (500 * 2), 332 * 3.5);
+        glamrActionMain.changeState(EntityState.ACTION_MAIN);
+        glamrActionMain.getAnimation().setCharacterId("glamrActionMain");
+        addChild(glamrActionMain);
+        charactersMap.set("glamrActionMain", glamrActionMain);
+        
+        final glamrActionSpecial = new GlamrEntityView();
+        glamrActionSpecial.setPosition(150 + (500 * 2.5), 332 * 3.5);
+        glamrActionSpecial.changeState(EntityState.ACTION_SPECIAL);
+        glamrActionSpecial.getAnimation().setCharacterId("glamrActionSpecial");
+        addChild(glamrActionSpecial);
+        charactersMap.set("glamrActionSpecial", glamrActionSpecial);
     }
 
     public function start():Void {
@@ -121,6 +193,7 @@ class CharactersTestScene extends BasicScene implements EventListener {
                 final characterId = params;
 
                 switch (characterId) {
+                    // Ragnar
                     case "ragnarDeath": {
                         charactersMap.get("ragnarDeath").changeState(EntityState.IDLE);
                         charactersMap.get("ragnarDeath").changeState(EntityState.DEATH);
@@ -129,6 +202,8 @@ class CharactersTestScene extends BasicScene implements EventListener {
                         charactersMap.get("ragnarActionMain").changeState(EntityState.IDLE);
                         charactersMap.get("ragnarActionMain").changeState(EntityState.ACTION_MAIN);
                     }
+
+                    // Zombie Boy
                     case "zombieBoyDeath": {
                         charactersMap.get("zombieBoyDeath").changeState(EntityState.IDLE);
                         charactersMap.get("zombieBoyDeath").changeState(EntityState.DEATH);
@@ -140,6 +215,38 @@ class CharactersTestScene extends BasicScene implements EventListener {
                     case "zombieBoyActionMain": {
                         charactersMap.get("zombieBoyActionMain").changeState(EntityState.IDLE);
                         charactersMap.get("zombieBoyActionMain").changeState(EntityState.ACTION_MAIN);
+                    }
+
+                    // Zombie Girl
+                    case "zombieGirlDeath": {
+                        charactersMap.get("zombieGirlDeath").changeState(EntityState.IDLE);
+                        charactersMap.get("zombieGirlDeath").changeState(EntityState.DEATH);
+                    }
+                    case "zombieGirlSpawn": {
+                        charactersMap.get("zombieGirlSpawn").changeState(EntityState.IDLE);
+                        charactersMap.get("zombieGirlSpawn").changeState(EntityState.SPAWN);
+                    }
+                    case "zombieGirlActionMain": {
+                        charactersMap.get("zombieGirlActionMain").changeState(EntityState.IDLE);
+                        charactersMap.get("zombieGirlActionMain").changeState(EntityState.ACTION_MAIN);
+                    }
+
+                    // Glamr
+                    case "glamrDeath": {
+                        charactersMap.get("glamrDeath").changeState(EntityState.IDLE);
+                        charactersMap.get("glamrDeath").changeState(EntityState.DEATH);
+                    }
+                    case "glamrSpawn": {
+                        charactersMap.get("glamrSpawn").changeState(EntityState.IDLE);
+                        charactersMap.get("glamrSpawn").changeState(EntityState.SPAWN);
+                    }
+                    case "glamrActionMain": {
+                        charactersMap.get("glamrActionMain").changeState(EntityState.IDLE);
+                        charactersMap.get("glamrActionMain").changeState(EntityState.ACTION_MAIN);
+                    }
+                    case "glamrActionSpecial": {
+                        charactersMap.get("glamrActionSpecial").changeState(EntityState.IDLE);
+                        charactersMap.get("glamrActionSpecial").changeState(EntityState.ACTION_SPECIAL);
                     }
                 }
             }
