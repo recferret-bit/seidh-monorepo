@@ -1,5 +1,6 @@
 package game.mvp.view.scene;
 
+import game.mvp.view.scene.impl.test.TerrainTestScene;
 import game.mvp.view.scene.impl.test.ObjectsTilemapTestScene;
 import game.mvp.view.scene.impl.test.CharactersTestScene;
 import game.mvp.view.scene.impl.GameScene;
@@ -18,9 +19,10 @@ class SceneManager implements EventListener {
 		EventManager.instance.subscribe(EventManager.EVENT_LOAD_HOME_SCENE, this);
 		EventManager.instance.subscribe(EventManager.EVENT_LOAD_GAME_SCENE, this);
 
-		// currentScene = new LoadingScene();
+		currentScene = new LoadingScene();
 		// currentScene = new ObjectsTilemapTestScene();
-		currentScene = new CharactersTestScene();
+		// currentScene = new CharactersTestScene();
+		// currentScene = new TerrainTestScene();
 		currentScene.start();
 
 		changeSceneCallback();

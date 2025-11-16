@@ -114,7 +114,7 @@ class InputPresenter {
      * Capture movement input (WASD/Arrow keys)
      */
     private function captureMovementInput(): {x: Float, y: Float} {
-        var movement = {x: 0.0, y: 0.0};
+        final movement = {x: 0.0, y: 0.0};
         
         // Horizontal movement
         if (Key.isDown(Key.A) || Key.isDown(Key.LEFT)) {

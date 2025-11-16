@@ -62,7 +62,7 @@ class GameScene extends BasicScene {
 		if (gamePresenter != null && gamePresenter.isGameRunning()) {
 			gamePresenter.update(dt);
 		}
-		}
+	}
 
 	public override function render(e:Engine) {
 		super.render(e);

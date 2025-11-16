@@ -11,7 +11,7 @@ class Main extends App {
 
 	override function init() {
 		// Set up mobile-friendly engine settings
-		engine.backgroundColor = 0xFFFFFF;
+		engine.backgroundColor = 0x788a88;
 
 		Res.instance.init(function(c:ResLoadingProgressCallback):Void {
 		});

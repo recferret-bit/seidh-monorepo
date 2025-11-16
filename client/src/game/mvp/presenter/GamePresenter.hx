@@ -35,7 +35,7 @@ class GamePresenter {
     private var frameCount: Int;
     private var fps: Float;
     
-    public function new(parent: h2d.Object) {
+    public function new(scene: h2d.Scene) {
         isRunning = false;
         currentTick = 0;
         lastUpdateTime = 0;
@@ -43,18 +43,18 @@ class GamePresenter {
         fps = 0;
         
         // Initialize components
-        initializeComponents(parent);
+        initializeComponents(scene);
     }
     
     /**
      * Initialize all MVP components
      */
-    private function initializeComponents(parent: h2d.Object): Void {
+    private function initializeComponents(parent: h2d.Scene): Void {
         // Create game client state
         gameClientState = new GameClientState();
         
         // Create view orchestrator with scene reference
-        viewOrchestrator = new GameViewOrchestrator(gameClientState, parent, cast(parent, h2d.Scene));
+        viewOrchestrator = new GameViewOrchestrator(gameClientState, parent);
         
         // Create engine with config
         engine = SeidhEngine.create(Config.engineConfig);

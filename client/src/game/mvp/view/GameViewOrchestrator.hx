@@ -45,9 +45,10 @@ class GameViewOrchestrator {
     private var enableObjectPooling: Bool;
     private var enableInterpolation: Bool;
     
-    public function new(gameClientState: GameClientState, parent: Object, scene: Scene) {
+    public function new(gameClientState: GameClientState, scene: Scene) {
+        this.parent = new Object(scene);
+
         this.gameClientState = gameClientState;
-        this.parent = parent;
         this.scene = scene;
         
         // Initialize components

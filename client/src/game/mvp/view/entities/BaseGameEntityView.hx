@@ -1,12 +1,12 @@
 package game.mvp.view.entities;
 
+import engine.geometry.RectUtils;
 import engine.model.entities.EntityType;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.presenter.GamePresenter;
 import h2d.Bitmap;
 import h2d.Graphics;
 import h2d.Object;
-import h2d.Tile;
 
 /**
  * Base game entity view using Tile.fromColor approach
@@ -15,7 +15,7 @@ import h2d.Tile;
  */
 class BaseGameEntityView extends Object {
     // Visual components
-    private var bitmap: Bitmap;
+    public var bitmap: Bitmap;
     private var graphics: Graphics;
     private var healthBar: Graphics;
     private var borderGraphics: Graphics;
@@ -31,8 +31,8 @@ class BaseGameEntityView extends Object {
     private var isInPool: Bool;
     private var poolType: EntityType;
     
-    public function new(parent: Object = null) {
-        super(parent);
+    public function new() {
+        super();
         
         // Create visual components
         graphics = new Graphics(this);
@@ -72,19 +72,19 @@ class BaseGameEntityView extends Object {
      * Create visual representation using Tile.fromColor
      */
     private function createVisualRepresentation(): Void {
-        if (bitmap != null) {
-            bitmap.remove();
-        }
+        // if (bitmap != null) {
+        //     bitmap.remove();
+        // }
         
         // Calculate size based on model collider dimensions
-        final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
-        final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
-        var tile = Tile.fromColor(0xFF0000, width, height);
-        bitmap = new Bitmap(tile, this);
+        // final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
+        // final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
+        // var tile = Tile.fromColor(0xFF0000, width, height);
+        // bitmap = new Bitmap(tile, this);
         
-        // Center the bitmap
-        bitmap.x = -width * 0.5;
-        bitmap.y = -height * 0.5;
+        // // Center the bitmap
+        // bitmap.x = -width * 0.5;
+        // bitmap.y = -height * 0.5;
     }
     
     /**
@@ -105,6 +105,10 @@ class BaseGameEntityView extends Object {
         borderGraphics.drawRect(-width * 0.5, -height * 0.5, width, height);
     }
     
+    // public function setPosition() {
+        
+    // }
+
     /**
      * Update view from model data
      */
@@ -337,5 +341,43 @@ class BaseGameEntityView extends Object {
         model = null;
         isInitialized = false;
         isInPool = false;
+    }
+
+    public function setPositionByTileCenter(x:Int, y:Int) {
+        final pt = getIntPosAndTileParams();
+        setPosition(x + pt.tileHalfWidth, y + pt.tileHalfWidth);
+    }
+
+    /**
+    * Geometry
+    **/
+    public function getRect() {
+        if (bitmap != null) {
+            final pt = getIntPosAndTileParams();
+            return RectUtils.create(pt.x + pt.tileHalfWidth, pt.y + pt.tileHalfHeight, pt.tileWidth, pt.tileHeight);
+        }
+        return null;
+    }
+
+    public function getBottomRect(rectHeight:Int) {
+        if (bitmap != null) {
+            final pt = getIntPosAndTileParams();
+            return RectUtils.create(pt.x + pt.tileHalfWidth, pt.y + pt.tileHeight, pt.tileWidth, pt.tileHeight);
+        }
+        return null;
+    }
+
+    /**
+    * Getters
+    **/
+    public function getIntPosAndTileParams() {
+        return {
+            x: Std.int(x),
+            y: Std.int(y),
+            tileWidth: Std.int(bitmap.tile.width),
+            tileHeight: Std.int(bitmap.tile.height),
+            tileHalfWidth: Std.int(bitmap.tile.width / 2),
+            tileHalfHeight: Std.int(bitmap.tile.height / 2),
+        }
     }
 }

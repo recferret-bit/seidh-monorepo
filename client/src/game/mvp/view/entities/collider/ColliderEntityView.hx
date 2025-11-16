@@ -2,8 +2,6 @@ package game.mvp.view.entities.collider;
 
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.ColliderModel;
-import game.mvp.presenter.GamePresenter;
-import h2d.Object;
 
 /**
  * Collider entity view extending BaseGameEntityView
@@ -11,8 +9,8 @@ import h2d.Object;
  */
 class ColliderEntityView extends BaseGameEntityView {
     
-    public function new(parent: Object = null) {
-        super(parent);
+    public function new() {
+        super();
     }
     
     /**
