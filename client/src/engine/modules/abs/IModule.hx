@@ -1,4 +1,4 @@
-package engine.modules;
+package engine.modules.abs;
 
 import engine.model.GameModelState;
 
@@ -19,3 +19,4 @@ interface IModule {
      */
     function shutdown(): Void;
 }
+

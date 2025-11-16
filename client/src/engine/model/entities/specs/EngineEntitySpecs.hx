@@ -170,7 +170,7 @@ class EngineEntitySpecs {
             passable: passable,
             isTrigger: isTrigger,
             colliderWidth: 2,  // reasonable size for collision
-            colliderHeight: 2  // reasonable size for collision
+            colliderHeight: 2,  // reasonable size for collision
         };
     }
     

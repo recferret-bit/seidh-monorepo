@@ -1,7 +1,5 @@
 package engine.model.entities.types;
 
-import engine.model.entities.types.EntityType;
-
 /**
  * Entity specification type definitions for type-safe entity creation
  * 
@@ -10,19 +8,9 @@ import engine.model.entities.types.EntityType;
  */
 
 /**
- * Base entity specification with common fields
+ * Full entity specification extending base spec
  */
-typedef EngineEntitySpec = {
-    ?id: Int,
-    ?type: EntityType,
-    pos: {x: Int, y: Int},
-    ?vel: {x: Int, y: Int},
-    ?rotation: Float,
-    ownerId: String,
-    ?isAlive: Bool,
-    ?isInputDriven: Bool,
-    ?colliderWidth: Float,
-    ?colliderHeight: Float,
+typedef EngineEntitySpec = BaseEntitySpec & {
     // Character fields
     ?maxHp: Int,
     ?hp: Int,

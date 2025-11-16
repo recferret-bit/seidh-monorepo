@@ -35,8 +35,6 @@ class ColliderModel extends BaseEntityModel {
             renderPos.y = colliderEntity.pos.y;
             previousPos.x = colliderEntity.pos.x;
             previousPos.y = colliderEntity.pos.y;
-
-            trace(colliderEntity.pos);
         }
     }
     
@@ -47,6 +45,9 @@ class ColliderModel extends BaseEntityModel {
         super.updateFromEngine();
         
         if (colliderEntity == null) return;
+
+        renderPos.x = Std.int(engineEntity.pos.x);
+        renderPos.y = Std.int(engineEntity.pos.y);
     }
     
     // Convenience getters that delegate to collider entity

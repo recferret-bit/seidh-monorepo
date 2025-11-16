@@ -1,5 +1,6 @@
 package game.scene;
 
+import game.scene.impl.test.PhysicsTestScene;
 import game.scene.impl.test.TerrainTestScene;
 import game.scene.impl.test.ObjectsTilemapTestScene;
 import game.scene.impl.test.CharactersTestScene;
@@ -19,10 +20,11 @@ class SceneManager implements EventListener {
 		EventManager.instance.subscribe(EventManager.EVENT_LOAD_HOME_SCENE, this);
 		EventManager.instance.subscribe(EventManager.EVENT_LOAD_GAME_SCENE, this);
 
-		currentScene = new LoadingScene();
+		// currentScene = new LoadingScene();
 		// currentScene = new ObjectsTilemapTestScene();
 		// currentScene = new CharactersTestScene();
 		// currentScene = new TerrainTestScene();
+		currentScene = new PhysicsTestScene();
 		currentScene.start();
 
 		changeSceneCallback();

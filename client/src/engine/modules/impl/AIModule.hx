@@ -1,5 +1,6 @@
-package engine.modules;
+package engine.modules.impl;
 
+import engine.modules.abs.IModule;
 import engine.model.GameModelState;
 import engine.model.entities.types.EntityType;
 import engine.model.entities.character.BaseCharacterEntity;
@@ -76,3 +77,4 @@ class AIModule implements IModule {
         }
     }
 }
+

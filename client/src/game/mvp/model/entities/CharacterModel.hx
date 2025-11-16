@@ -48,14 +48,14 @@ class CharacterModel extends BaseEntityModel {
         }
         
         // Smooth interpolation towards target
-        var interpSpeed = 0.3;  // Tune this (0.0-1.0, higher = faster)
+        final interpSpeed = 0.3;  // Tune this (0.0-1.0, higher = faster)
         interpolationAlpha = Math.min(1.0, interpolationAlpha + interpSpeed);
         
         renderPos.x = Std.int(previousPos.x + (characterEntity.pos.x - previousPos.x) * interpolationAlpha);
         renderPos.y = Std.int(previousPos.y + (characterEntity.pos.y - previousPos.y) * interpolationAlpha);
         
         // Update movement state based on velocity or position changes
-        var speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
+        final speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
         isMoving = speed > 0.1;
         if (isMoving) {
             lastMoveTime = 0; // Reset when moving

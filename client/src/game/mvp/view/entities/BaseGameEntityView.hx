@@ -53,9 +53,6 @@ class BaseGameEntityView extends Object {
         this.model = model;
         this.poolType = model.type;
         
-        // Create bitmap with color from model
-        createVisualRepresentation();
-        
         // Create border graphics for physics debugging if enabled
         if (GamePresenter.Config.visualSettings.drawPhysicsShapes) {
             createBorderGraphics();
@@ -66,25 +63,6 @@ class BaseGameEntityView extends Object {
         
         isInitialized = true;
         lastModelUpdate = model.lastUpdateTick;
-    }
-    
-    /**
-     * Create visual representation using Tile.fromColor
-     */
-    private function createVisualRepresentation(): Void {
-        // if (bitmap != null) {
-        //     bitmap.remove();
-        // }
-        
-        // Calculate size based on model collider dimensions
-        // final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
-        // final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
-        // var tile = Tile.fromColor(0xFF0000, width, height);
-        // bitmap = new Bitmap(tile, this);
-        
-        // // Center the bitmap
-        // bitmap.x = -width * 0.5;
-        // bitmap.y = -height * 0.5;
     }
     
     /**
@@ -142,7 +120,6 @@ class BaseGameEntityView extends Object {
     private function updateVisuals(): Void {
         if (model.needsVisualUpdate) {
             // Recreate bitmap if color or size changed
-            createVisualRepresentation();
             model.needsVisualUpdate = false;
         }
     }
@@ -155,8 +132,6 @@ class BaseGameEntityView extends Object {
             // Use interpolated render position for smooth movement
             x = model.renderPos.x;
             y = model.renderPos.y;
-
-            trace(x, y);
         }
     }
     

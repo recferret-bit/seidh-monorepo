@@ -1,4 +1,6 @@
-package engine.modules;
+package engine.modules.registry;
+
+import engine.modules.abs.IModule;
 
 /**
  * Registry for engine modules
@@ -40,3 +42,4 @@ class ModuleRegistry {
         return result;
     }
 }
+

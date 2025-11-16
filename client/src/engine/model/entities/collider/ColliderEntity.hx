@@ -39,8 +39,10 @@ class ColliderEntity extends BaseEngineEntity {
             isInputDriven = false;
             vel.x = 0;
             vel.y = 0;
-            colliderWidth = 1;
-            colliderHeight = 1;
+            colliderWidth = 2;
+            colliderHeight = 2;
+            colliderPxOffsetX = 0;
+            colliderPxOffsetY = 0;
             return;
         }
 

@@ -1,5 +1,6 @@
-package engine.modules;
+package engine.modules.impl;
 
+import engine.modules.abs.IModule;
 import engine.model.GameModelState;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.types.EngineEntitySpec;
@@ -56,3 +57,4 @@ class SpawnModule implements IModule {
         }
     }
 }
+

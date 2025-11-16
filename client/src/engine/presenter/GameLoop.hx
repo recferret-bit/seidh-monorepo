@@ -1,7 +1,7 @@
 package engine.presenter;
 
 import engine.model.GameModelState;
-import engine.modules.ModuleRegistry;
+import engine.modules.registry.ModuleRegistry;
 import engine.view.EventBusConstants;
 import engine.view.IEventBus;
 
@@ -64,25 +64,25 @@ class GameLoop {
      */
     private function executeModules(tick: Int, dt: Float): Void {
         // 1. Input module - collect and apply inputs
-        final inputModule = cast(modules.get("input"), engine.modules.InputModule);
+        final inputModule = cast(modules.get("input"), engine.modules.impl.InputModule);
         if (inputModule != null) {
             inputModule.update(state, tick, dt);
         }
         
         // 2. AI module - update AI behavior
-        final aiModule = cast(modules.get("ai"), engine.modules.AIModule);
+        final aiModule = cast(modules.get("ai"), engine.modules.impl.AIModule);
         if (aiModule != null) {
             aiModule.update(state, tick, dt);
         }
         
         // 3. Physics module - integrate and resolve collisions
-        final physicsModule = cast(modules.get("physics"), engine.modules.PhysicsModule);
+        final physicsModule = cast(modules.get("physics"), engine.modules.impl.PhysicsModule);
         if (physicsModule != null) {
             physicsModule.update(state, tick, dt);
         }
         
         // 4. Spawn module - cleanup dead entities
-        final spawnModule = cast(modules.get("spawn"), engine.modules.SpawnModule);
+        final spawnModule = cast(modules.get("spawn"), engine.modules.impl.SpawnModule);
         if (spawnModule != null) {
             spawnModule.update(state, tick, dt);
         }

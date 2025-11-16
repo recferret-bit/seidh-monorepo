@@ -25,8 +25,9 @@ class ColliderEntityView extends BaseGameEntityView {
         // Calculate size based on model collider dimensions
         final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
         final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
-        var tile = Tile.fromColor(0xFF0000, width, height).center();
+        final tile = Tile.fromColor(0xFF0000, width, height).center();
         bitmap = new Bitmap(tile, this);
+        bitmap.alpha = 0.9;
     }
 
     /**
