@@ -8,7 +8,6 @@ import engine.model.entities.collider.ColliderEntity;
 import engine.model.entities.types.EntityType;
 import engine.physics.CollisionDetector;
 import engine.physics.CollisionTypes.CollisionObject;
-import engine.SeidhEngine;
 
 /**
  * Physics module for movement and collision

@@ -74,8 +74,25 @@ class CollisionDetector {
         final colliderAHeight = Std.int(a.colliderHeight * unitPixels);
         final colliderBWidth = Std.int(b.colliderWidth * unitPixels);
         final colliderBHeight = Std.int(b.colliderHeight * unitPixels);
-        final rectA = RectUtils.create(Std.int(a.pos.x), Std.int(a.pos.y), colliderAWidth, colliderAHeight);
-        final rectB = RectUtils.create(Std.int(b.pos.x), Std.int(b.pos.y), colliderBWidth, colliderBHeight);
+        
+        // Apply collider pixel offsets to get the actual collider center position
+        final offsetAX = a.entity.colliderPxOffsetX != null ? a.entity.colliderPxOffsetX : 0;
+        final offsetAY = a.entity.colliderPxOffsetY != null ? a.entity.colliderPxOffsetY : 0;
+        final offsetBX = b.entity.colliderPxOffsetX != null ? b.entity.colliderPxOffsetX : 0;
+        final offsetBY = b.entity.colliderPxOffsetY != null ? b.entity.colliderPxOffsetY : 0;
+        
+        final rectA = RectUtils.create(
+            Std.int(a.pos.x + offsetAX), 
+            Std.int(a.pos.y + offsetAY), 
+            colliderAWidth, 
+            colliderAHeight
+        );
+        final rectB = RectUtils.create(
+            Std.int(b.pos.x + offsetBX), 
+            Std.int(b.pos.y + offsetBY), 
+            colliderBWidth, 
+            colliderBHeight
+        );
         
         final intersects = RectUtils.intersectsRect(rectA, rectB);
         final separation = intersects ? RectUtils.getIntersectionDepth(rectA, rectB) : Vec2Utils.create(0, 0);

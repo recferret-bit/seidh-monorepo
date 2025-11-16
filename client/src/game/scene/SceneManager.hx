@@ -20,11 +20,11 @@ class SceneManager implements EventListener {
 		EventManager.instance.subscribe(EventManager.EVENT_LOAD_HOME_SCENE, this);
 		EventManager.instance.subscribe(EventManager.EVENT_LOAD_GAME_SCENE, this);
 
-		// currentScene = new LoadingScene();
+		currentScene = new LoadingScene();
 		// currentScene = new ObjectsTilemapTestScene();
 		// currentScene = new CharactersTestScene();
 		// currentScene = new TerrainTestScene();
-		currentScene = new PhysicsTestScene();
+		// currentScene = new PhysicsTestScene();
 		currentScene.start();
 
 		changeSceneCallback();
