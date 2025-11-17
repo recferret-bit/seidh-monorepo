@@ -3,7 +3,6 @@ package game.mvp.presenter;
 import engine.SeidhEngine;
 import engine.model.entities.specs.EngineEntitySpecs;
 import engine.model.entities.specs.EngineEntitySpec;
-import game.config.GameClientConfig;
 import game.mvp.model.GameClientState;
 import game.mvp.presenter.EntitySyncPresenter;
 import game.mvp.presenter.InputPresenter;
@@ -15,8 +14,6 @@ import game.mvp.view.GameViewOrchestrator;
  * Main update loop and engine synchronization
  */
 class GamePresenter {
-    public static final Config: GameClientConfig = GameClientConfig.createSingleplayer();
-
     // Core components
     private var engine: SeidhEngine;
     private var gameClientState: GameClientState;

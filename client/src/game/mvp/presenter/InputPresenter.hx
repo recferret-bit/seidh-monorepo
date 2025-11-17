@@ -257,7 +257,7 @@ class InputPresenter {
         
         // Calculate latency offset based on engine mode
         var latencyOffset = 0;
-        final engineConfig = GamePresenter.Config.engineConfig;
+        final engineConfig = SeidhEngine.Config;
         if (engineConfig != null && engineConfig.mode == CLIENT_PREDICTION) {
             latencyOffset = estimatedLatency;
         }
@@ -369,7 +369,7 @@ class InputPresenter {
      */
     private function applyLocalPrediction(inputMessage: InputMessage): Void {
         // Only apply prediction in CLIENT_PREDICTION mode
-        final engineConfig = GamePresenter.Config.engineConfig;
+        final engineConfig = SeidhEngine.Config;
         if (engineConfig == null || engineConfig.mode != CLIENT_PREDICTION) {
             return;
         }

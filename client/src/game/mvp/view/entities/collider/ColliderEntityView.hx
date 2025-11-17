@@ -1,5 +1,6 @@
 package game.mvp.view.entities.collider;
 
+import engine.SeidhEngine;
 import h2d.Bitmap;
 import h2d.Tile;
 import game.mvp.presenter.GamePresenter;
@@ -23,8 +24,8 @@ class ColliderEntityView extends BaseGameEntityView {
         super.initialize(model);
 
         // Calculate size based on model collider dimensions
-        final width = Math.floor(model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels);
-        final height = Math.floor(model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels);
+        final width = Math.floor(model.colliderWidth * SeidhEngine.Config.unitPixels);
+        final height = Math.floor(model.colliderHeight * SeidhEngine.Config.unitPixels);
         final tile = Tile.fromColor(0xFF0000, width, height).center();
         bitmap = new Bitmap(tile, this);
         bitmap.alpha = 0.9;

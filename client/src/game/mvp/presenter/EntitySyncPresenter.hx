@@ -122,7 +122,7 @@ class EntitySyncPresenter {
      */
     private function shouldReconcile(serverSnapshot: Dynamic): Bool {
         // Only reconcile in CLIENT_PREDICTION mode
-        final engineConfig = GamePresenter.Config.engineConfig;
+        final engineConfig = SeidhEngine.Config;
         if (engineConfig == null || engineConfig.mode != CLIENT_PREDICTION) {
             return false;
         }

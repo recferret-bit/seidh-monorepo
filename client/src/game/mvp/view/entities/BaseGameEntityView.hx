@@ -1,5 +1,7 @@
 package game.mvp.view.entities;
 
+import engine.SeidhEngine;
+import game.config.GameClientConfig;
 import engine.geometry.Rect;
 import engine.model.entities.types.EntityType;
 import game.mvp.model.entities.BaseEntityModel;
@@ -54,7 +56,7 @@ class BaseGameEntityView extends Object {
         this.poolType = model.type;
         
         // Create border graphics for physics debugging if enabled
-        if (GamePresenter.Config.visualSettings.drawPhysicsShapes) {
+        if (GameClientConfig.DefaultVisualSettings.drawPhysicsShapes) {
             createBorderGraphics();
         }
         
@@ -76,8 +78,8 @@ class BaseGameEntityView extends Object {
         borderGraphics = new Graphics(this);
         
         // Draw border around entity using proper unit conversion
-        final width = model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels;
-        final height = model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels;
+        final width = model.colliderWidth * SeidhEngine.Config.unitPixels;
+        final height = model.colliderHeight * SeidhEngine.Config.unitPixels;
         
         final offset = model.colliderOffset;
         final pxOffsetX = offset != null ? offset.x : 0;
@@ -173,7 +175,7 @@ class BaseGameEntityView extends Object {
         
         healthBar.clear();
         healthBar.x = -barWidth * 0.5;
-        healthBar.y = -model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels - 10; // Position above entity
+        healthBar.y = -model.colliderHeight * SeidhEngine.Config.unitPixels - 10; // Position above entity
         
         // Background (red)
         healthBar.beginFill(0xFF0000);
