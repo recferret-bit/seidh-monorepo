@@ -376,25 +376,30 @@ class InputPresenter {
         
         // Get controlled character from engine
         if (controlledEntityId != null) {
-            final ragnar = engine.getRagnarById(controlledEntityId);
-            if (ragnar != null) {
-                // Apply step-based movement prediction immediately
-                var dt = 1.0 / 60.0; // Assume 60 FPS for prediction
+            // Get entity type from game client state
+            final entityModel = gameClientState.getEntity(controlledEntityId);
+            if (entityModel != null) {
+                final entityType = entityModel.type;
+                final character = cast(engine.getEntityById(controlledEntityId, entityType), engine.model.entities.character.BaseCharacterEntity);
+                if (character != null) {
+                    // Apply step-based movement prediction immediately
+                    var dt = 1.0 / 60.0; // Assume 60 FPS for prediction
 
-                // Apply step-based movement prediction immediately
-                ragnar.applyMovementStep(inputMessage.movement.x, inputMessage.movement.y, dt);
-                
-                // Store prediction for later reconciliation
-                predictionHistory.push({
-                    sequence: inputMessage.sequence,
-                    input: inputMessage,
-                    predictedPos: {x: ragnar.pos.x, y: ragnar.pos.y},
-                    predictedVel: {x: ragnar.vel.x, y: ragnar.vel.y}
-                });
-                
-                // Limit prediction history size
-                if (predictionHistory.length > maxPredictionHistory) {
-                    predictionHistory.shift();
+                    // Apply step-based movement prediction immediately
+                    character.applyMovementStep(inputMessage.movement.x, inputMessage.movement.y, dt);
+                    
+                    // Store prediction for later reconciliation
+                    predictionHistory.push({
+                        sequence: inputMessage.sequence,
+                        input: inputMessage,
+                        predictedPos: {x: character.pos.x, y: character.pos.y},
+                        predictedVel: {x: character.vel.x, y: character.vel.y}
+                    });
+                    
+                    // Limit prediction history size
+                    if (predictionHistory.length > maxPredictionHistory) {
+                        predictionHistory.shift();
+                    }
                 }
             }
         }

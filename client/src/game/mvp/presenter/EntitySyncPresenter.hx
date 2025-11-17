@@ -256,20 +256,7 @@ class EntitySyncPresenter {
         final pos = event.pos;
         final ownerId = event.ownerId;
         
-        final engineEntity:BaseEngineEntity = switch (entityType) {
-            case EntityType.RAGNAR:
-                engine.getRagnarById(entityId);
-            case EntityType.ZOMBIE_BOY:
-                engine.getZombieBoyById(entityId);
-            case EntityType.ZOMBIE_GIRL:
-                engine.getZombieGirlById(entityId);
-            case EntityType.GLAMR:
-                engine.getGlamrById(entityId);
-            case EntityType.COLLIDER:
-                engine.getColliderById(entityId);
-            default:
-                null;
-        }
+        final engineEntity:BaseEngineEntity = engine.getEntityById(entityId, entityType);
 
         if (engineEntity == null) {
             trace("Warning: Could not get engine entity for id: " + entityId);

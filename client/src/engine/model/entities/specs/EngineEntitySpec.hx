@@ -1,4 +1,4 @@
-package engine.model.entities.types;
+package engine.model.entities.specs;
 
 /**
  * Entity specification type definitions for type-safe entity creation

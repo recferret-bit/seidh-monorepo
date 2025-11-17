@@ -1,6 +1,6 @@
 package game.mvp.view.entities;
 
-import engine.geometry.RectUtils;
+import engine.geometry.Rect;
 import engine.model.entities.types.EntityType;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.presenter.GamePresenter;
@@ -79,8 +79,9 @@ class BaseGameEntityView extends Object {
         final width = model.colliderWidth * GamePresenter.Config.engineConfig.unitPixels;
         final height = model.colliderHeight * GamePresenter.Config.engineConfig.unitPixels;
         
-        final pxOffsetX = model.colliderPxOffsetX;
-        final pxOffsetY = model.colliderPxOffsetY;
+        final offset = model.colliderOffset;
+        final pxOffsetX = offset != null ? offset.x : 0;
+        final pxOffsetY = offset != null ? offset.y : 0;
 
         borderGraphics.lineStyle(2, 0x0000FF, 1);
         borderGraphics.drawRect(-width * 0.5 + pxOffsetX, -height * 0.5 + pxOffsetY, width, height);
@@ -334,7 +335,7 @@ class BaseGameEntityView extends Object {
     public function getRect() {
         if (bitmap != null) {
             final pt = getIntPosAndTileParams();
-            return RectUtils.create(pt.x + pt.tileHalfWidth, pt.y + pt.tileHalfHeight, pt.tileWidth, pt.tileHeight);
+            return new Rect(pt.x + pt.tileHalfWidth, pt.y + pt.tileHalfHeight, pt.tileWidth, pt.tileHeight);
         }
         return null;
     }
@@ -342,7 +343,7 @@ class BaseGameEntityView extends Object {
     public function getBottomRect(rectHeight:Int) {
         if (bitmap != null) {
             final pt = getIntPosAndTileParams();
-            return RectUtils.create(pt.x + pt.tileHalfWidth, pt.y + pt.tileHeight, pt.tileWidth, pt.tileHeight);
+            return new Rect(pt.x + pt.tileHalfWidth, pt.y + pt.tileHeight, pt.tileWidth, pt.tileHeight);
         }
         return null;
     }

@@ -1,6 +1,7 @@
 package engine.modules.registry;
 
 import engine.modules.abs.IModule;
+import engine.modules.ModuleName;
 
 /**
  * Registry for engine modules
@@ -17,7 +18,7 @@ class ModuleRegistry {
      * @param name Module name
      * @param module Module instance
      */
-    public function register(name: String, module: IModule): Void {
+    public function register(name: ModuleName, module: IModule): Void {
         modules.set(name, module);
     }
     
@@ -26,7 +27,7 @@ class ModuleRegistry {
      * @param name Module name
      * @return Module or null
      */
-    public function get(name: String): IModule {
+    public function get(name: ModuleName): IModule {
         return modules.exists(name) ? modules.get(name) : null;
     }
     

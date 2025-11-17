@@ -1,7 +1,7 @@
 package engine.modules.impl;
 
 import engine.modules.abs.IModule;
-import engine.geometry.Vec2Utils;
+import engine.geometry.Vec2;
 import engine.model.GameModelState;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.collider.ColliderEntity;
@@ -45,7 +45,7 @@ class PhysicsModule implements IModule {
                     // (movement is already applied in InputModule)
                     if (!entity.isInputDriven) {
                         // Apply velocity to position for physics-driven entities
-                        entity.pos = Vec2Utils.add(entity.pos, Vec2Utils.scale(entity.vel, dt));
+                        entity.pos = Vec2.add(entity.pos, Vec2.scale(entity.vel, dt));
                     }
                 }
             });

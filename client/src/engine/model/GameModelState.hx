@@ -1,9 +1,11 @@
 package engine.model;
 
+import engine.geometry.Vec2;
 import engine.model.DeterministicRng;
 import engine.model.ObjectPool;
 import engine.model.entities.types.EntityType;
 import engine.model.entities.factory.EngineEntityFactory;
+import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.character.BaseCharacterEntity;
 import engine.model.entities.collider.ColliderEntity;
 import engine.model.entities.consumable.BaseConsumableEntity;
@@ -16,8 +18,8 @@ import engine.model.managers.IEngineEntityManagerRegistry;
 typedef EngineEntityMemento = {
     id: Int,
     type: EntityType,
-    pos: {x: Int, y: Int},
-    vel: {x: Int, y: Int},
+    pos: Vec2,
+    vel: Vec2,
     rotation: Float,
     ownerId: String,
     isAlive: Bool,
@@ -109,43 +111,12 @@ class GameModelState {
     }
     
     /**
-     * Get ragnar manager with explicit type
-     * @return Ragnar entity manager
+     * Get manager by entity type
+     * @param type Entity type
+     * @return Manager for the specified entity type
      */
-    public function getRagnarManager(): IEngineEntityManager<BaseCharacterEntity> {
-        return managers.get(EntityType.RAGNAR);
-    }
-    
-    /**
-     * Get zombie boy manager with explicit type
-     * @return Zombie boy entity manager
-     */
-    public function getZombieBoyManager(): IEngineEntityManager<BaseCharacterEntity> {
-        return managers.get(EntityType.ZOMBIE_BOY);
-    }
-    
-    /**
-     * Get zombie girl manager with explicit type
-     * @return Zombie girl entity manager
-     */
-    public function getZombieGirlManager(): IEngineEntityManager<BaseCharacterEntity> {
-        return managers.get(EntityType.ZOMBIE_GIRL);
-    }
-
-    /**
-     * Get glamr manager with explicit type
-     * @return Glamr entity manager
-     */
-    public function getGlamrManager(): IEngineEntityManager<BaseCharacterEntity> {
-        return managers.get(EntityType.GLAMR);
-    }
-    
-    /**
-     * Get collider manager with explicit type
-     * @return Collider entity manager
-     */
-    public function getColliderManager(): IEngineEntityManager<ColliderEntity> {
-        return managers.get(EntityType.COLLIDER);
+    public function getManager<T:BaseEngineEntity>(type: EntityType): IEngineEntityManager<T> {
+        return managers.get(type);
     }
     
     private function setupManagers(): Void {

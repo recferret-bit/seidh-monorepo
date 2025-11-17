@@ -1,7 +1,7 @@
 package engine.model.entities.collider;
 
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.specs.EngineEntitySpec;
 
 /**
  * Collider entity for map building and collision detection
@@ -41,8 +41,7 @@ class ColliderEntity extends BaseEngineEntity {
             vel.y = 0;
             colliderWidth = 2;
             colliderHeight = 2;
-            colliderPxOffsetX = 0;
-            colliderPxOffsetY = 0;
+            colliderOffset = new engine.geometry.Vec2(0, 0);
             return;
         }
 

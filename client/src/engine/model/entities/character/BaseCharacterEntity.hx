@@ -1,10 +1,9 @@
 package engine.model.entities.character;
 
 import engine.SeidhEngine;
-import engine.geometry.Vec2Utils;
 import engine.geometry.Vec2;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.specs.EngineEntitySpec;
 
 /**
  * Base character entity with combat stats and abilities
@@ -66,8 +65,7 @@ class BaseCharacterEntity extends BaseEngineEntity {
             // Character-specific collider dimensions (smaller than default)
             colliderWidth = 3;
             colliderHeight = 5;
-            colliderPxOffsetX = 0;
-            colliderPxOffsetY = 0;
+            colliderOffset = new Vec2(0, 0);
             
             // Characters are input-driven by default
             isInputDriven = true;
@@ -98,11 +96,14 @@ class BaseCharacterEntity extends BaseEngineEntity {
      * @param dt Delta time
      */
     public function applyMovementStep(movementX: Float, movementY: Float, dt: Float): Void {
-        final movementStep = Vec2Utils.add(calculateMovementStep(movementX, movementY, dt), movementCorrection);
+        final movementStep = Vec2.add(calculateMovementStep(movementX, movementY, dt), movementCorrection);
 
         // Apply movement step to position
         pos.x += movementStep.x;
         pos.y += movementStep.y;
+        
+        // Update collider rect after position change
+        updateColliderRect();
                     
         // Clear velocity (movement is step-based, not continuous)
         vel.x = 0;
@@ -120,10 +121,10 @@ class BaseCharacterEntity extends BaseEngineEntity {
      */
     public function calculateMovementStep(movementX: Float, movementY: Float, dt: Float): Vec2 {
         final speed = (stats != null && stats.speed != null ? stats.speed : 1.0) * SeidhEngine.Config.unitPixels;
-        return {
-            x: Std.int(movementX * speed * dt),
-            y: Std.int(movementY * speed * dt)
-        };
+        return new Vec2(
+            Std.int(movementX * speed * dt),
+            Std.int(movementY * speed * dt)
+        );
     }
     
 }

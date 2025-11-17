@@ -1,7 +1,7 @@
 package engine.model.entities.character;
 
 import engine.model.entities.types.EntityType;
-import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.specs.EngineEntitySpec;
 
 /**
  * Zombie Boy character entity

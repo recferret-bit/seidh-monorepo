@@ -1,5 +1,6 @@
 package engine.model;
 
+import engine.geometry.Vec2;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.types.EntityType;
 
@@ -63,8 +64,8 @@ class ObjectPool {
         obj.reset({
             id: 0,
             type: kind,
-            pos: {x: 0, y: 0},
-            vel: {x: 0, y: 0},
+            pos: new Vec2(0, 0),
+            vel: new Vec2(0, 0),
             rotation: 0,
             ownerId: "",
             isAlive: false

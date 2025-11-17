@@ -1,8 +1,9 @@
 package engine.model.entities.specs;
 
 import engine.SeidhEngine;
+import engine.geometry.Vec2;
 import engine.model.entities.types.EntityType;
-import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.specs.EngineEntitySpec;
 
 /**
  * EntitySpecs - Entity specification seed data for the engine
@@ -17,7 +18,8 @@ class EngineEntitySpecs {
     public static function getRagnarSpec(): EngineEntitySpec {
         return {
             type: EntityType.RAGNAR,
-            pos: {x: 200, y: 200},
+            pos: new Vec2(200, 200),
+            vel: new Vec2(0, 0),
             ownerId: "player1",
             level: 1,
             maxHp: 100,
@@ -37,7 +39,8 @@ class EngineEntitySpecs {
     public static function getZombieBoySpec(): EngineEntitySpec {
         return {
             type: EntityType.ZOMBIE_BOY,
-            pos: {x: 100, y: 100},
+            pos: new Vec2(100, 100),
+            vel: new Vec2(0, 0),
             ownerId: "player1",
             level: 1,
             maxHp: 100,
@@ -48,7 +51,8 @@ class EngineEntitySpecs {
     public static function getZombieGirlSpec(): EngineEntitySpec {
         return {
             type: EntityType.ZOMBIE_GIRL,
-            pos: {x: 100, y: 100},
+            pos: new Vec2(100, 100),
+            vel: new Vec2(0, 0),
             ownerId: "player1",
             level: 1,
             maxHp: 100,
@@ -59,7 +63,8 @@ class EngineEntitySpecs {
     public static function getGlamrSpec(): EngineEntitySpec {
         return {
             type: EntityType.GLAMR,
-            pos: {x: 100, y: 100},
+            pos: new Vec2(100, 100),
+            vel: new Vec2(0, 0),
             ownerId: "player1",
             level: 1,
             maxHp: 100,
@@ -73,7 +78,8 @@ class EngineEntitySpecs {
     public static function getHealthPotionSpec(x: Int, y: Int): EngineEntitySpec {
         return {
             type: EntityType.HEALTH_POTION,
-            pos: {x: x, y: y},
+            pos: new Vec2(x, y),
+            vel: new Vec2(0, 0),
             ownerId: "world",
             isAlive: true,
             effectId: "heal",
@@ -91,7 +97,8 @@ class EngineEntitySpecs {
     public static function getArmorPotionSpec(x: Int, y: Int): EngineEntitySpec {
         return {
             type: EntityType.ARMOR_POTION,
-            pos: {x: x, y: y},
+            pos: new Vec2(x, y),
+            vel: new Vec2(0, 0),
             ownerId: "world",
             isAlive: true,
             effectId: "armor_boost",
@@ -109,7 +116,8 @@ class EngineEntitySpecs {
     public static function getSalmonSpec(x: Int, y: Int): EngineEntitySpec {
         return {
             type: EntityType.SALMON,
-            pos: {x: x, y: y},
+            pos: new Vec2(x, y),
+            vel: new Vec2(0, 0),
             ownerId: "world",
             isAlive: true,
             effectId: "health_restore",
@@ -164,7 +172,8 @@ class EngineEntitySpecs {
     public static function getColliderSpec(x: Int, y: Int, passable: Bool, isTrigger: Bool): EngineEntitySpec {
         return {
             type: EntityType.COLLIDER,
-            pos: {x: x, y: y},
+            pos: new Vec2(x, y),
+            vel: new Vec2(0, 0),
             ownerId: "world",
             isAlive: true,  // explicitly set colliders as alive
             passable: passable,

@@ -1,7 +1,7 @@
 package engine.model.entities.consumable;
 
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.specs.EngineEntitySpec;
 
 /**
  * Base consumable item entity (potions, food, etc.)

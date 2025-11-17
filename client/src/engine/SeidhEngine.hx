@@ -4,7 +4,7 @@ import engine.EngineConfig;
 import engine.model.GameModelState;
 import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.types.EngineEntitySpec;
+import engine.model.entities.specs.EngineEntitySpec;
 import engine.model.entities.character.BaseCharacterEntity;
 import engine.model.entities.collider.ColliderEntity;
 import engine.model.managers.IEngineEntityManager;
@@ -13,6 +13,7 @@ import engine.modules.impl.InputModule;
 import engine.modules.registry.ModuleRegistry;
 import engine.modules.impl.PhysicsModule;
 import engine.modules.impl.SpawnModule;
+import engine.modules.ModuleName;
 import engine.presenter.GameLoop;
 import engine.presenter.InputMessage;
 import engine.presenter.SnapshotManager;
@@ -140,7 +141,7 @@ class SeidhEngine {
      * @param input Input message
      */
     public function queueInput(input: InputMessage): Void {
-        final inputModule = cast(modules.get("input"), InputModule);
+        final inputModule = cast(modules.get(ModuleName.INPUT), InputModule);
         if (inputModule != null) {
             inputModule.queueInput(input);
         }
@@ -247,58 +248,21 @@ class SeidhEngine {
      * @return Input module instance
      */
     public function getInputModule(): InputModule {
-        return cast(modules.get("input"), InputModule);
+        return cast(modules.get(ModuleName.INPUT), InputModule);
     }
     
     /**
-     * Get ragnar by ID
-     * @param id Ragnar ID
-     * @return Ragnar entity
+     * Get entity by ID and type
+     * @param id Entity ID
+     * @param type Entity type
+     * @return Entity or null
      */
-    public function getRagnarById(id: Int): BaseCharacterEntity {
-        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.RAGNAR);
-        return manager.find(id);
-    }
-    
-
-    /**
-     * Get zombie boy by ID
-     * @param id Zombie boy ID
-     * @return Zombie boy entity
-     */
-    public function getZombieBoyById(id: Int): BaseCharacterEntity {
-        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.ZOMBIE_BOY);
-        return manager.find(id);
-    }
-
-    /**
-     * Get zombie girl by ID
-     * @param id Zombie girl ID
-     * @return Zombie girl entity
-     */
-    public function getZombieGirlById(id: Int): BaseCharacterEntity {
-        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.ZOMBIE_GIRL);
-        return manager.find(id);
-    }
-
-    /**
-     * Get glamr by ID
-     * @param id Glamr ID
-     * @return Glamr entity
-     */
-    public function getGlamrById(id: Int): BaseCharacterEntity {
-        final manager: IEngineEntityManager<BaseCharacterEntity> = state.managers.get(EntityType.GLAMR);
-        return manager.find(id);
-    }
-
-    /**
-     * Get collider by ID
-     * @param id Collider ID
-     * @return Entity manager
-     */
-    public function getColliderById(id: Int): ColliderEntity {
-        final manager: IEngineEntityManager<ColliderEntity> = state.managers.get(EntityType.COLLIDER);
-        return manager.find(id);
+    public function getEntityById(id: Int, type: EntityType): BaseEngineEntity {
+        final manager: IEngineEntityManager<BaseEngineEntity> = state.managers.get(type);
+        if (manager != null) {
+            return manager.find(id);
+        }
+        return null;
     }
     
     /**
@@ -376,10 +340,10 @@ class SeidhEngine {
         final aiModule = new AIModule();
         final spawnModule = new SpawnModule();
         
-        modules.register("input", inputModule);
-        modules.register("physics", physicsModule);
-        modules.register("ai", aiModule);
-        modules.register("spawn", spawnModule);
+        modules.register(ModuleName.INPUT, inputModule);
+        modules.register(ModuleName.PHYSICS, physicsModule);
+        modules.register(ModuleName.AI, aiModule);
+        modules.register(ModuleName.SPAWN, spawnModule);
     }
 
     private function emitSnapshotEvents(): Void {

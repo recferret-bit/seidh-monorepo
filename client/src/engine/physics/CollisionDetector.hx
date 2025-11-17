@@ -1,7 +1,7 @@
 package engine.physics;
 
-import engine.geometry.RectUtils;
-import engine.geometry.Vec2Utils;
+import engine.geometry.Rect;
+import engine.geometry.Vec2;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.physics.CollisionTypes.CollisionObject;
 import engine.physics.CollisionTypes.CollisionResult;
@@ -33,18 +33,22 @@ class CollisionDetector {
                 final b = objects[j];
                 
                 // Broad-phase: Use actual collider dimensions for more precise collision detection
-                final widthA = a.colliderWidth * unitPixels;
-                final heightA = a.colliderHeight * unitPixels;
-                final widthB = b.colliderWidth * unitPixels;
-                final heightB = b.colliderHeight * unitPixels;
+                final rectA = a.entity != null ? a.entity.colliderRect : null;
+                final rectB = b.entity != null ? b.entity.colliderRect : null;
+                
+                if (rectA == null || rectB == null) {
+                    continue;
+                }
                 
                 // Calculate maximum possible distance between collider centers
-                final maxDistanceX = (widthA + widthB) / 2;
-                final maxDistanceY = (heightA + heightB) / 2;
+                final maxDistanceX = (rectA.width + rectB.width) / 2;
+                final maxDistanceY = (rectA.height + rectB.height) / 2;
                 final maxDistanceSquared = maxDistanceX * maxDistanceX + maxDistanceY * maxDistanceY;
                 
-                // Calculate actual distance between entity centers
-                final distanceSquared = Vec2Utils.distanceSquared(a.pos, b.pos);
+                // Calculate actual distance between collider centers
+                final dx = rectA.x - rectB.x;
+                final dy = rectA.y - rectB.y;
+                final distanceSquared = dx * dx + dy * dy;
                 
                 // Skip collision check if entities are too far apart
                 if (distanceSquared > maxDistanceSquared) {
@@ -69,33 +73,33 @@ class CollisionDetector {
      * @return Collision result with intersection info and rectangles
      */
     public function checkCollision(a: CollisionObject, b: CollisionObject): CollisionResult {
-        // Create rectangles for collision detection
-        final colliderAWidth = Std.int(a.colliderWidth * unitPixels);
-        final colliderAHeight = Std.int(a.colliderHeight * unitPixels);
-        final colliderBWidth = Std.int(b.colliderWidth * unitPixels);
-        final colliderBHeight = Std.int(b.colliderHeight * unitPixels);
+        // Use collider rectangles from entities (already updated and positioned)
+        final rectA = a.entity != null ? a.entity.colliderRect : null;
+        final rectB = b.entity != null ? b.entity.colliderRect : null;
         
-        // Apply collider pixel offsets to get the actual collider center position
-        final offsetAX = a.entity.colliderPxOffsetX != null ? a.entity.colliderPxOffsetX : 0;
-        final offsetAY = a.entity.colliderPxOffsetY != null ? a.entity.colliderPxOffsetY : 0;
-        final offsetBX = b.entity.colliderPxOffsetX != null ? b.entity.colliderPxOffsetX : 0;
-        final offsetBY = b.entity.colliderPxOffsetY != null ? b.entity.colliderPxOffsetY : 0;
+        if (rectA == null || rectB == null) {
+            // Fallback: create temporary rects if entities don't have colliderRect
+            final colliderAWidth = Std.int(a.colliderWidth * unitPixels);
+            final colliderAHeight = Std.int(a.colliderHeight * unitPixels);
+            final colliderBWidth = Std.int(b.colliderWidth * unitPixels);
+            final colliderBHeight = Std.int(b.colliderHeight * unitPixels);
+            
+            final fallbackRectA = new Rect(a.pos.x, a.pos.y, colliderAWidth, colliderAHeight);
+            final fallbackRectB = new Rect(b.pos.x, b.pos.y, colliderBWidth, colliderBHeight);
+            
+            final intersects = fallbackRectA.intersectsRect(fallbackRectB);
+            final separation = intersects ? fallbackRectA.getIntersectionDepth(fallbackRectB) : new Vec2(0, 0);
+            
+            return {
+                intersects: intersects,
+                rectA: fallbackRectA,
+                rectB: fallbackRectB,
+                separation: separation
+            };
+        }
         
-        final rectA = RectUtils.create(
-            Std.int(a.pos.x + offsetAX), 
-            Std.int(a.pos.y + offsetAY), 
-            colliderAWidth, 
-            colliderAHeight
-        );
-        final rectB = RectUtils.create(
-            Std.int(b.pos.x + offsetBX), 
-            Std.int(b.pos.y + offsetBY), 
-            colliderBWidth, 
-            colliderBHeight
-        );
-        
-        final intersects = RectUtils.intersectsRect(rectA, rectB);
-        final separation = intersects ? RectUtils.getIntersectionDepth(rectA, rectB) : Vec2Utils.create(0, 0);
+        final intersects = rectA.intersectsRect(rectB);
+        final separation = intersects ? rectA.getIntersectionDepth(rectB) : new Vec2(0, 0);
         
         return {
             intersects: intersects,

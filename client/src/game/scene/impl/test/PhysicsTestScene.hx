@@ -75,6 +75,7 @@ class PhysicsTestScene extends BaseScene {
         // Apply movement to collider1
         collider1Model.engineEntity.pos.x += Std.int(movement.x);
         collider1Model.engineEntity.pos.y += Std.int(movement.y);
+        collider1Model.engineEntity.updateColliderRect();
 
         collider1.alpha = 1;
         collider2.alpha = 1;

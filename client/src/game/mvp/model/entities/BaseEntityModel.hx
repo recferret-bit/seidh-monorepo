@@ -28,8 +28,8 @@ class BaseEntityModel {
         visualScale = 1.0;
         
         // Initialize interpolation fields
-        previousPos = engine.geometry.Vec2Utils.create(0, 0);
-        renderPos = engine.geometry.Vec2Utils.create(0, 0);
+        previousPos = new engine.geometry.Vec2(0, 0);
+        renderPos = new engine.geometry.Vec2(0, 0);
         positionHistory = [];
         interpolationAlpha = 0.0;
         
@@ -44,9 +44,9 @@ class BaseEntityModel {
         this.engineEntity = engineEntity;
         
         // Initialize interpolation with current position
-        previousPos = engine.geometry.Vec2Utils.create(engineEntity.pos.x, engineEntity.pos.y);
-        renderPos = engine.geometry.Vec2Utils.create(engineEntity.pos.x, engineEntity.pos.y);
-        positionHistory = [{tick: 0, pos: engine.geometry.Vec2Utils.create(engineEntity.pos.x, engineEntity.pos.y)}];
+        previousPos = new engine.geometry.Vec2(engineEntity.pos.x, engineEntity.pos.y);
+        renderPos = new engine.geometry.Vec2(engineEntity.pos.x, engineEntity.pos.y);
+        positionHistory = [{tick: 0, pos: new engine.geometry.Vec2(engineEntity.pos.x, engineEntity.pos.y)}];
         interpolationAlpha = 0.0;
         
         needsVisualUpdate = true;
@@ -71,8 +71,8 @@ class BaseEntityModel {
         visualScale = 1.0;
         
         // Reset interpolation fields
-        previousPos = engine.geometry.Vec2Utils.create(0, 0);
-        renderPos = engine.geometry.Vec2Utils.create(0, 0);
+        previousPos = new engine.geometry.Vec2(0, 0);
+        renderPos = new engine.geometry.Vec2(0, 0);
         positionHistory = [];
         interpolationAlpha = 0.0;
         
@@ -90,18 +90,16 @@ class BaseEntityModel {
     public var isAlive(get, never): Bool;
     public var colliderWidth(get, never): Float;
     public var colliderHeight(get, never): Float;
-    public var colliderPxOffsetX(get, never): Float;
-    public var colliderPxOffsetY(get, never): Float;
+    public var colliderOffset(get, never): engine.geometry.Vec2;
     
     private function get_id(): Int return engineEntity != null ? engineEntity.id : 0;
     private function get_type(): EntityType return engineEntity != null ? engineEntity.type : GENERIC;
-    private function get_pos(): engine.geometry.Vec2 return engineEntity != null ? engineEntity.pos : engine.geometry.Vec2Utils.create(0, 0);
-    private function get_vel(): engine.geometry.Vec2 return engineEntity != null ? engineEntity.vel : engine.geometry.Vec2Utils.create(0, 0);
+    private function get_pos(): engine.geometry.Vec2 return engineEntity != null ? engineEntity.pos : new engine.geometry.Vec2(0, 0);
+    private function get_vel(): engine.geometry.Vec2 return engineEntity != null ? engineEntity.vel : new engine.geometry.Vec2(0, 0);
     private function get_rotation(): Float return engineEntity != null ? engineEntity.rotation : 0;
     private function get_ownerId(): String return engineEntity != null ? engineEntity.ownerId : "";
     private function get_isAlive(): Bool return engineEntity != null ? engineEntity.isAlive : false;
     private function get_colliderWidth(): Float return engineEntity != null ? engineEntity.colliderWidth : 1.0;
     private function get_colliderHeight(): Float return engineEntity != null ? engineEntity.colliderHeight : 1.0;
-    private function get_colliderPxOffsetX(): Float return engineEntity != null ? engineEntity.colliderPxOffsetX : 0.0;
-    private function get_colliderPxOffsetY(): Float return engineEntity != null ? engineEntity.colliderPxOffsetY : 0.0;
+    private function get_colliderOffset(): engine.geometry.Vec2 return engineEntity != null ? engineEntity.colliderOffset : new engine.geometry.Vec2(0, 0);
 }
