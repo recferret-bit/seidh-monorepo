@@ -1,25 +1,26 @@
 package engine;
 
 import engine.EngineConfig;
+import engine.eventbus.EventBus;
+import engine.eventbus.IEventBus;
+import engine.eventbus.events.EntityCorrectionEvent;
+import engine.eventbus.events.EntityDeathEvent;
+import engine.eventbus.events.EntitySpawnEvent;
+import engine.eventbus.events.SnapshotEvent;
 import engine.model.GameModelState;
-import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.specs.EngineEntitySpec;
-import engine.model.entities.character.BaseCharacterEntity;
-import engine.model.entities.collider.ColliderEntity;
+import engine.model.entities.types.EntityType;
 import engine.model.managers.IEngineEntityManager;
+import engine.modules.ModuleName;
 import engine.modules.impl.AIModule;
 import engine.modules.impl.InputModule;
-import engine.modules.registry.ModuleRegistry;
 import engine.modules.impl.PhysicsModule;
 import engine.modules.impl.SpawnModule;
-import engine.modules.ModuleName;
+import engine.modules.registry.ModuleRegistry;
 import engine.presenter.GameLoop;
 import engine.presenter.InputMessage;
 import engine.presenter.SnapshotManager;
-import engine.view.EventBus;
-import engine.view.EventBusConstants;
-import engine.view.IEventBus;
 
 /**
  * Main Seidh Engine - portable game engine with MVP architecture
@@ -167,7 +168,7 @@ class SeidhEngine {
             final entity = manager.create(spec);
             
             // Emit spawn event
-            eventBus.emit(EventBusConstants.ENTITY_SPAWN, {
+            eventBus.emit(EntitySpawnEvent.NAME, {
                 tick: state.tick,
                 entityId: entity.id,
                 type: entity.type,
@@ -191,7 +192,7 @@ class SeidhEngine {
             final entity = manager.find(entityId);
             if (entity != null) {
                 // Emit death event
-                eventBus.emit(EventBusConstants.ENTITY_DEATH, {
+                eventBus.emit(EntityDeathEvent.NAME, {
                     tick: state.tick,
                     entityId: entityId,
                     killerId: 0
@@ -201,34 +202,6 @@ class SeidhEngine {
                 break;
             }
         }
-    }
-    
-    /**
-     * Subscribe to events with typed handler
-     * @param topic Event topic
-     * @param handler Event handler
-     * @return Subscription token
-     */
-    public function subscribeEvent<T>(topic: String, handler: T->Void): Int {
-        return eventBus.subscribe(topic, handler);
-    }
-    
-    /**
-     * Subscribe to events with dynamic handler (legacy support)
-     * @param topic Event topic
-     * @param handler Event handler
-     * @return Subscription token
-     */
-    public function subscribeEventDynamic(topic: String, handler: Dynamic->Void): Int {
-        return eventBus.subscribeDynamic(topic, handler);
-    }
-    
-    /**
-     * Unsubscribe from events
-     * @param token Subscription token
-     */
-    public function unsubscribeEvent(token: Int): Void {
-        eventBus.unsubscribe(token);
     }
     
     /**
@@ -356,14 +329,14 @@ class SeidhEngine {
                 // No snapshot events for singleplayer
             case SERVER:
                 if (state.tick % SeidhEngine.Config.snapshotEmissionInterval == 0) {
-                    eventBus.emit(EventBusConstants.SNAPSHOT, {
+                    eventBus.emit(SnapshotEvent.NAME, {
                         tick: state.tick,
                         serializedState: state.saveMemento()
                     });
                 }
             case CLIENT_PREDICTION:
                 // Always emit snapshots for client prediction
-                eventBus.emit(EventBusConstants.SNAPSHOT, {
+                eventBus.emit(SnapshotEvent.NAME, {
                     tick: state.tick,
                     serializedState: state.saveMemento()
                 });
@@ -374,7 +347,7 @@ class SeidhEngine {
         // Emit entity correction events for client prediction
         for (manager in state.managers.getAll()) {
             manager.iterate(function(entity) {
-                eventBus.emit(EventBusConstants.ENTITY_CORRECTION, {
+                eventBus.emit(EntityCorrectionEvent.NAME, {
                     tick: state.tick,
                     entityId: entity.id,
                     correctedPos: entity.pos,

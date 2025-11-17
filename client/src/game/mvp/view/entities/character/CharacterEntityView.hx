@@ -1,10 +1,9 @@
 package game.mvp.view.entities.character;
 
-import game.resource.animation.character.BasicCharacterAnimation;
 import engine.model.entities.types.EntityState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
-
+import game.resource.animation.character.BasicCharacterAnimation;
 import h2d.Graphics;
 import h2d.Object;
 

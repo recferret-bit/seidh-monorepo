@@ -1,7 +1,7 @@
 package game.mvp.view.camera;
 
-import hxd.Key;
 import h2d.Scene;
+import hxd.Key;
 
 class DebugCamera {
     private final scene:Scene;

@@ -1,17 +1,17 @@
 package engine.model.entities.factory;
 
 import engine.model.ObjectPool;
-import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.specs.EngineEntitySpec;
-import engine.model.entities.character.RagnarEntity;
 import engine.model.entities.character.GlamrEntity;
+import engine.model.entities.character.RagnarEntity;
 import engine.model.entities.character.ZombieBoyEntity;
 import engine.model.entities.character.ZombieGirlEntity;
 import engine.model.entities.collider.ColliderEntity;
-import engine.model.entities.consumable.HealthPotionEntity;
 import engine.model.entities.consumable.ArmorPotionEntity;
+import engine.model.entities.consumable.HealthPotionEntity;
 import engine.model.entities.consumable.SalmonEntity;
+import engine.model.entities.specs.EngineEntitySpec;
+import engine.model.entities.types.EntityType;
 
 /**
  * Factory for creating entities with registration pattern

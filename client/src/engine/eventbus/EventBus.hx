@@ -1,4 +1,4 @@
-package engine.view;
+package engine.eventbus;
 
 /**
  * Event bus implementation with ordered delivery and safe async dispatch
@@ -86,3 +86,4 @@ class EventBus implements IEventBus {
         isProcessing = false;
     }
 }
+

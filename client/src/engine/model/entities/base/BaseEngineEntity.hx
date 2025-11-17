@@ -1,11 +1,11 @@
 package engine.model.entities.base;
 
-import engine.geometry.Vec2;
-import engine.geometry.Rect;
-import engine.model.entities.types.EntityType;
-import engine.model.entities.specs.EngineEntitySpec;
-import engine.model.entities.specs.BaseEntitySpec;
 import engine.SeidhEngine;
+import engine.geometry.Rect;
+import engine.geometry.Vec2;
+import engine.model.entities.specs.BaseEntitySpec;
+import engine.model.entities.specs.EngineEntitySpec;
+import engine.model.entities.types.EntityType;
 
 /**
  * Abstract base entity with common fields and default implementations

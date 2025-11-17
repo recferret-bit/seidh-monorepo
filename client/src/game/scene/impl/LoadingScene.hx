@@ -1,7 +1,8 @@
 package game.scene.impl;
 
 import game.scene.base.BaseScene;
-import game.event.EventManager;
+import game.eventbus.GameEventBus;
+import game.eventbus.events.LoadGameSceneEvent;
 
 class LoadingScene extends BaseScene {
 	public function new() {
@@ -11,7 +12,7 @@ class LoadingScene extends BaseScene {
 
 	public function start():Void {
 		trace("LoadingScene started");
-		EventManager.instance.notify(EventManager.EVENT_LOAD_GAME_SCENE, null);
+		GameEventBus.instance.emit(LoadGameSceneEvent.NAME, {});
 	}
 
 	public function destroy():Void {

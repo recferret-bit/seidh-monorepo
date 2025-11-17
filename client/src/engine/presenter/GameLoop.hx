@@ -1,10 +1,10 @@
 package engine.presenter;
 
+import engine.eventbus.IEventBus;
+import engine.eventbus.events.TickCompleteEvent;
 import engine.model.GameModelState;
-import engine.modules.registry.ModuleRegistry;
 import engine.modules.ModuleName;
-import engine.view.EventBusConstants;
-import engine.view.IEventBus;
+import engine.modules.registry.ModuleRegistry;
 
 /**
  * Fixed timestep game loop
@@ -55,7 +55,7 @@ class GameLoop {
         state.managers.updateAll(fixedDt, currentTick, state);
         
         // Emit tick complete event
-        eventBus.emit(EventBusConstants.TICK_COMPLETE, {tick: currentTick});
+        eventBus.emit(TickCompleteEvent.NAME, {tick: currentTick});
     }
     
     /**

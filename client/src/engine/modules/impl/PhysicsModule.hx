@@ -1,11 +1,11 @@
 package engine.modules.impl;
 
-import engine.modules.abs.IModule;
 import engine.geometry.Vec2;
 import engine.model.GameModelState;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.collider.ColliderEntity;
 import engine.model.entities.types.EntityType;
+import engine.modules.abs.IModule;
 import engine.physics.CollisionDetector;
 import engine.physics.CollisionTypes.CollisionObject;
 

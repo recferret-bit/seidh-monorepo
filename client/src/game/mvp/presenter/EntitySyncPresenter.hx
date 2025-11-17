@@ -1,12 +1,17 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.model.entities.types.EntityType;
+import engine.eventbus.IEventBus;
+import engine.eventbus.events.ColliderTriggerEvent;
+import engine.eventbus.events.EntityCollisionEvent;
+import engine.eventbus.events.EntityCorrectionEvent;
+import engine.eventbus.events.EntityDamageEvent;
+import engine.eventbus.events.EntityDeathEvent;
+import engine.eventbus.events.EntityMoveEvent;
+import engine.eventbus.events.EntitySpawnEvent;
 import engine.model.entities.base.BaseEngineEntity;
+import engine.model.entities.types.EntityType;
 import engine.presenter.InputMessage;
-import engine.view.EventBusConstants;
-import engine.view.EventBusTypes;
-import engine.view.IEventBus;
 import game.mvp.model.GameClientState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
@@ -59,13 +64,13 @@ class EntitySyncPresenter {
         this.eventBus = eventBus;
         
         // Subscribe to entity events with typed handlers
-        final spawnToken = eventBus.subscribe(EventBusConstants.ENTITY_SPAWN, onEntitySpawn);
-        final deathToken = eventBus.subscribe(EventBusConstants.ENTITY_DEATH, onEntityDeath);
-        final moveToken = eventBus.subscribe(EventBusConstants.ENTITY_MOVE, onEntityMove);
-        final correctionToken = eventBus.subscribe(EventBusConstants.ENTITY_CORRECTION, onEntityCorrection);
-        final damageToken = eventBus.subscribe(EventBusConstants.ENTITY_DAMAGE, onEntityDamage);
-        final collisionToken = eventBus.subscribe(EventBusConstants.ENTITY_COLLISION, onEntityCollision);
-        final triggerToken = eventBus.subscribe(EventBusConstants.COLLIDER_TRIGGER, onColliderTrigger);
+        final spawnToken = eventBus.subscribe(EntitySpawnEvent.NAME, onEntitySpawn);
+        final deathToken = eventBus.subscribe(EntityDeathEvent.NAME, onEntityDeath);
+        final moveToken = eventBus.subscribe(EntityMoveEvent.NAME, onEntityMove);
+        final correctionToken = eventBus.subscribe(EntityCorrectionEvent.NAME, onEntityCorrection);
+        final damageToken = eventBus.subscribe(EntityDamageEvent.NAME, onEntityDamage);
+        final collisionToken = eventBus.subscribe(EntityCollisionEvent.NAME, onEntityCollision);
+        final triggerToken = eventBus.subscribe(ColliderTriggerEvent.NAME, onColliderTrigger);
         
         // Store tokens for cleanup
         eventTokens.push(spawnToken);
@@ -250,7 +255,7 @@ class EntitySyncPresenter {
     /**
      * Handle entity spawn event
      */
-    private function onEntitySpawn(event: EntitySpawnEvent): Void {
+    private function onEntitySpawn(event: EntitySpawnEventData): Void {
         final entityId = event.entityId;
         final entityType = event.type;
         final pos = event.pos;
@@ -287,14 +292,14 @@ class EntitySyncPresenter {
     /**
      * Handle entity death event
      */
-    private function onEntityDeath(event: EntityDeathEvent): Void {
-        var entityId = event.entityId;
-        var killerId = event.killerId;
+    private function onEntityDeath(event: EntityDeathEventData): Void {
+        final entityId = event.entityId;
+        final killerId = event.killerId;
         
         trace("Entity died: ID=" + entityId + ", Killer=" + killerId);
         
         // Mark entity as dead in game client state
-        var model = gameClientState.getEntity(entityId);
+        final model = gameClientState.getEntity(entityId);
         if (model != null && model.engineEntity != null) {
             model.engineEntity.isAlive = false;
             model.needsVisualUpdate = true;
@@ -304,13 +309,13 @@ class EntitySyncPresenter {
     /**
      * Handle entity move event
      */
-    private function onEntityMove(event: EntityMoveEvent): Void {
-        var entityId = event.entityId;
-        var pos = event.pos;
-        var vel = event.vel;
+    private function onEntityMove(event: EntityMoveEventData): Void {
+        final entityId = event.entityId;
+        final pos = event.pos;
+        final vel = event.vel;
         
         // Update model position
-        var model = gameClientState.getEntity(entityId);
+        final model = gameClientState.getEntity(entityId);
         if (model != null && model.engineEntity != null) {
             model.engineEntity.pos.x = pos.x;
             model.engineEntity.pos.y = pos.y;
@@ -323,15 +328,15 @@ class EntitySyncPresenter {
     /**
      * Handle entity correction event
      */
-    private function onEntityCorrection(event: EntityCorrectionEvent): Void {
-        var entityId = event.entityId;
-        var correctedPos = event.correctedPos;
-        var correctedVel = event.correctedVel;
+    private function onEntityCorrection(event: EntityCorrectionEventData): Void {
+        final entityId = event.entityId;
+        final correctedPos = event.correctedPos;
+        final correctedVel = event.correctedVel;
         
         trace("Entity correction: ID=" + entityId + ", Pos=" + correctedPos);
         
         // Update model with corrected values
-        var model = gameClientState.getEntity(entityId);
+        final model = gameClientState.getEntity(entityId);
         if (model != null && model.engineEntity != null) {
             model.engineEntity.pos.x = correctedPos.x;
             model.engineEntity.pos.y = correctedPos.y;
@@ -344,17 +349,17 @@ class EntitySyncPresenter {
     /**
      * Handle entity damage event
      */
-    private function onEntityDamage(event: EntityDamageEvent): Void {
-        var entityId = event.entityId;
-        var damage = event.damage;
-        var attackerId = event.attackerId;
+    private function onEntityDamage(event: EntityDamageEventData): Void {
+        final entityId = event.entityId;
+        final damage = event.damage;
+        final attackerId = event.attackerId;
         
         trace("Entity damage: ID=" + entityId + ", Damage=" + damage + ", Attacker=" + attackerId);
         
         // Apply damage to character model
-        var model = gameClientState.getEntity(entityId);
+        final model = gameClientState.getEntity(entityId);
         if (model != null && Std.isOfType(model, CharacterModel)) {
-            var characterModel = cast(model, CharacterModel);
+            final characterModel = cast(model, CharacterModel);
             characterModel.takeDamage(damage);
         }
     }
@@ -362,11 +367,11 @@ class EntitySyncPresenter {
     /**
      * Handle entity collision event
      */
-    private function onEntityCollision(event: EntityCollisionEvent): Void {
-        var entityIdA = event.entityIdA;
-        var entityIdB = event.entityIdB;
-        var contactPoint = event.contactPoint;
-        var normal = event.normal;
+    private function onEntityCollision(event: EntityCollisionEventData): Void {
+        final entityIdA = event.entityIdA;
+        final entityIdB = event.entityIdB;
+        final contactPoint = event.contactPoint;
+        final normal = event.normal;
         
         trace("Entity collision: " + entityIdA + " vs " + entityIdB + ", Contact=" + contactPoint);
         
@@ -446,10 +451,10 @@ class EntitySyncPresenter {
     /**
      * Handle collider trigger event
      */
-    private function onColliderTrigger(event: ColliderTriggerEvent): Void {
-        var entityId = event.entityId;
-        var colliderId = event.colliderId;
-        var triggerPos = event.triggerPos;
+    private function onColliderTrigger(event: ColliderTriggerEventData): Void {
+        final entityId = event.entityId;
+        final colliderId = event.colliderId;
+        final triggerPos = event.triggerPos;
         
         trace("Collider trigger: Entity=" + entityId + ", Collider=" + colliderId + ", Pos=" + triggerPos);
         

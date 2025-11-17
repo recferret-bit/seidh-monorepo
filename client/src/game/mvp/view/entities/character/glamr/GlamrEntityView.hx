@@ -1,7 +1,7 @@
 package game.mvp.view.entities.character.glamr;
 
-import game.resource.animation.character.glamr.GlamrAnimation;
 import game.mvp.view.entities.character.CharacterEntityView;
+import game.resource.animation.character.glamr.GlamrAnimation;
 
 class GlamrEntityView extends CharacterEntityView {
     public function new() {

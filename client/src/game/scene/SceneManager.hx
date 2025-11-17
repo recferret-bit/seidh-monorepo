@@ -8,17 +8,22 @@ import game.scene.impl.GameScene;
 import game.scene.impl.LoadingScene;
 import game.scene.impl.HomeScene;
 import game.scene.base.BaseScene;
-import game.event.EventManager;
+import game.eventbus.GameEventBus;
+import game.eventbus.events.LoadHomeSceneEvent;
+import game.eventbus.events.LoadGameSceneEvent;
 
-class SceneManager implements EventListener {
+class SceneManager {
 	private var sceneChangedCallback:BaseScene->Void;
 	private var currentScene:BaseScene;
+	private var subscriptionTokens: Array<Int>;
 	
 	public function new(sceneChangedCallback:BaseScene->Void) {
 		this.sceneChangedCallback = sceneChangedCallback;
+		this.subscriptionTokens = [];
 
-		EventManager.instance.subscribe(EventManager.EVENT_LOAD_HOME_SCENE, this);
-		EventManager.instance.subscribe(EventManager.EVENT_LOAD_GAME_SCENE, this);
+		// Subscribe to scene loading events
+		subscriptionTokens.push(GameEventBus.instance.subscribe(LoadHomeSceneEvent.NAME, handleLoadHomeScene));
+		subscriptionTokens.push(GameEventBus.instance.subscribe(LoadGameSceneEvent.NAME, handleLoadGameScene));
 
 		currentScene = new LoadingScene();
 		// currentScene = new ObjectsTilemapTestScene();
@@ -31,26 +36,24 @@ class SceneManager implements EventListener {
 	}
 
 	// --------------------------------------
-	// Impl
+	// Event Handlers
 	// --------------------------------------
 
-	public function notify(event:String, message:Dynamic) {
-		switch (event) {
-			case EventManager.EVENT_LOAD_HOME_SCENE: {
-				if (currentScene != null) {
-					currentScene.destroy();
-				}
-				currentScene = new HomeScene();
-				currentScene.start();
-			}
-			case EventManager.EVENT_LOAD_GAME_SCENE: {
-				if (currentScene != null) {
-					currentScene.destroy();
-				}
-				currentScene = new GameScene();
-				currentScene.start();
-			}
+	private function handleLoadHomeScene(payload: LoadHomeSceneEventData): Void {
+		if (currentScene != null) {
+			currentScene.destroy();
 		}
+		currentScene = new HomeScene();
+		currentScene.start();
+		changeSceneCallback();
+	}
+
+	private function handleLoadGameScene(payload: LoadGameSceneEventData): Void {
+		if (currentScene != null) {
+			currentScene.destroy();
+		}
+		currentScene = new GameScene();
+		currentScene.start();
 		changeSceneCallback();
 	}
 

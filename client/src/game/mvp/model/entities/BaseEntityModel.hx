@@ -1,7 +1,7 @@
 package game.mvp.model.entities;
 
-import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
+import engine.model.entities.types.EntityType;
 
 /**
  * Base entity model that wraps engine BaseEntity

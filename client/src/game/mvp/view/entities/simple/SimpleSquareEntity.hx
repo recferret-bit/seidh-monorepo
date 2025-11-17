@@ -1,9 +1,9 @@
 package game.mvp.view.entities.simple;
 
-import h2d.Object;
-import h2d.Tile;
 import h2d.Bitmap;
 import h2d.Graphics;
+import h2d.Object;
+import h2d.Tile;
 
 class SimpleSquareEntity extends Object {
 	private var bitmap:Bitmap;

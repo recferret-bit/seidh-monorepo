@@ -1,11 +1,12 @@
 package game.resource.animation.character;
 
-import game.event.EventManager;
 import engine.model.entities.types.EntityDirection;
 import engine.model.entities.types.EntityState;
 import engine.model.entities.types.EntityType;
 import h2d.Anim;
 import h2d.Tile;
+import game.eventbus.GameEventBus;
+import game.eventbus.events.CharacterAnimEndEvent;
 import game.resource.animation.character.CharacterAnimationConfigRegistry.AnimationConfigType;
 
 typedef AnimationConfig = {
@@ -52,15 +53,20 @@ abstract class BasicCharacterAnimation {
             // Notify event manager that animation has ended
             // Debug only
             if (characterId != null) {
-                EventManager.instance.notify(EventManager.EVENT_CHARACTER_ANIM_END, characterId);
+                GameEventBus.instance.emit(CharacterAnimEndEvent.NAME, 
+                    {
+                        characterId: characterId, 
+                        entityState: entityState,
+                    }
+                );
             }
 
             // Restrict animation if entity is dead
             // And notify event manager that death animation has ended
             if (entityState == EntityState.DEATH) {
-                if (characterId != null) {
-                    EventManager.instance.notify(EventManager.EVENT_CHARACTER_DEATH_ANIM_END, characterId);
-                }
+                // if (characterId != null) {
+                //     GameEventBus.instance.emit(CharacterDeathAnimEndEvent.NAME, { entityId: characterId });
+                // }
             } else {
                 // Animation has ended, so we can enable movement animation again
                 // And set the animation to idle

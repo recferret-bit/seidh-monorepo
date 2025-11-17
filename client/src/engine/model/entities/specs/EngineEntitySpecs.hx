@@ -2,8 +2,8 @@ package engine.model.entities.specs;
 
 import engine.SeidhEngine;
 import engine.geometry.Vec2;
-import engine.model.entities.types.EntityType;
 import engine.model.entities.specs.EngineEntitySpec;
+import engine.model.entities.types.EntityType;
 
 /**
  * EntitySpecs - Entity specification seed data for the engine

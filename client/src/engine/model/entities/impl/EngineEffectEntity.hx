@@ -1,8 +1,8 @@
 package engine.model.entities.impl;
 
-import engine.model.entities.types.EntityType;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.specs.EngineEntitySpec;
+import engine.model.entities.types.EntityType;
 
 /**
  * Effect entity (buffs, debuffs, visual effects)

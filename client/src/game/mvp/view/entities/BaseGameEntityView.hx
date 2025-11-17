@@ -1,9 +1,9 @@
 package game.mvp.view.entities;
 
 import engine.SeidhEngine;
-import game.config.GameClientConfig;
 import engine.geometry.Rect;
 import engine.model.entities.types.EntityType;
+import game.config.GameClientConfig;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.presenter.GamePresenter;
 import h2d.Bitmap;

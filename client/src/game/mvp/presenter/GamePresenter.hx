@@ -1,8 +1,8 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.model.entities.specs.EngineEntitySpecs;
 import engine.model.entities.specs.EngineEntitySpec;
+import engine.model.entities.specs.EngineEntitySpecs;
 import game.mvp.model.GameClientState;
 import game.mvp.presenter.EntitySyncPresenter;
 import game.mvp.presenter.InputPresenter;

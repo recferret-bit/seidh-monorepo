@@ -1,11 +1,11 @@
 package game.mvp.view.entities.collider;
 
 import engine.SeidhEngine;
-import h2d.Bitmap;
-import h2d.Tile;
-import game.mvp.presenter.GamePresenter;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.ColliderModel;
+import game.mvp.presenter.GamePresenter;
+import h2d.Bitmap;
+import h2d.Tile;
 
 /**
  * Collider entity view extending BaseGameEntityView

@@ -1,9 +1,9 @@
 package engine.modules.impl;
 
-import engine.modules.abs.IModule;
 import engine.model.GameModelState;
 import engine.model.entities.base.BaseEngineEntity;
 import engine.model.entities.specs.EngineEntitySpec;
+import engine.modules.abs.IModule;
 
 /**
  * Spawn module for entity lifecycle

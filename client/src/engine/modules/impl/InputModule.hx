@@ -1,10 +1,10 @@
 package engine.modules.impl;
 
-import engine.modules.abs.IModule;
-import engine.model.entities.types.EntityType;
 import engine.model.GameModelState;
 import engine.model.entities.character.BaseCharacterEntity;
+import engine.model.entities.types.EntityType;
 import engine.model.managers.IEngineEntityManager;
+import engine.modules.abs.IModule;
 import engine.presenter.InputBuffer;
 import engine.presenter.InputMessage;
 
