@@ -65,9 +65,16 @@ import engine.view.IEventBus;
  */
 @:expose()
 class SeidhEngine {
-    public static var Config: EngineConfig;
+    public static final Config: EngineConfig = {
+        mode: SINGLEPLAYER,
+        tickRate: 60,
+        unitPixels: 32,
+        aiUpdateInterval: 10,
+        snapshotBufferSize: 1000,
+        rngSeed: 12345,
+        snapshotEmissionInterval: 5
+    };
     
-    private var config: EngineConfig;
     private var state: GameModelState;
     private var modules: ModuleRegistry;
     private var eventBus: IEventBus;
@@ -75,9 +82,7 @@ class SeidhEngine {
     private var snapshotManager: SnapshotManager;
     private var running: Bool;
     
-    private function new(config: EngineConfig) {
-        Config = config;
-
+    private function new() {
         this.state = new GameModelState(Config.rngSeed);
         this.modules = new ModuleRegistry();
         this.eventBus = new EventBus();
@@ -90,11 +95,10 @@ class SeidhEngine {
     
     /**
      * Create new engine instance
-     * @param config Engine configuration
      * @return Engine instance
      */
-    public static function create(config: EngineConfig): SeidhEngine {
-        return new SeidhEngine(config);
+    public static function create(): SeidhEngine {
+        return new SeidhEngine();
     }
     
     /**

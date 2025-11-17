@@ -1,6 +1,5 @@
 package game.scene.impl;
 
-import game.mvp.view.entities.collider.ColliderEntityView;
 import h3d.Engine;
 
 import game.scene.base.BaseScene;

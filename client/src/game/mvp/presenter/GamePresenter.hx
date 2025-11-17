@@ -56,8 +56,8 @@ class GamePresenter {
         // Create view orchestrator with scene reference
         viewOrchestrator = new GameViewOrchestrator(gameClientState, parent);
         
-        // Create engine with config
-        engine = SeidhEngine.create(Config.engineConfig);
+        // Create engine
+        engine = SeidhEngine.create();
         
         // Create sub-presenters
         inputPresenter = new InputPresenter(engine, gameClientState);

@@ -2,7 +2,6 @@ package engine.physics;
 
 import engine.geometry.Rect;
 import engine.geometry.Vec2;
-import engine.model.entities.base.BaseEngineEntity;
 import engine.physics.CollisionTypes.CollisionObject;
 import engine.physics.CollisionTypes.CollisionResult;
 
@@ -11,9 +10,6 @@ import engine.physics.CollisionTypes.CollisionResult;
  * Works with plain arrays and data structures - no dependencies on GameModelState or managers
  */
 class CollisionDetector {
-    
-    /** Unit pixels conversion factor */
-    public final unitPixels = 32;
     
     public function new() {
     }
@@ -78,6 +74,8 @@ class CollisionDetector {
         final rectB = b.entity != null ? b.entity.colliderRect : null;
         
         if (rectA == null || rectB == null) {
+            final unitPixels = SeidhEngine.Config.unitPixels;
+
             // Fallback: create temporary rects if entities don't have colliderRect
             final colliderAWidth = Std.int(a.colliderWidth * unitPixels);
             final colliderAHeight = Std.int(a.colliderHeight * unitPixels);
