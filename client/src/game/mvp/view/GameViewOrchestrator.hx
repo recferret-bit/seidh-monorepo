@@ -7,13 +7,7 @@ import game.mvp.view.camera.CameraConfig;
 import game.mvp.view.camera.CameraController;
 import game.mvp.view.entities.BaseGameEntityView;
 import game.mvp.view.entities.character.CharacterEntityView;
-import game.mvp.view.entities.character.glamr.GlamrEntityView;
 import game.mvp.view.entities.character.ragnar.RagnarEntityView;
-import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
-import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
-import game.mvp.view.entities.collider.ColliderEntityView;
-// import game.mvp.view.entities.consumable.ConsumableEntityView;
-// import game.mvp.view.entities.effect.EffectEntityView;
 import h2d.Graphics;
 import h2d.Object;
 import h2d.Scene;
@@ -175,21 +169,11 @@ class GameViewOrchestrator {
             // Skip object pooling for colliders as requested
             view = entityViewPool.acquire(model.type, layer);
         } else {
-            switch (model.type) {
-                case EntityType.RAGNAR:
-                    view = new RagnarEntityView();
-                case EntityType.ZOMBIE_BOY:
-                    view = new ZombieBoyEntityView();
-                case EntityType.ZOMBIE_GIRL:
-                    view = new ZombieGirlEntityView();
-                case EntityType.GLAMR:
-                    view = new GlamrEntityView();
-                case EntityType.COLLIDER:
-                    view = new ColliderEntityView();
-                default:
-                    view = new RagnarEntityView(); // Default fallback
+            // Create view using centralized factory
+            view = EntityViewFactory.create(model.type);
+            if (view != null) {
+                parent.addChild(view);
             }
-            parent.addChild(view);
         }
         
         if (view != null) {

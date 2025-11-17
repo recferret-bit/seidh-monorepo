@@ -2,14 +2,6 @@ package game.mvp.view;
 
 import engine.model.entities.types.EntityType;
 import game.mvp.view.entities.BaseGameEntityView;
-import game.mvp.view.entities.character.CharacterEntityView;
-import game.mvp.view.entities.character.glamr.GlamrEntityView;
-import game.mvp.view.entities.character.ragnar.RagnarEntityView;
-import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
-import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
-import game.mvp.view.entities.collider.ColliderEntityView;
-// import game.mvp.view.entities.consumable.ConsumableEntityView;
-// import game.mvp.view.entities.effect.EffectEntityView;
 import h2d.Object;
 
 /**
@@ -55,31 +47,24 @@ class EntityViewPool {
      * Register factory functions for each entity type
      */
     private function registerFactories(): Void {
-        factories.set(EntityType.RAGNAR, function() {
-            final view = new RagnarEntityView();
-            view.setPoolType(EntityType.RAGNAR);
-            return view;
-        });
-        factories.set(EntityType.ZOMBIE_BOY, function() {
-            final view = new ZombieBoyEntityView();
-            view.setPoolType(EntityType.ZOMBIE_BOY);
-            return view;
-        });
-        factories.set(EntityType.ZOMBIE_GIRL, function() {
-            final view = new ZombieGirlEntityView();
-            view.setPoolType(EntityType.ZOMBIE_GIRL);
-            return view;
-        });
-        factories.set(EntityType.GLAMR, function() {
-            final view = new GlamrEntityView();
-            view.setPoolType(EntityType.GLAMR);
-            return view;
-        });
-        factories.set(EntityType.COLLIDER, function() {
-            final view = new ColliderEntityView();
-            view.setPoolType(EntityType.COLLIDER);
-            return view;
-        });
+        // Register factories for all supported entity types
+        final supportedTypes = [
+            EntityType.RAGNAR,
+            EntityType.ZOMBIE_BOY,
+            EntityType.ZOMBIE_GIRL,
+            EntityType.GLAMR,
+            EntityType.COLLIDER
+        ];
+        
+        for (type in supportedTypes) {
+            if (EntityViewFactory.isSupported(type)) {
+                // Capture type in local variable to avoid closure issues
+                final entityType = type;
+                factories.set(type, function() {
+                    return EntityViewFactory.create(entityType);
+                });
+            }
+        }
     }
     
     /**

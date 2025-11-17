@@ -12,15 +12,8 @@ import game.mvp.model.entities.ColliderModel;
  * Provides centralized access to game state
  */
 class GameClientState {
-    // Entity storage by ID
+    // Single entity storage by ID - source of truth
     private var entities: Map<Int, BaseEntityModel>;
-    
-    // Typed entity collections for quick access
-    private var ragnars: Map<Int, CharacterModel>;
-    private var zombieBoys: Map<Int, CharacterModel>;
-    private var zombieGirls: Map<Int, CharacterModel>;
-    private var glamrs: Map<Int, CharacterModel>;
-    private var colliders: Map<Int, ColliderModel>;
 
     // State tracking
     private var nextLocalId: Int;
@@ -35,11 +28,6 @@ class GameClientState {
     
     public function new() {
         entities = new Map<Int, BaseEntityModel>();
-        ragnars = new Map<Int, CharacterModel>();
-        zombieBoys = new Map<Int, CharacterModel>();
-        zombieGirls = new Map<Int, CharacterModel>();
-        glamrs = new Map<Int, CharacterModel>();
-        colliders = new Map<Int, ColliderModel>();
 
         nextLocalId = 1;
         lastUpdateTick = 0;
@@ -56,50 +44,13 @@ class GameClientState {
      */
     public function addEntity(model: BaseEntityModel): Void {
         entities.set(model.engineEntity.id, model);
-        
-        // Add to typed collection
-        switch (model.type) {
-            case RAGNAR:
-                ragnars.set(model.engineEntity.id, cast model);
-            case ZOMBIE_BOY:
-                zombieBoys.set(model.engineEntity.id, cast model);
-            case ZOMBIE_GIRL:
-                zombieGirls.set(model.engineEntity.id, cast model);
-            case GLAMR:
-                glamrs.set(model.engineEntity.id, cast model);
-            case COLLIDER:
-                colliders.set(model.engineEntity.id, cast model);
-            default:
-                trace("addEntity: unknown entity type: " + model.type);
-                // Handle unknown types if needed
-        }
     }
     
     /**
      * Remove entity model from state
      */
     public function removeEntity(entityId: Int): Void {
-        var model = entities.get(entityId);
-        if (model != null) {
-            // Remove from typed collection
-            switch (model.type) {
-                case RAGNAR:
-                    ragnars.remove(entityId);
-                case ZOMBIE_BOY:
-                    zombieBoys.remove(entityId);
-                case ZOMBIE_GIRL:
-                    zombieGirls.remove(entityId);
-                case GLAMR:
-                    glamrs.remove(entityId);
-                case COLLIDER:
-                    colliders.remove(entityId);
-                default:
-                    trace("removeEntity: unknown entity type: " + model.type);
-                    // Handle unknown types if needed
-            }
-            
-            entities.remove(entityId);
-        }
+        entities.remove(entityId);
     }
     
     /**
@@ -110,42 +61,69 @@ class GameClientState {
     }
     
     /**
-     * Get character model by ID
+     * Generic helper: Get entity by ID and type, with type-safe casting
      */
-    public function getRagnar(entityId: Int): CharacterModel {
-        return ragnars.get(entityId);
-    }
-    
-
-    /**
-     * Get zombie boy model by ID
-     */
-    public function getZombieBoy(entityId: Int): CharacterModel {
-        return zombieBoys.get(entityId);
+    private function getEntityByType<T:BaseEntityModel>(entityId: Int, expectedType: EntityType): Null<T> {
+        var entity = entities.get(entityId);
+        if (entity != null && entity.type == expectedType) {
+            return cast entity;
+        }
+        return null;
     }
     
     /**
-     * Get zombie girl model by ID
+     * Get character model by ID (type-safe)
      */
-    public function getZombieGirl(entityId: Int): CharacterModel {
-        return zombieGirls.get(entityId);
+    public function getRagnar(entityId: Int): Null<CharacterModel> {
+        var result: Null<CharacterModel> = getEntityByType(entityId, RAGNAR);
+        return result;
     }
 
     /**
-     * Get glamr model by ID
+     * Get zombie boy model by ID (type-safe)
      */
-    public function getGlamr(entityId: Int): CharacterModel {
-        return glamrs.get(entityId);
+    public function getZombieBoy(entityId: Int): Null<CharacterModel> {
+        var result: Null<CharacterModel> = getEntityByType(entityId, ZOMBIE_BOY);
+        return result;
     }
-
 
     /**
-     * Get collider model by ID
+     * Get zombie girl model by ID (type-safe)
      */
-    public function getCollider(entityId: Int): ColliderModel {
-        return colliders.get(entityId);
+    public function getZombieGirl(entityId: Int): Null<CharacterModel> {
+        var result: Null<CharacterModel> = getEntityByType(entityId, ZOMBIE_GIRL);
+        return result;
     }
 
+    /**
+     * Get glamr model by ID (type-safe)
+     */
+    public function getGlamr(entityId: Int): Null<CharacterModel> {
+        var result: Null<CharacterModel> = getEntityByType(entityId, GLAMR);
+        return result;
+    }
+
+    /**
+     * Get collider model by ID (type-safe)
+     */
+    public function getCollider(entityId: Int): Null<ColliderModel> {
+        var result: Null<ColliderModel> = getEntityByType(entityId, COLLIDER);
+        return result;
+    }
+
+    /**
+     * Generic helper: Get all entities of a specific type with type-safe casting
+     */
+    private function getEntitiesByTypeGeneric<T:BaseEntityModel>(type: EntityType): Array<T> {
+        final result: Array<T> = [];
+        for (entity in entities) {
+            if (entity.type == type) {
+                result.push(cast entity);
+            }
+        }
+        return result;
+    }
+    
     /**
      * Get all entities of a specific type
      */
@@ -160,33 +138,24 @@ class GameClientState {
     }
     
     /**
-     * Get all characters
+     * Get all characters (type-safe)
      */
     public function getAllCharacters(): Array<CharacterModel> {
-        final result = [];
-        for (ragnar in ragnars) {
-            result.push(ragnar);
-        }
-        for (zombieBoy in zombieBoys) {
-            result.push(zombieBoy);
-        }
-        for (zombieGirl in zombieGirls) {
-            result.push(zombieGirl);
-        }
-        for (glamr in glamrs) {
-            result.push(glamr);
+        final result: Array<CharacterModel> = [];
+        final characterTypes = [RAGNAR, ZOMBIE_BOY, ZOMBIE_GIRL, GLAMR];
+        for (entity in entities) {
+            if (characterTypes.indexOf(entity.type) >= 0) {
+                result.push(cast entity);
+            }
         }
         return result;
     }
 
     /**
-     * Get all colliders
+     * Get all colliders (type-safe)
      */
     public function getAllColliders(): Array<ColliderModel> {
-        final result = [];
-        for (collider in colliders) {
-            result.push(collider);
-        }
+        var result: Array<ColliderModel> = getEntitiesByTypeGeneric(COLLIDER);
         return result;
     }
 
@@ -238,9 +207,9 @@ class GameClientState {
     /**
      * Get player controlled entity
      */
-    public function getPlayerControlledEntity(): CharacterModel {
+    public function getPlayerControlledEntity(): Null<CharacterModel> {
         if (playerControlledEntityId != null) {
-            return ragnars.get(playerControlledEntityId);
+            return getRagnar(playerControlledEntityId);
         }
         return null;
     }
@@ -320,11 +289,6 @@ class GameClientState {
      */
     public function clear(): Void {
         entities.clear();
-        ragnars.clear();
-        zombieBoys.clear();
-        zombieGirls.clear();
-        glamrs.clear();
-        colliders.clear();
 
         nextLocalId = 1;
         playerControlledEntityId = null;
