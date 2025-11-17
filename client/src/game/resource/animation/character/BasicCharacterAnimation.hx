@@ -6,6 +6,7 @@ import engine.model.entities.types.EntityState;
 import engine.model.entities.types.EntityType;
 import h2d.Anim;
 import h2d.Tile;
+import game.resource.animation.character.CharacterAnimationConfigRegistry.AnimationConfigType;
 
 typedef AnimationConfig = {
     /** Tile set to load the animation from */
@@ -40,8 +41,11 @@ abstract class BasicCharacterAnimation {
     private var deathAnimation:Array<Tile>;
     private var actionMainAnimation:Array<Tile>;
     private var actionSpecialAnimation:Array<Tile>;
+    
+    private final defaultAnimationSpeed:Int = 10;
 
-    public function new() {
+    public function new(entityType:EntityType) {
+        this.entityType = entityType;
         animation = new h2d.Anim();
 
         animation.onAnimEnd = function callback() {
@@ -66,12 +70,13 @@ abstract class BasicCharacterAnimation {
             }
         }
 
-        idleAnimationConfig = provideIdleConfig();
-        runAnimationConfig = provideRunConfig();
-        spawnAnimationConfig = provideSpawnConfig();
-        deathAnimationConfig = provideDeathConfig();
-        actionMainAnimationConfig = provideActionMainConfig();
-        actionSpecialAnimationConfig = provideActionSpecialConfig();
+        // Load configs from registry
+        idleAnimationConfig = CharacterAnimationConfigRegistry.getConfig(entityType, AnimationConfigType.IDLE);
+        runAnimationConfig = CharacterAnimationConfigRegistry.getConfig(entityType, AnimationConfigType.RUN);
+        spawnAnimationConfig = CharacterAnimationConfigRegistry.getConfig(entityType, AnimationConfigType.SPAWN);
+        deathAnimationConfig = CharacterAnimationConfigRegistry.getConfig(entityType, AnimationConfigType.DEATH);
+        actionMainAnimationConfig = CharacterAnimationConfigRegistry.getConfig(entityType, AnimationConfigType.ATTACK);
+        actionSpecialAnimationConfig = CharacterAnimationConfigRegistry.getConfig(entityType, AnimationConfigType.ACTION_SPECIAL);
 
         loadIdleAnimation();
         loadRunAnimation();
@@ -81,20 +86,15 @@ abstract class BasicCharacterAnimation {
         loadActionSpecialAnimation();
     }
 
-    abstract function provideIdleConfig():AnimationConfig;
-    abstract function provideRunConfig():AnimationConfig;
-    abstract function provideSpawnConfig():AnimationConfig;
-    abstract function provideDeathConfig():AnimationConfig;
-    abstract function provideActionMainConfig():AnimationConfig;
-    abstract function provideActionSpecialConfig():AnimationConfig;
-
     public function setDirection(direction:EntityDirection) {
         if (this.entityDirection != direction) {
             this.entityDirection = direction;
 
             function flipTilesHorizontally(animationToPlay:Array<Tile>) {
-                for (value in animationToPlay) {
-                    value.flipX();
+                if (animationToPlay != null) {
+                    for (value in animationToPlay) {
+                        value.flipX();
+                    }
                 }
             }
 
@@ -119,31 +119,38 @@ abstract class BasicCharacterAnimation {
             switch (newState) {
                 case IDLE:
                     animationToPlay = idleAnimation;
-                    animation.speed = idleAnimationConfig.speed;
+                    animation.speed = idleAnimationConfig != null ? idleAnimationConfig.speed : defaultAnimationSpeed;
                 case RUN:
                     animationToPlay = runAnimation;
-                    animation.speed = runAnimationConfig.speed;
+                    animation.speed = runAnimationConfig != null ? runAnimationConfig.speed : defaultAnimationSpeed;
                 case DEATH:
                     animation.loop = false;
                     animationToPlay = deathAnimation;
-                    animation.speed = deathAnimationConfig.speed;
+                    animation.speed = deathAnimationConfig != null ? deathAnimationConfig.speed : defaultAnimationSpeed;
                 case SPAWN:
                     animation.loop = false;
                     animationToPlay = spawnAnimation;
-                    animation.speed = spawnAnimationConfig.speed;
+                    animation.speed = spawnAnimationConfig != null ? spawnAnimationConfig.speed : defaultAnimationSpeed;
                 case ACTION_MAIN:
                     animation.loop = false;
                     animationToPlay = actionMainAnimation;
-                    animation.speed = actionMainAnimationConfig.speed;
+                    animation.speed = actionMainAnimationConfig != null ? actionMainAnimationConfig.speed : defaultAnimationSpeed;
                 case ACTION_SPECIAL:
                     animation.loop = false;
                     animationToPlay = actionSpecialAnimation;
-                    animation.speed = actionSpecialAnimationConfig.speed;
+                    animation.speed = actionSpecialAnimationConfig != null ? actionSpecialAnimationConfig.speed : defaultAnimationSpeed;
                 default:
                     animationToPlay = idleAnimation;
             }
 
-            animation.play(animationToPlay);
+            // Fallback to idle if animation is null
+            if (animationToPlay == null) {
+                animationToPlay = idleAnimation;
+            }
+
+            if (animationToPlay != null) {
+                animation.play(animationToPlay);
+            }
         }
     }
 

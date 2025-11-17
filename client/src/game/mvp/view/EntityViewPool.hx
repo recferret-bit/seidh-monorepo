@@ -18,14 +18,12 @@ import h2d.Object;
  * Implements acquire/release pattern for object pooling
  */
 
-// TODO create a generic pool for all entity types
 class EntityViewPool {
-    // Typed pools for each entity type
-    private var ragnarPool: Array<BaseGameEntityView>;
-    private var zombieBoyPool: Array<BaseGameEntityView>;
-    private var zombieGirlPool: Array<BaseGameEntityView>;
-    private var glamrPool: Array<BaseGameEntityView>;
-    private var colliderPool: Array<BaseGameEntityView>;
+    // Unified pool map for all entity types
+    private var pools: Map<EntityType, Array<BaseGameEntityView>>;
+    
+    // Factory functions for creating views
+    private var factories: Map<EntityType, Void->BaseGameEntityView>;
     
     // Pool statistics
     private var poolStats: Map<EntityType, PoolStats>;
@@ -38,35 +36,74 @@ class EntityViewPool {
         this.maxPoolSize = maxPoolSize;
         this.initialPoolSize = initialPoolSize;
         
-        // Initialize pools
-        ragnarPool = [];
-        zombieBoyPool = [];
-        zombieGirlPool = [];
-        glamrPool = [];
-        colliderPool = [];
+        // Initialize pools map
+        pools = new Map<EntityType, Array<BaseGameEntityView>>();
+        
+        // Initialize factory map
+        factories = new Map<EntityType, Void->BaseGameEntityView>();
+        registerFactories();
 
         // Initialize statistics
         poolStats = new Map<EntityType, PoolStats>();
-        poolStats.set(EntityType.RAGNAR, new PoolStats());
-        poolStats.set(EntityType.ZOMBIE_BOY, new PoolStats());
-        poolStats.set(EntityType.ZOMBIE_GIRL, new PoolStats());
-        poolStats.set(EntityType.GLAMR, new PoolStats());
-        poolStats.set(EntityType.COLLIDER, new PoolStats());
+        initializeStats();
 
         // Pre-populate pools
         initializePools();
     }
     
     /**
+     * Register factory functions for each entity type
+     */
+    private function registerFactories(): Void {
+        factories.set(EntityType.RAGNAR, function() {
+            final view = new RagnarEntityView();
+            view.setPoolType(EntityType.RAGNAR);
+            return view;
+        });
+        factories.set(EntityType.ZOMBIE_BOY, function() {
+            final view = new ZombieBoyEntityView();
+            view.setPoolType(EntityType.ZOMBIE_BOY);
+            return view;
+        });
+        factories.set(EntityType.ZOMBIE_GIRL, function() {
+            final view = new ZombieGirlEntityView();
+            view.setPoolType(EntityType.ZOMBIE_GIRL);
+            return view;
+        });
+        factories.set(EntityType.GLAMR, function() {
+            final view = new GlamrEntityView();
+            view.setPoolType(EntityType.GLAMR);
+            return view;
+        });
+        factories.set(EntityType.COLLIDER, function() {
+            final view = new ColliderEntityView();
+            view.setPoolType(EntityType.COLLIDER);
+            return view;
+        });
+    }
+    
+    /**
+     * Initialize statistics for all entity types
+     */
+    private function initializeStats(): Void {
+        for (type => _ in factories) {
+            pools.set(type, []);
+            poolStats.set(type, new PoolStats());
+        }
+    }
+    
+    /**
      * Initialize pools with initial objects
      */
     private function initializePools(): Void {
-        // Pre-create character views
-        for (i in 0...initialPoolSize) {
-            final view: BaseGameEntityView = new RagnarEntityView();
-            view.setPoolType(EntityType.RAGNAR);
-            view.reset();
-            ragnarPool.push(view);
+        // Pre-create views for each entity type
+        for (type => factory in factories) {
+            final pool = pools.get(type);
+            for (i in 0...initialPoolSize) {
+                final view = factory();
+                view.reset();
+                pool.push(view);
+            }
         }
     }
     
@@ -76,39 +113,18 @@ class EntityViewPool {
     public function acquire(type: EntityType, parent: Object): BaseGameEntityView {
         var view: BaseGameEntityView = null;
         
-        switch (type) {
-            case EntityType.RAGNAR:
-                view = getFromPool(ragnarPool);
-                if (view == null) {
-                    view = new RagnarEntityView();
-                    view.setPoolType(EntityType.RAGNAR);
-                }
-            case EntityType.ZOMBIE_BOY:
-                view = getFromPool(zombieBoyPool);
-                if (view == null) {
-                    view = new ZombieBoyEntityView();
-                    view.setPoolType(EntityType.ZOMBIE_BOY);
-                }
-            case EntityType.ZOMBIE_GIRL:
-                view = getFromPool(zombieGirlPool);
-                if (view == null) {
-                    view = new ZombieGirlEntityView();
-                    view.setPoolType(EntityType.ZOMBIE_GIRL);
-                }
-            case EntityType.GLAMR:
-                view = getFromPool(glamrPool);
-                if (view == null) {
-                    view = new GlamrEntityView();
-                    view.setPoolType(EntityType.GLAMR);
-                }
-            case EntityType.COLLIDER:
-                view = getFromPool(colliderPool);
-                if (view == null) {
-                    view = new ColliderEntityView();
-                    view.setPoolType(EntityType.COLLIDER);
-                }
-            default:
-                view = null;
+        // Get pool for this entity type
+        final pool = pools.get(type);
+        final factory = factories.get(type);
+        
+        if (pool == null || factory == null) {
+            return null;
+        }
+        
+        // Try to get from pool, or create new if pool is empty
+        view = getFromPool(pool);
+        if (view == null) {
+            view = factory();
         }
         
         if (view != null) {
@@ -122,8 +138,10 @@ class EntityViewPool {
             
             // Update statistics
             final stats = poolStats.get(type);
-            stats.acquired++;
-            stats.activeCount++;
+            if (stats != null) {
+                stats.acquired++;
+                stats.activeCount++;
+            }
         }
         
         return view;
@@ -138,40 +156,23 @@ class EntityViewPool {
         }
         
         final type = view.getPoolType();
+        final pool = pools.get(type);
         final stats = poolStats.get(type);
+        
+        if (pool == null || stats == null) {
+            view.destroy();
+            return;
+        }
         
         // Reset view for reuse
         view.release();
         
-        // Add back to appropriate pool
-        switch (type) {
-            case EntityType.RAGNAR:
-                if (ragnarPool.length < maxPoolSize) {
-                    ragnarPool.push(view);
-                } else {
-                    // Pool is full, destroy the view
-                    view.destroy();
-                }
-            case EntityType.ZOMBIE_BOY:
-                if (zombieBoyPool.length < maxPoolSize) {
-                    zombieBoyPool.push(view);
-                } else {
-                    view.destroy();
-                }
-            case EntityType.ZOMBIE_GIRL:
-                if (zombieGirlPool.length < maxPoolSize) {
-                    zombieGirlPool.push(view);
-                } else {
-                    view.destroy();
-                }
-            case EntityType.GLAMR:
-                if (glamrPool.length < maxPoolSize) {
-                    glamrPool.push(view);
-                } else {
-                    view.destroy();
-                }
-            default:
-                view.destroy();
+        // Add back to pool if not full, otherwise destroy
+        if (pool.length < maxPoolSize) {
+            pool.push(view);
+        } else {
+            // Pool is full, destroy the view
+            view.destroy();
         }
         
         // Update statistics
@@ -193,25 +194,19 @@ class EntityViewPool {
      * Get pool size for specific type
      */
     public function getPoolSize(type: EntityType): Int {
-        switch (type) {
-            case EntityType.RAGNAR:
-                return ragnarPool.length;
-            case EntityType.ZOMBIE_BOY:
-                return zombieBoyPool.length;
-            case EntityType.ZOMBIE_GIRL:
-                return zombieGirlPool.length;
-            case EntityType.GLAMR:
-                return glamrPool.length;
-            default:
-                return 0;
-        }
+        final pool = pools.get(type);
+        return pool != null ? pool.length : 0;
     }
     
     /**
      * Get total pool size
      */
     public function getTotalPoolSize(): Int {
-        return ragnarPool.length + zombieBoyPool.length + zombieGirlPool.length + glamrPool.length;
+        var total = 0;
+        for (pool in pools) {
+            total += pool.length;
+        }
+        return total;
     }
     
     /**
@@ -219,7 +214,7 @@ class EntityViewPool {
      */
     public function getActiveCount(type: EntityType): Int {
         var stats = poolStats.get(type);
-        return stats.activeCount;
+        return stats != null ? stats.activeCount : 0;
     }
     
     /**
@@ -252,24 +247,12 @@ class EntityViewPool {
      */
     public function clear(): Void {
         // Destroy all pooled objects
-        for (view in ragnarPool) {
-            view.destroy();
+        for (pool in pools) {
+            for (view in pool) {
+                view.destroy();
+            }
+            pool.resize(0);
         }
-        for (view in zombieBoyPool) {
-            view.destroy();
-        }
-        for (view in zombieGirlPool) {
-            view.destroy();
-        }
-        for (view in glamrPool) {
-            view.destroy();
-        }
-        
-        // Clear pools
-        ragnarPool = [];
-        zombieBoyPool = [];
-        zombieGirlPool = [];
-        glamrPool = [];
         
         // Reset statistics
         for (stats in poolStats) {
@@ -281,34 +264,24 @@ class EntityViewPool {
      * Get pool summary for debugging
      */
     public function getPoolSummary(): Dynamic {
-        return {
+        final summary: Dynamic = {
             totalPooled: getTotalPoolSize(),
             totalActive: getTotalActiveCount(),
-            ragnarPool: {
-                pooled: ragnarPool.length,
-                active: getActiveCount(EntityType.RAGNAR),
-                acquired: poolStats.get(EntityType.RAGNAR).acquired,
-                released: poolStats.get(EntityType.RAGNAR).released
-            },
-            zombieBoyPool: {
-                pooled: zombieBoyPool.length,
-                active: getActiveCount(EntityType.ZOMBIE_BOY),
-                acquired: poolStats.get(EntityType.ZOMBIE_BOY).acquired,
-                released: poolStats.get(EntityType.ZOMBIE_BOY).released
-            },
-            zombieGirlPool: {
-                pooled: zombieGirlPool.length,
-                active: getActiveCount(EntityType.ZOMBIE_GIRL),
-                acquired: poolStats.get(EntityType.ZOMBIE_GIRL).acquired,
-                released: poolStats.get(EntityType.ZOMBIE_GIRL).released
-            },
-            glamrPool: {
-                pooled: glamrPool.length,
-                active: getActiveCount(EntityType.GLAMR),
-                acquired: poolStats.get(EntityType.GLAMR).acquired,
-                released: poolStats.get(EntityType.GLAMR).released
-            }
+            pools: {}
         };
+        
+        // Add summary for each pool type
+        for (type => pool in pools) {
+            final stats = poolStats.get(type);
+            Reflect.setField(summary.pools, type, {
+                pooled: pool.length,
+                active: stats != null ? stats.activeCount : 0,
+                acquired: stats != null ? stats.acquired : 0,
+                released: stats != null ? stats.released : 0
+            });
+        }
+        
+        return summary;
     }
 }
 
