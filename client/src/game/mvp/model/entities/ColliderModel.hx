@@ -1,7 +1,7 @@
 package game.mvp.model.entities;
 
-import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.collider.ColliderEntity;
+import engine.domain.entities.BaseEntity;
+import engine.domain.entities.collider.ColliderEntity;
 
 /**
  * Collider entity model extending BaseEntityModel
@@ -26,7 +26,7 @@ class ColliderModel extends BaseEntityModel {
     /**
      * Initialize with engine collider entity
      */
-    override public function initialize(engineEntity: BaseEngineEntity): Void {
+    override public function initialize(engineEntity: BaseEntity): Void {
         super.initialize(engineEntity);
         
         // Colliders are static, no interpolation needed

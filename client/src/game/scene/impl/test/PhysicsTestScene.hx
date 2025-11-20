@@ -1,12 +1,11 @@
 package game.scene.impl.test;
 
-import engine.model.entities.collider.ColliderEntity;
+import engine.domain.entities.BaseEntity;
+import engine.domain.entities.collider.ColliderEntity;
+import engine.infrastructure.utilities.physics.CollisionDetector;
+import engine.infrastructure.utilities.physics.CollisionTypes.CollisionObject;
 import game.mvp.model.entities.ColliderModel;
-import engine.model.entities.specs.EngineEntitySpecs;
 import game.mvp.view.entities.collider.ColliderEntityView;
-import engine.physics.CollisionDetector;
-import engine.physics.CollisionTypes.CollisionObject;
-import engine.model.entities.base.BaseEngineEntity;
 import hxd.Key;
 import game.scene.base.BaseScene;
 import engine.SeidhEngine;
@@ -28,7 +27,7 @@ class PhysicsTestScene extends BaseScene {
         collider1 = new ColliderEntityView();
         collider1Model = new ColliderModel();
         final colliderEntity1 = new ColliderEntity();
-        colliderEntity1.reset(EngineEntitySpecs.getColliderSpec(100, 100, false, false));
+        // TODO: Recreate spec helper or create inline
         collider1Model.initialize(colliderEntity1);
         collider1.initialize(collider1Model);
         addChild(collider1);
@@ -37,7 +36,7 @@ class PhysicsTestScene extends BaseScene {
         collider2 = new ColliderEntityView();
         collider2Model = new ColliderModel();
         final colliderEntity2 = new ColliderEntity();
-        colliderEntity2.reset(EngineEntitySpecs.getColliderSpec(200, 200, false, false));
+        // TODO: Recreate spec helper or create inline
         collider2Model.initialize(colliderEntity2);
         collider2.initialize(collider2Model);
         addChild(collider2);
@@ -92,7 +91,7 @@ class PhysicsTestScene extends BaseScene {
                 passable: collider1Model.passable,
                 isTrigger: collider1Model.isTrigger,
                 entity: collider1Model.engineEntity,
-                onCollision: function(entityA: BaseEngineEntity, entityB: BaseEngineEntity) {
+                onCollision: function(entityA: BaseEntity, entityB: BaseEntity) {
                     trace("Collision detected between entity " + entityA.id + " and entity " + entityB.id);
                     collider1.alpha = 0.5;
                 },
@@ -110,7 +109,7 @@ class PhysicsTestScene extends BaseScene {
                 passable: collider2Model.passable,
                 isTrigger: collider2Model.isTrigger,
                 entity: collider2Model.engineEntity,
-                onCollision: function(entityA: BaseEngineEntity, entityB: BaseEngineEntity) {
+                onCollision: function(entityA: BaseEntity, entityB: BaseEntity) {
                     trace("Collision detected between entity " + entityA.id + " and entity " + entityB.id);
                     collider2.alpha = 0.5;
                 },

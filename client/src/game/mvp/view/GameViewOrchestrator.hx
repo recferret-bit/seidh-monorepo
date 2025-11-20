@@ -1,6 +1,6 @@
 package game.mvp.view;
 
-import engine.model.entities.types.EntityType;
+import engine.domain.types.EntityType;
 import game.mvp.model.GameClientState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.view.camera.CameraConfig;

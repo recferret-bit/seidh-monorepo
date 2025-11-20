@@ -1,17 +1,18 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.eventbus.IEventBus;
-import engine.eventbus.events.ColliderTriggerEvent;
-import engine.eventbus.events.EntityCollisionEvent;
-import engine.eventbus.events.EntityCorrectionEvent;
-import engine.eventbus.events.EntityDamageEvent;
-import engine.eventbus.events.EntityDeathEvent;
-import engine.eventbus.events.EntityMoveEvent;
-import engine.eventbus.events.EntitySpawnEvent;
-import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.types.EntityType;
-import engine.presenter.InputMessage;
+import engine.config.EngineMode;
+import engine.infrastructure.adapters.events.IEventBus;
+import engine.infrastructure.adapters.events.events.ColliderTriggerEvent;
+import engine.infrastructure.adapters.events.events.EntityCollisionEvent;
+import engine.infrastructure.adapters.events.events.EntityCorrectionEvent;
+import engine.infrastructure.adapters.events.events.EntityDamageEvent;
+import engine.infrastructure.adapters.events.events.EntityDeathEvent;
+import engine.infrastructure.adapters.events.events.EntityMoveEvent;
+import engine.infrastructure.adapters.events.events.EntitySpawnEvent;
+import engine.domain.entities.BaseEntity;
+import engine.domain.types.EntityType;
+import engine.presentation.InputMessage;
 import game.mvp.model.GameClientState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
@@ -128,7 +129,7 @@ class EntitySyncPresenter {
     private function shouldReconcile(serverSnapshot: Dynamic): Bool {
         // Only reconcile in CLIENT_PREDICTION mode
         final engineConfig = SeidhEngine.Config;
-        if (engineConfig == null || engineConfig.mode != CLIENT_PREDICTION) {
+        if (engineConfig == null || engineConfig.mode != EngineMode.CLIENT_PREDICTION) {
             return false;
         }
         
@@ -261,7 +262,7 @@ class EntitySyncPresenter {
         final pos = event.pos;
         final ownerId = event.ownerId;
         
-        final engineEntity:BaseEngineEntity = engine.getEntityById(entityId, entityType);
+        final engineEntity:BaseEntity = engine.getEntityById(entityId, entityType);
 
         if (engineEntity == null) {
             trace("Warning: Could not get engine entity for id: " + entityId);
@@ -465,7 +466,7 @@ class EntitySyncPresenter {
     /**
      * Create model for entity type
      */
-    private function createModelForTypeAndInitialize(entityType: EntityType, engineEntity: BaseEngineEntity): BaseEntityModel {
+    private function createModelForTypeAndInitialize(entityType: EntityType, engineEntity: BaseEntity): BaseEntityModel {
         var clientModel:BaseEntityModel = null;
         switch (entityType) {
             case RAGNAR:

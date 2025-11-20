@@ -1,6 +1,6 @@
 package game.mvp.view;
 
-import engine.model.entities.types.EntityType;
+import engine.domain.types.EntityType;
 import game.mvp.view.entities.BaseGameEntityView;
 import game.mvp.view.entities.character.glamr.GlamrEntityView;
 import game.mvp.view.entities.character.ragnar.RagnarEntityView;

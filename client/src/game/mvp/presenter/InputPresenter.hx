@@ -1,7 +1,8 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.presenter.InputMessage;
+import engine.config.EngineMode;
+import engine.presentation.InputMessage;
 import game.mvp.model.GameClientState;
 import hxd.Key;
 
@@ -258,7 +259,7 @@ class InputPresenter {
         // Calculate latency offset based on engine mode
         var latencyOffset = 0;
         final engineConfig = SeidhEngine.Config;
-        if (engineConfig != null && engineConfig.mode == CLIENT_PREDICTION) {
+        if (engineConfig != null && engineConfig.mode == EngineMode.CLIENT_PREDICTION) {
             latencyOffset = estimatedLatency;
         }
         
@@ -370,7 +371,7 @@ class InputPresenter {
     private function applyLocalPrediction(inputMessage: InputMessage): Void {
         // Only apply prediction in CLIENT_PREDICTION mode
         final engineConfig = SeidhEngine.Config;
-        if (engineConfig == null || engineConfig.mode != CLIENT_PREDICTION) {
+        if (engineConfig == null || engineConfig.mode != EngineMode.CLIENT_PREDICTION) {
             return;
         }
         
@@ -380,7 +381,7 @@ class InputPresenter {
             final entityModel = gameClientState.getEntity(controlledEntityId);
             if (entityModel != null) {
                 final entityType = entityModel.type;
-                final character = cast(engine.getEntityById(controlledEntityId, entityType), engine.model.entities.character.BaseCharacterEntity);
+                final character = cast(engine.getEntityById(controlledEntityId, entityType), engine.domain.entities.character.base.BaseCharacterEntity);
                 if (character != null) {
                     // Apply step-based movement prediction immediately
                     var dt = 1.0 / 60.0; // Assume 60 FPS for prediction

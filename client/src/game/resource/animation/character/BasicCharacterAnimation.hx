@@ -1,8 +1,8 @@
 package game.resource.animation.character;
 
-import engine.model.entities.types.EntityDirection;
-import engine.model.entities.types.EntityState;
-import engine.model.entities.types.EntityType;
+import engine.domain.types.EntityDirection;
+import engine.domain.types.EntityState;
+import engine.domain.types.EntityType;
 import h2d.Anim;
 import h2d.Tile;
 import game.eventbus.GameEventBus;
