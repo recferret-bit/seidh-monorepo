@@ -3,6 +3,7 @@ package engine.domain.entities.consumable.base;
 import engine.domain.entities.BaseEntity;
 import engine.domain.events.EntityDied;
 import engine.domain.specs.EntitySpec;
+import engine.domain.specs.ConsumableSpec;
 
 /**
  * Base consumable item entity (potions, food, etc.)
@@ -22,7 +23,6 @@ class BaseConsumableEntity extends BaseEntity {
     
     public function new() {
         super();
-        isInputDriven = false;
         effectId = "";
         durationTicks = 0;
         stackable = false;
@@ -51,12 +51,15 @@ class BaseConsumableEntity extends BaseEntity {
     
     public override function reset(spec: EntitySpec): Void {
         super.reset(spec);
-        effectId = spec.effectId != null ? spec.effectId : "";
-        durationTicks = spec.durationTicks != null ? spec.durationTicks : 0;
-        stackable = spec.stackable != null ? spec.stackable : false;
-        charges = spec.charges != null ? spec.charges : 1;
-        useRange = spec.useRange != null ? spec.useRange : 16.0;
-        isInputDriven = false;
+        
+        // Cast to ConsumableSpec for type-safe access to consumable fields
+        final consumeSpec: ConsumableSpec = cast spec;
+        
+        effectId = consumeSpec.effectId;
+        durationTicks = consumeSpec.durationTicks != null ? consumeSpec.durationTicks : 0;
+        stackable = consumeSpec.stackable != null ? consumeSpec.stackable : false;
+        charges = consumeSpec.charges != null ? consumeSpec.charges : 1;
+        useRange = consumeSpec.useRange != null ? consumeSpec.useRange : 16.0;
     }
 
     public function consume(tick: Int): Bool {

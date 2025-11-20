@@ -1,6 +1,6 @@
 package engine.infrastructure.state;
 
-import engine.config.EngineConfig;
+import engine.domain.config.EngineConfig;
 import engine.domain.geometry.Vec2;
 import engine.domain.services.DeterministicRng;
 import engine.domain.types.EntityType;

@@ -1,20 +1,18 @@
 package engine.domain.entities.collider;
 
-import engine.domain.valueobjects.Position;
+import engine.domain.specs.ColliderSpec;
 
 /**
- * Contract for creating collider entities.
+ * Contract for creating collider entities
+ * Uses ColliderSpec for type-safe collider creation
  */
 interface ColliderEntityFactory {
-    function create(
-        id: Int,
-        position: Position,
-        ownerId: String,
-        width: Float,
-        height: Float,
-        passable: Bool = false,
-        isTrigger: Bool = false
-    ): ColliderEntity;
+    /**
+     * Create collider entity from specification
+     * @param spec Collider specification
+     * @return Created collider entity
+     */
+    function create(spec: ColliderSpec): ColliderEntity;
 }
 
 

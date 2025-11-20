@@ -6,6 +6,7 @@ import engine.domain.events.DamageDealt;
 import engine.domain.events.EntityDied;
 import engine.domain.events.EntityMoved;
 import engine.domain.specs.EntitySpec;
+import engine.domain.specs.CharacterSpec;
 import engine.domain.valueobjects.Health;
 import engine.domain.valueobjects.Position;
 import engine.domain.valueobjects.Velocity;
@@ -90,28 +91,21 @@ class BaseCharacterEntity extends BaseEntity {
             colliderWidth = 3;
             colliderHeight = 5;
             colliderOffset = new Position(0, 0);
-            
-            // Characters are input-driven by default
-            isInputDriven = true;
 
             return;
         }
 
-        final maxHpValue = spec.maxHp != null ? spec.maxHp : 100;
-        final hpValue = spec.hp != null ? spec.hp : maxHpValue;
+        // Cast to CharacterSpec for type-safe access to character fields
+        final charSpec: CharacterSpec = cast spec;
+        
+        final maxHpValue = charSpec.maxHp != null ? charSpec.maxHp : 100;
+        final hpValue = charSpec.hp != null ? charSpec.hp : maxHpValue;
         _health = new Health(hpValue, maxHpValue);
-        level = spec.level != null ? spec.level : 1;
-        stats = spec.stats != null
-            ? new CharacterStats(
-                spec.stats.power,
-                spec.stats.armor,
-                spec.stats.speed,
-                spec.stats.castSpeed
-            )
-            : defaultStats();
-        attackDefs = spec.attackDefs != null ? spec.attackDefs : [];
-        spellBook = spec.spellBook != null ? spec.spellBook : [];
-        aiProfile = spec.aiProfile != null ? spec.aiProfile : "";
+        level = charSpec.level != null ? charSpec.level : 1;
+        stats = charSpec.stats != null ? charSpec.stats : defaultStats();
+        attackDefs = charSpec.attackDefs != null ? charSpec.attackDefs : [];
+        spellBook = charSpec.spellBook != null ? charSpec.spellBook : [];
+        aiProfile = charSpec.aiProfile != null ? charSpec.aiProfile : "";
         
         // Character-specific collider dimensions (smaller than default)
         if (spec.colliderWidth == null) colliderWidth = 3;
@@ -119,9 +113,6 @@ class BaseCharacterEntity extends BaseEntity {
         if (spec.colliderOffset == null) {
             colliderOffset = new Position(0, 0);
         }
-        
-        // Characters are input-driven by default
-        isInputDriven = spec.isInputDriven != null ? spec.isInputDriven : true;
     }
 
     /**

@@ -6,7 +6,6 @@ import engine.domain.types.EntityType;
 import engine.domain.valueobjects.Position;
 import engine.domain.valueobjects.Velocity;
 import engine.domain.specs.EntitySpec;
-import engine.domain.specs.EntitySpec.BaseEntitySpec;
 
 /**
  * Abstract base entity with common fields and default implementations.
@@ -14,10 +13,13 @@ import engine.domain.specs.EntitySpec.BaseEntitySpec;
  */
 abstract class BaseEntity {
     /** Base entity data */
-    public var base: BaseEntitySpec;
+    public var base: EntitySpec;
     
     /** Collider rectangle instance (kept and updated automatically) */
     public var colliderRect: Rect;
+    
+    /** Is this entity input-driven (vs physics-driven) */
+    public var isInputDriven: Bool = false;
     
     // Property accessors for backward compatibility
     public var id(get, set): Int;
@@ -27,7 +29,6 @@ abstract class BaseEntity {
     public var rotation(get, set): Float;
     public var ownerId(get, set): String;
     public var isAlive(get, set): Bool;
-    public var isInputDriven(get, set): Bool;
     public var colliderWidth(get, set): Float;
     public var colliderHeight(get, set): Float;
 
@@ -64,8 +65,6 @@ abstract class BaseEntity {
     private function set_ownerId(v: String): String return base.ownerId = v;
     private function get_isAlive(): Bool return base.isAlive;
     private function set_isAlive(v: Bool): Bool return base.isAlive = v;
-    private function get_isInputDriven(): Bool return base.isInputDriven;
-    private function set_isInputDriven(v: Bool): Bool return base.isInputDriven = v;
     private function get_colliderWidth(): Float return base.colliderWidth;
     private function set_colliderWidth(v: Float): Float {
         base.colliderWidth = v;
@@ -127,16 +126,15 @@ abstract class BaseEntity {
     /**
      * Create default base entity data
      */
-    private function createDefaultBaseData(): BaseEntitySpec {
+    private function createDefaultBaseData(): EntitySpec {
         return {
-            id: 0,
             type: EntityType.GENERIC,
             pos: new Vec2(0, 0),
             vel: new Vec2(0, 0),
-            rotation: 0,
             ownerId: "",
+            id: 0,
+            rotation: 0,
             isAlive: false,
-            isInputDriven: false,
             colliderWidth: 1,
             colliderHeight: 1,
             colliderOffset: null // No longer stored in base, stored in rect
@@ -146,16 +144,15 @@ abstract class BaseEntity {
     /**
      * Convert spec to base data with defaults applied
      */
-    private function specToBaseData(spec: BaseEntitySpec): BaseEntitySpec {
+    private function specToBaseData(spec: EntitySpec): EntitySpec {
         return {
+            type: spec.type,
+            pos: spec.pos,
+            vel: spec.vel,
+            ownerId: spec.ownerId,
             id: spec.id != null ? spec.id : 0,
-            type: spec.type != null ? spec.type : EntityType.GENERIC,
-            pos: spec.pos != null ? spec.pos : new Vec2(0, 0),
-            vel: spec.vel != null ? spec.vel : new Vec2(0, 0),
             rotation: spec.rotation != null ? spec.rotation : 0,
-            ownerId: spec.ownerId != null ? spec.ownerId : "",
             isAlive: spec.isAlive != null ? spec.isAlive : true,
-            isInputDriven: spec.isInputDriven != null ? spec.isInputDriven : false,
             colliderWidth: spec.colliderWidth != null ? spec.colliderWidth : 1,
             colliderHeight: spec.colliderHeight != null ? spec.colliderHeight : 1,
             colliderOffset: null // No longer stored in base, stored in rect
@@ -212,7 +209,6 @@ abstract class BaseEntity {
             rotation: base.rotation,
             ownerId: base.ownerId,
             isAlive: base.isAlive,
-            isInputDriven: base.isInputDriven,
             colliderWidth: base.colliderWidth,
             colliderHeight: base.colliderHeight,
             colliderOffset: {x: offset.x, y: offset.y}
@@ -221,14 +217,13 @@ abstract class BaseEntity {
     
     public function deserialize(data: Dynamic): Void {
         base = {
-            id: data.id,
             type: data.type,
             pos: data.pos != null ? new Vec2(data.pos.x, data.pos.y) : new Vec2(0, 0),
             vel: data.vel != null ? new Vec2(data.vel.x, data.vel.y) : new Vec2(0, 0),
-            rotation: data.rotation,
             ownerId: data.ownerId,
+            id: data.id,
+            rotation: data.rotation,
             isAlive: data.isAlive,
-            isInputDriven: data.isInputDriven != null ? data.isInputDriven : false,
             colliderWidth: data.colliderWidth != null ? data.colliderWidth : 1,
             colliderHeight: data.colliderHeight != null ? data.colliderHeight : 1,
             colliderOffset: null // No longer stored in base, stored in rect

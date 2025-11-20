@@ -1,7 +1,7 @@
 package engine;
 
-import engine.config.EngineConfig;
-import engine.config.EngineMode;
+import engine.domain.config.EngineConfig;
+import engine.domain.config.EngineMode;
 import engine.domain.entities.BaseEntity;
 import engine.infrastructure.adapters.events.EventBus;
 import engine.infrastructure.adapters.events.IEventBus;

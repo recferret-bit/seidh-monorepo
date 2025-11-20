@@ -1,23 +1,18 @@
 package engine.domain.entities.character.factory;
 
 import engine.domain.entities.character.base.BaseCharacterEntity;
-import engine.domain.entities.character.base.CharacterStats;
-import engine.domain.valueobjects.Position;
-import engine.domain.valueobjects.Health;
+import engine.domain.specs.CharacterSpec;
 
 /**
- * Contract for creating character entities by type.
+ * Contract for creating character entities
+ * Uses CharacterSpec for type-safe character creation
  */
 interface CharacterEntityFactory {
-    function create(
-        entityType: String,
-        id: Int,
-        position: Position,
-        health: Health,
-        ownerId: String,
-        level: Int = 1,
-        stats: CharacterStats = null,
-        isInputDriven: Bool = true
-    ): BaseCharacterEntity;
+    /**
+     * Create character entity from specification
+     * @param spec Character specification with all required fields
+     * @return Created character entity
+     */
+    function create(spec: CharacterSpec): BaseCharacterEntity;
 }
 
