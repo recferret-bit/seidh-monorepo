@@ -1,7 +1,7 @@
 package game.mvp.model;
 
-import engine.model.entities.types.EntityType;
-import engine.presenter.InputMessage;
+import engine.domain.types.EntityType;
+import engine.presentation.InputMessage;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
 import game.mvp.model.entities.ColliderModel;
@@ -309,7 +309,7 @@ class GameClientState {
     /**
      * Get pending inputs
      */
-    public function getPendingInputs(): Array<engine.presenter.InputMessage> {
+    public function getPendingInputs(): Array<engine.presentation.InputMessage> {
         return cast pendingInputs.copy();
     }
     

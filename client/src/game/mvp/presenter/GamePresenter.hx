@@ -1,8 +1,7 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.model.entities.specs.EngineEntitySpec;
-import engine.model.entities.specs.EngineEntitySpecs;
+import engine.domain.specs.EntitySpec;
 import game.mvp.model.GameClientState;
 import game.mvp.presenter.EntitySyncPresenter;
 import game.mvp.presenter.InputPresenter;
@@ -154,8 +153,10 @@ class GamePresenter {
      */
     private function spawnInitialEntities(): Void {
         // Spawn player character
-        final playerSpec = EngineEntitySpecs.getRagnarSpec();
-        final playerId = engine.spawnEntity(playerSpec);
+        // TODO: Recreate EngineEntitySpecs helper or create specs inline
+        // final playerSpec = EngineEntitySpecs.getRagnarSpec();
+        final playerId = 0; // TODO: Actually spawn player when spec helper is recreated
+        // final playerId = engine.spawnEntity(playerSpec);
         
         // Set up player controlled entity tracking
         gameClientState.setPlayerControlledEntity(playerId);
@@ -216,7 +217,7 @@ class GamePresenter {
     /**
      * Spawn entity by type and spec
      */
-    public function spawnEntity(spec: EngineEntitySpec): Int {
+    public function spawnEntity(spec: EntitySpec): Int {
         return engine.spawnEntity(spec);
     }
     
@@ -365,13 +366,14 @@ class GamePresenter {
      * Spawn map colliders in chess pattern
      */
     private function spawnMapColliders(): Void {
+        // TODO: Recreate EngineEntitySpecs helper or generate colliders inline
         // Generate 10x10 grid of colliders with 10 unit spacing
-        final colliderSpecs = EngineEntitySpecs.generateMapColliders(1, 1);
-        
-        for (spec in colliderSpecs) {
-            engine.spawnEntity(spec);
-        }
-        
-        trace("Spawned " + colliderSpecs.length + " map colliders in chess pattern");
+        // final colliderSpecs = EngineEntitySpecs.generateMapColliders(1, 1);
+        // 
+        // for (spec in colliderSpecs) {
+        //     engine.spawnEntity(spec);
+        // }
+        // 
+        // trace("Spawned " + colliderSpecs.length + " map colliders in chess pattern");
     }
 }

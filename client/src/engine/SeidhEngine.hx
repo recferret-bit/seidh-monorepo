@@ -1,26 +1,36 @@
 package engine;
 
-import engine.EngineConfig;
-import engine.eventbus.EventBus;
-import engine.eventbus.IEventBus;
-import engine.eventbus.events.EntityCorrectionEvent;
-import engine.eventbus.events.EntityDeathEvent;
-import engine.eventbus.events.EntitySpawnEvent;
-import engine.eventbus.events.SnapshotEvent;
-import engine.model.GameModelState;
-import engine.model.entities.base.BaseEngineEntity;
-import engine.model.entities.specs.EngineEntitySpec;
-import engine.model.entities.types.EntityType;
-import engine.model.managers.IEngineEntityManager;
-import engine.modules.ModuleName;
-import engine.modules.impl.AIModule;
-import engine.modules.impl.InputModule;
-import engine.modules.impl.PhysicsModule;
-import engine.modules.impl.SpawnModule;
-import engine.modules.registry.ModuleRegistry;
-import engine.presenter.GameLoop;
-import engine.presenter.InputMessage;
-import engine.presenter.SnapshotManager;
+import engine.config.EngineConfig;
+import engine.config.EngineMode;
+import engine.domain.entities.BaseEntity;
+import engine.infrastructure.eventbus.EventBus;
+import engine.infrastructure.eventbus.IEventBus;
+import engine.infrastructure.eventbus.events.EntityCorrectionEvent;
+import engine.infrastructure.eventbus.events.EntityDeathEvent;
+import engine.infrastructure.eventbus.events.EntitySpawnEvent;
+import engine.infrastructure.eventbus.events.SnapshotEvent;
+import engine.infrastructure.state.GameModelState;
+import engine.domain.entities.BaseEntity;
+import engine.domain.specs.EntitySpec;
+import engine.domain.types.EntityType;
+import engine.infrastructure.managers.IEngineEntityManager;
+import engine.infrastructure.config.ServiceRegistry;
+import engine.infrastructure.config.ServiceName;
+import engine.application.services.InputService;
+import engine.application.services.AIService;
+import engine.application.services.PhysicsService;
+import engine.application.services.SpawnService;
+import engine.infrastructure.config.UseCaseFactory;
+import engine.infrastructure.persistence.EntityRepository;
+import engine.infrastructure.events.EventPublisher;
+import engine.presentation.GameLoop;
+import engine.presentation.InputMessage;
+import engine.presentation.SnapshotManager;
+import engine.domain.entities.character.factory.DefaultCharacterEntityFactory;
+import engine.domain.entities.collider.DefaultColliderEntityFactory;
+import engine.domain.entities.consumable.factory.DefaultConsumableEntityFactory;
+import engine.infrastructure.logging.Logger;
+import engine.infrastructure.services.ClientEntityMappingService;
 
 /**
  * Main Seidh Engine - portable game engine with MVP architecture
@@ -66,48 +76,78 @@ import engine.presenter.SnapshotManager;
  */
 @:expose()
 class SeidhEngine {
-    public static final Config: EngineConfig = {
+    public static final DEFAULT_CONFIG: EngineConfig = {
         mode: SINGLEPLAYER,
         tickRate: 60,
         unitPixels: 32,
         aiUpdateInterval: 10,
         snapshotBufferSize: 1000,
         rngSeed: 12345,
-        snapshotEmissionInterval: 5
+        snapshotEmissionInterval: 5,
+        debugLogging: false
     };
-    
+    public static var Config(default, null): EngineConfig;
+
+    private final config: EngineConfig;
     private var state: GameModelState;
-    private var modules: ModuleRegistry;
+    private var services: ServiceRegistry;
     private var eventBus: IEventBus;
     private var gameLoop: GameLoop;
     private var snapshotManager: SnapshotManager;
     private var running: Bool;
+    private var useCaseFactory: UseCaseFactory;
+    private var entityRepository: EntityRepository;
+    private var eventPublisher: EventPublisher;
     
-    private function new() {
-        this.state = new GameModelState(Config.rngSeed);
-        this.modules = new ModuleRegistry();
+    private function new(config: EngineConfig) {
+        this.config = config;
+        SeidhEngine.Config = config;
+        Logger.configure(config.debugLogging == true);
+        
+        // Initialize BaseEntity static configuration
+        BaseEntity.setUnitPixels(config.unitPixels);
+        
+        this.state = new GameModelState(config);
+        this.services = new ServiceRegistry();
         this.eventBus = new EventBus();
-        this.snapshotManager = new SnapshotManager(Config.snapshotBufferSize);
+        this.snapshotManager = new SnapshotManager(config.snapshotBufferSize);
         this.running = false;
         
-        setupModules();
-        this.gameLoop = new GameLoop(state, modules, eventBus);
+        // Create infrastructure implementations
+        final characterFactory = new DefaultCharacterEntityFactory();
+        final consumableFactory = new DefaultConsumableEntityFactory();
+        final colliderFactory = new DefaultColliderEntityFactory();
+        this.eventPublisher = new EventPublisher(eventBus, state);
+        this.entityRepository = new EntityRepository(state, characterFactory, consumableFactory, colliderFactory);
+        
+        // Create use case factory (creates all use cases)
+        this.useCaseFactory = new UseCaseFactory(
+            entityRepository,
+            eventPublisher,
+            state,
+            characterFactory,
+            consumableFactory,
+            colliderFactory
+        );
+        
+        setupServices();
+        this.gameLoop = new GameLoop(state, services, eventBus, config.tickRate);
     }
     
     /**
      * Create new engine instance
      * @return Engine instance
      */
-    public static function create(): SeidhEngine {
-        return new SeidhEngine();
+    public static function create(?config: EngineConfig): SeidhEngine {
+        final engineConfig = config != null ? config : DEFAULT_CONFIG;
+        return new SeidhEngine(engineConfig);
     }
     
     /**
      * Main function for compilation
      */
     public static function main(): Void {
-        // This is just for compilation - the engine is used as a library
-        trace("Seidh Engine compiled successfully");
+        Logger.debug("Seidh Engine compiled successfully");
     }
     
     /**
@@ -146,40 +186,23 @@ class SeidhEngine {
      * @param input Input message
      */
     public function queueInput(input: InputMessage): Void {
-        final inputModule = cast(modules.get(ModuleName.INPUT), InputModule);
-        if (inputModule != null) {
-            inputModule.queueInput(input);
+        final inputService = cast(services.get(ServiceName.INPUT), InputService);
+        if (inputService != null) {
+            inputService.queueInput(input);
         }
     }
     
     /**
      * Spawn entity
-     * @param type Entity type
      * @param spec Entity specification
      * @return Entity ID
      */
-    public function spawnEntity(spec: EngineEntitySpec): Int {
-        final entityId = state.allocateEntityId();
-        spec.id = entityId;
-        
-        // Find appropriate manager
-        final manager: IEngineEntityManager<BaseEngineEntity> = state.managers.get(spec.type);
-        if (manager != null) {
-            final entity = manager.create(spec);
-            
-            // Emit spawn event
-            eventBus.emit(EntitySpawnEvent.NAME, {
-                tick: state.tick,
-                entityId: entity.id,
-                type: entity.type,
-                pos: entity.pos,
-                ownerId: entity.ownerId
-            });
-            
-            return entity.id;
+    public function spawnEntity(spec: EntitySpec): Int {
+        final entityId = useCaseFactory.spawnEntity(spec);
+        if (entityId == 0 && spec != null && spec.type != null) {
+            Logger.warn('Failed to spawn entity of type: ${spec.type}');
         }
-        
-        return 0;
+        return entityId;
     }
     
     /**
@@ -187,21 +210,7 @@ class SeidhEngine {
      * @param entityId Entity ID
      */
     public function despawnEntity(entityId: Int): Void {
-        // Find entity in managers
-        for (manager in state.managers.getAll()) {
-            final entity = manager.find(entityId);
-            if (entity != null) {
-                // Emit death event
-                eventBus.emit(EntityDeathEvent.NAME, {
-                    tick: state.tick,
-                    entityId: entityId,
-                    killerId: 0
-                });
-                
-                manager.destroy(entityId);
-                break;
-            }
-        }
+        useCaseFactory.despawnEntity(entityId);
     }
     
     /**
@@ -221,11 +230,18 @@ class SeidhEngine {
     }
     
     /**
-     * Get input module
-     * @return Input module instance
+     * Get input service
+     * @return Input service instance
      */
-    public function getInputModule(): InputModule {
-        return cast(modules.get(ModuleName.INPUT), InputModule);
+    public function getInputService(): InputService {
+        return cast(services.get(ServiceName.INPUT), InputService);
+    }
+
+    /**
+     * Get client entity mapping module
+     */
+    public function getInputModule(): ClientEntityMappingService {
+        return useCaseFactory != null ? useCaseFactory.clientEntityMappingService : null;
     }
     
     /**
@@ -234,8 +250,8 @@ class SeidhEngine {
      * @param type Entity type
      * @return Entity or null
      */
-    public function getEntityById(id: Int, type: EntityType): BaseEngineEntity {
-        final manager: IEngineEntityManager<BaseEngineEntity> = state.managers.get(type);
+    public function getEntityById(id: Int, type: EntityType): BaseEntity {
+        final manager: IEngineEntityManager<BaseEntity> = state.managers.get(type);
         if (manager != null) {
             return manager.find(id);
         }
@@ -251,20 +267,6 @@ class SeidhEngine {
     }
 
     /**
-     * Get all entities from all managers
-     * @return Array of all entities
-     */
-    private function getAllEntities(): Array<Dynamic> {
-        final entities = [];
-        for (manager in state.managers.getAll()) {
-            manager.iterate(function(entity) {
-                entities.push(entity);
-            });
-        }
-        return entities;
-    }
-    
-    /**
      * Rollback and replay for client prediction
      * @param anchorTick Anchor tick for rollback
      * @param pendingInputs Pending inputs to replay
@@ -273,26 +275,48 @@ class SeidhEngine {
         // Load anchor state
         final anchorMemento = snapshotManager.load(anchorTick);
         if (anchorMemento == null) {
-            trace("Warning: No snapshot found for anchor tick " + anchorTick);
+            Logger.warn("No snapshot found for anchor tick " + anchorTick);
             return;
         }
-        
+
+        // Remember how far we had already simulated
+        final targetTick = state.tick;
+
         // Rollback to anchor state
         state.restoreMemento(anchorMemento);
-        
-        // Replay pending inputs
-        for (input in pendingInputs) {
+
+        // Nothing to replay if we were already at or before the anchor tick
+        if (targetTick <= anchorTick) {
+            emitCorrectionEvents();
+            return;
+        }
+
+        // Replay pending inputs in deterministic order
+        final inputsToReplay = pendingInputs.copy();
+        inputsToReplay.sort(function(a, b) {
+            if (a.intendedServerTick != b.intendedServerTick) {
+                return a.intendedServerTick - b.intendedServerTick;
+            }
+            return a.sequence - b.sequence;
+        });
+
+        for (input in inputsToReplay) {
             if (input.intendedServerTick > anchorTick) {
                 queueInput(input);
             }
         }
-        
-        // Step forward to current tick
-        final currentTick = state.tick;
-        while (state.tick < currentTick) {
-            gameLoop.stepFixed();
+
+        // Step forward to previously simulated tick
+        while (state.tick < targetTick) {
+            final tickBeforeStep = state.tick;
+            stepFixed();
+
+            if (state.tick == tickBeforeStep) {
+                Logger.warn("Unable to advance simulation during rollback replay");
+                break;
+            }
         }
-        
+
         // Emit correction events
         emitCorrectionEvents();
     }
@@ -310,25 +334,32 @@ class SeidhEngine {
         emitSnapshotEvents();
     }
     
-    private function setupModules(): Void {
-        // Create and register modules
-        final inputModule = new InputModule();
-        final physicsModule = new PhysicsModule();
-        final aiModule = new AIModule();
-        final spawnModule = new SpawnModule();
+    private function setupServices(): Void {
+        // Create and register services
+        final inputService = new InputService(
+            useCaseFactory.processInputUseCase,
+            useCaseFactory.inputBufferService,
+            useCaseFactory.clientEntityMappingService
+        );
+        final physicsService = new PhysicsService(
+            useCaseFactory.integratePhysicsUseCase,
+            useCaseFactory.resolveCollisionUseCase
+        );
+        final aiService = new AIService(useCaseFactory.updateAIBehaviorUseCase);
+        final spawnService = new SpawnService(useCaseFactory.cleanupDeadEntitiesUseCase);
         
-        modules.register(ModuleName.INPUT, inputModule);
-        modules.register(ModuleName.PHYSICS, physicsModule);
-        modules.register(ModuleName.AI, aiModule);
-        modules.register(ModuleName.SPAWN, spawnModule);
+        services.register(ServiceName.INPUT, inputService);
+        services.register(ServiceName.PHYSICS, physicsService);
+        services.register(ServiceName.AI, aiService);
+        services.register(ServiceName.SPAWN, spawnService);
     }
 
     private function emitSnapshotEvents(): Void {
-        switch (SeidhEngine.Config.mode) {
+        switch (config.mode) {
             case SINGLEPLAYER:
                 // No snapshot events for singleplayer
             case SERVER:
-                if (state.tick % SeidhEngine.Config.snapshotEmissionInterval == 0) {
+                if (state.tick % config.snapshotEmissionInterval == 0) {
                     eventBus.emit(SnapshotEvent.NAME, {
                         tick: state.tick,
                         serializedState: state.saveMemento()

@@ -1,6 +1,6 @@
 package game.mvp.view.entities.character;
 
-import engine.model.entities.types.EntityState;
+import engine.domain.types.EntityState;
 import game.mvp.model.entities.BaseEntityModel;
 import game.mvp.model.entities.CharacterModel;
 import game.resource.animation.character.BasicCharacterAnimation;

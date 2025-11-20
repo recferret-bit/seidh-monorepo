@@ -6,7 +6,7 @@ import game.mvp.view.entities.character.glamr.GlamrEntityView;
 import game.mvp.view.entities.character.zombie_girl.ZombieGirlEntityView;
 import game.mvp.view.entities.character.zombie_boy.ZombieBoyEntityView;
 import game.mvp.view.entities.character.CharacterEntityView;
-import engine.model.entities.types.EntityState;
+import engine.domain.types.EntityState;
 import h2d.Bitmap;
 
 import game.mvp.view.entities.character.ragnar.RagnarEntityView;

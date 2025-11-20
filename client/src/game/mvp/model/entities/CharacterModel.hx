@@ -1,6 +1,6 @@
 package game.mvp.model.entities;
 
-import engine.model.entities.character.BaseCharacterEntity;
+import engine.domain.entities.character.base.BaseCharacterEntity;
 
 /**
  * Character entity model extending BaseEntityModel
@@ -70,7 +70,7 @@ class CharacterModel extends BaseEntityModel {
      */
     public function takeDamage(damage: Int): Void {
         if (characterEntity != null) {
-            characterEntity.hp = Std.int(Math.max(0, characterEntity.hp - damage));
+            characterEntity.health = characterEntity.health.reduce(damage);
             needsVisualUpdate = true;
         }
     }
@@ -80,7 +80,7 @@ class CharacterModel extends BaseEntityModel {
      */
     public function heal(amount: Int): Void {
         if (characterEntity != null) {
-            characterEntity.hp = Std.int(Math.min(characterEntity.maxHp, characterEntity.hp + amount));
+            characterEntity.health = characterEntity.health.restore(amount);
             needsVisualUpdate = true;
         }
     }
@@ -89,7 +89,7 @@ class CharacterModel extends BaseEntityModel {
      * Check if character is dead
      */
     public function isDead(): Bool {
-        return characterEntity != null ? (characterEntity.hp <= 0 || !isAlive) : true;
+        return characterEntity != null ? (characterEntity.health.isDead() || !isAlive) : true;
     }
     
     /**
@@ -97,7 +97,8 @@ class CharacterModel extends BaseEntityModel {
      */
     public function getHealthPercentage(): Float {
         if (characterEntity == null) return 0.0;
-        return characterEntity.maxHp > 0 ? characterEntity.hp / characterEntity.maxHp : 0.0;
+        final health = characterEntity.health;
+        return health.maximum > 0 ? health.current / health.maximum : 0.0;
     }
     
     // Convenience getters that delegate to character entity
@@ -109,8 +110,8 @@ class CharacterModel extends BaseEntityModel {
     public var spellBook(get, never): Array<Dynamic>;
     public var aiProfile(get, never): String;
     
-    private function get_maxHp(): Int return characterEntity != null ? characterEntity.maxHp : 0;
-    private function get_hp(): Int return characterEntity != null ? characterEntity.hp : 0;
+    private function get_maxHp(): Int return characterEntity != null ? characterEntity.health.maximum : 0;
+    private function get_hp(): Int return characterEntity != null ? characterEntity.health.current : 0;
     private function get_level(): Int return characterEntity != null ? characterEntity.level : 0;
     private function get_stats(): Dynamic return characterEntity != null ? characterEntity.stats : {};
     private function get_attackDefs(): Array<Dynamic> return characterEntity != null ? characterEntity.attackDefs : [];

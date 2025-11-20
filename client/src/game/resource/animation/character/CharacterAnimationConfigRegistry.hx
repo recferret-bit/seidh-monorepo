@@ -1,6 +1,6 @@
 package game.resource.animation.character;
 
-import engine.model.entities.types.EntityType;
+import engine.domain.types.EntityType;
 import game.resource.Res.SeidhResource;
 import game.resource.animation.character.BasicCharacterAnimation.AnimationConfig;
 

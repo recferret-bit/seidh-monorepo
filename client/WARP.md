@@ -2,214 +2,348 @@
 
 This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
+## Overview
+
+Seidh is a mobile-focused game built with **Haxe + Heaps.io** (game engine) and **TypeScript** (mobile utilities and JS bridge), bundled with **Vite**. The project uses a deterministic, portable **MVP architecture** with Clean Architecture principles, designed to support singleplayer and multiplayer modes with client-side prediction and reconciliation.
+
 ## Build Commands
 
-### Client (Heaps.io + TypeScript)
-
-**Development Build:**
+### Development
 ```powershell
-# Compile Haxe game code (debug mode)
-haxe compile.hxml
-
-# Compile TypeScript and run dev server
-npm run dev
+npm run dev                # Build TS and start Vite dev server (port 3000)
+npm run vite:dev           # Start Vite dev server only (no TS build)
+haxe compile.hxml          # Compile Haxe to game.js (debug mode)
 ```
 
-**Production Build:**
+### Production Build
 ```powershell
-# Compile Haxe (same for prod)
-haxe compile.hxml
-
-# Build production bundle with minification
-npm run vite:build:prod
+npm run vite:build:prod    # Full production build (TS + Haxe + bundle + minify)
+npm run vite:preview       # Preview production build
 ```
 
-**Alternative Build Scripts:**
-- `npm run build:tsc` - Compile TypeScript and bundle with esbuild
-- `npm run build:tsc:prod` - Compile and minify TypeScript
-- `npm run vite:build` - Development Vite build
-- `npm run vite:preview` - Preview production build
-
-### Backend (Necroton Engine)
-
+### Individual Build Steps
 ```powershell
-# Compile engine for Node.js backend
-haxe compile-backend.hxml
-
-# Backend integration (from backend-integration directory)
-cd backend-integration
-npm install
-npm run build   # Compile TypeScript
-npm start       # Run server
+npm run build:tsc          # Compile TS and bundle with esbuild
+npm run build:tsc:prod     # Compile TS, bundle, and minify with terser
+npm run vite:build         # Vite build (development mode)
 ```
 
-### Running Tests
+### Haxe Compilation
+```powershell
+haxe compile.hxml               # Compile client (outputs game.js)
+haxe compile-backend.hxml       # Backend engine compilation (currently disabled)
+```
 
-No specific test framework is configured. Check README or search for test scripts before attempting to run tests.
-
-## Project Architecture
+## Architecture
 
 ### High-Level Structure
 
-This is a **mobile-focused game project** built with:
-- **Haxe + Heaps.io** for game client rendering
-- **TypeScript** for client-side utilities and Telegram integration
-- **Necroton Engine** - a deterministic, portable game engine following MVP architecture
+This is a **hybrid codebase**:
+- **Haxe** (`src/`) - Core game engine with strict Clean Architecture + MVP
+- **TypeScript** (`ts/`) - Mobile utilities, Telegram SDK integration, WebGL initialization
+- **Vite** - Build orchestration that bundles game.js + TS into a single bundle
 
-The project supports both **client-side gameplay** (browser/mobile) and **backend integration** (Node.js server running at 20 TPS).
+### Core Architectural Layers
 
-### Key Directories
+The engine follows **Clean Architecture** with strict dependency rules:
 
-- **`src/`** - Haxe source code (game client + engine)
-  - `engine/` - Necroton Engine implementation (Model-View-Presenter)
-  - `game/` - Game-specific code (scenes, MVP layers, UI)
-- **`ts/`** - TypeScript source (mobile utilities, Telegram SDK integration)
-- **`dist/`** - Compiled output
-- **`res/`** - Game assets (images, sounds)
-- **`backend-integration/`** - Node.js backend server with TypeScript bindings
-- **`docs/`** - Architecture documentation (engine, game patterns)
+```
+Presentation Layer (presenter/)
+    ↓ depends on
+Application Layer (application/)
+    ↓ depends on
+Domain Layer (domain/)
+    ↓ depends on
+Infrastructure Layer (infrastructure/)
+```
 
-### MVP Architecture (Necroton Engine)
+#### Layer Responsibilities
 
-The engine follows strict **Model-View-Presenter** separation:
+**Domain Layer** (`src/engine/domain/`)
+- Pure business logic with ZERO dependencies on other layers
+- Contains: entities, value objects, domain services, repository interfaces
+- Examples: `DeterministicRng`, `PhysicsService`, `CollisionService`, `AIDecisionService`
+- All domain entities are immutable data structures
 
-**Model** (Pure simulation, deterministic):
-- `engine/model/` - Core entities, state, RNG
-- `GameModelState` - Holds tick, entities, RNG state
-- Entity types: CHARACTER, COLLIDER, CONSUMABLE, PROJECTILE
-- No Heaps or rendering dependencies
+**Application Layer** (`src/engine/application/`)
+- Use Cases (application business rules) and DTOs
+- Services orchestrate use cases but contain NO business logic
+- Use cases execute single business operations using domain layer
+- Examples: `SpawnCharacterUseCase`, `ProcessInputUseCase`, `IntegratePhysicsUseCase`
 
-**Presenter** (Orchestration):
-- `engine/presenter/` - Game loop, input handling, snapshots
-- `NecrotonEngine` - Main engine API
-- `GameLoop` - Fixed-timestep simulation at configurable TPS
-- `InputModule`, `PhysicsModule`, `AIModule`, `SpawnModule`
+**Infrastructure Layer** (`src/engine/infrastructure/`)
+- Implementation details: EventBus, repositories, state management, entity factories
+- Contains concrete implementations of domain interfaces
+- Examples: `EntityRepository`, `EventPublisher`, `GameModelState`, `ObjectPool`
 
-**View** (Event-driven surface):
-- `engine/view/EventBus` - Exposes events to clients
-- Events: `ENTITY_SPAWN`, `ENTITY_DEATH`, `ENTITY_MOVE`, `TICK_COMPLETE`, etc.
-- View layer (Heaps rendering) subscribes to EventBus, never modifies Model
+**Presentation Layer** (`src/engine/presentation/`)
+- User interface concerns and orchestration
+- `GameLoop` - orchestrates services in deterministic order
+- `SnapshotManager` - manages state snapshots for rollback
+- `InputBuffer` - buffers and sequences player inputs
 
-### Client Architecture (Heaps.io)
+### Key Architectural Patterns
 
-**Scene Management:**
-- `game/scene/SceneManager` - Manages scene transitions via event system
-- Scenes: `LoadingScene`, `HomeScene`, `GameScene`
-- Scene lifecycle: `start()`, `destroy()`, `customUpdate(dt, fps)`, `onResize()`
+**MVP (Model-View-Presenter)**
+- **Model**: `SeidhEngine`, `GameModelState`, entity managers - pure simulation, no view dependencies
+- **Presenter**: `GameLoop`, Services, Use Case orchestration - coordinates model and view
+- **View**: Heaps.io rendering (`game/scene/`), EventBus subscribers - passive consumer of engine events
 
-**Event System:**
-- `game/event/EventManager` - Global event bus for scene transitions
-- Events: `EVENT_LOAD_HOME_SCENE`, `EVENT_LOAD_GAME_SCENE`
-- Components implement `EventListener` interface with `notify(event, message)`
+**Repository Pattern**
+- Domain defines interfaces (`IEntityRepository`, `ICharacterRepository`)
+- Infrastructure provides implementations (`EntityRepository`, `CharacterRepository`)
 
-**TypeScript Integration:**
-- Mobile utilities compiled via `tsconfig.build.json`
-- Output: `dist/main.js` and `dist/bundle.js`
-- Vite bundles TypeScript + Haxe output together
-- Production build combines `game.js` (Haxe) + `bundle.min.js` (TS) into single file
+**Factory Pattern**
+- `EngineEntityFactory` - infrastructure factory using ObjectPool
+- `UseCaseFactory` - creates all use cases with proper dependency injection
+- Domain factories: `CharacterEntityFactory`, `ConsumableEntityFactory`, `ColliderEntityFactory`
 
-### Backend Integration
+**Event-Driven Architecture**
+- `EventBus` - ordered, async-safe event delivery
+- Engine emits events: `EntitySpawnEvent`, `EntityDeathEvent`, `TickCompleteEvent`, `SnapshotEvent`
+- View subscribes to events without modifying model state
 
-The engine compiles to JavaScript for backend use:
-- `compile-backend.hxml` generates `dist/engine.js`
-- TypeScript bindings in `backend-integration/engine.d.ts`
-- Server example runs at 20 TPS using `setImmediate` (non-blocking)
-- Supports: entity spawning, input queuing, event subscriptions, snapshot emission
+**Memento Pattern**
+- `GameModelState.saveMemento()` / `restoreMemento()` for deterministic rollback
+- Used for client-side prediction and reconciliation in multiplayer
 
-## Development Workflow
+### Critical Components
 
-### Typical Development Cycle
+**SeidhEngine** (`src/engine/SeidhEngine.hx`)
+- Main engine facade exposed to JavaScript via `@:expose()`
+- Creates and wires all services, use cases, and infrastructure
+- Supports three modes: `SINGLEPLAYER`, `SERVER`, `CLIENT_PREDICTION`
+- Key methods: `start()`, `step()`, `queueInput()`, `spawnEntity()`, `rollbackAndReplay()`
 
-1. **Edit Haxe code** in `src/`
-2. **Run `haxe compile.hxml`** to compile game logic
-3. **Run `npm run dev`** to start Vite dev server (compiles TS automatically)
-4. **Access `http://localhost:3000`** in browser
-5. Engine changes require recompiling Haxe and refreshing browser
+**GameLoop** (`src/engine/presentation/GameLoop.hx`)
+- Fixed timestep game loop (default 60 ticks/second)
+- Executes services in deterministic order:
+  1. InputService → ProcessInputUseCase
+  2. AIService → UpdateAIBehaviorUseCase
+  3. PhysicsService → IntegratePhysicsUseCase + ResolveCollisionUseCase
+  4. SpawnService → CleanupDeadEntitiesUseCase
+- NEVER contains business logic - only orchestration
 
-### Mobile Testing
+**GameModelState** (`src/engine/infrastructure/state/GameModelState.hx`)
+- Central state container with deterministic RNG
+- Manages entity managers registry
+- Implements Memento pattern for snapshots
+- Allocates entity IDs sequentially
 
-Serve locally and access from mobile device:
+**UseCaseFactory** (`src/engine/infrastructure/config/UseCaseFactory.hx`)
+- Factory for creating all use cases with dependency injection
+- Initializes domain services (physics, collision, AI, targeting)
+- Provides `spawnEntity()` / `despawnEntity()` convenience methods
+
+**EventBus** (`src/engine/infrastructure/eventbus/EventBus.hx`)
+- Ordered event delivery per topic
+- Safe async dispatch (prevents reentrancy during module updates)
+- Type-safe subscriptions with token-based unsubscribe
+
+### Game Client Integration
+
+**SceneManager** (`src/game/scene/SceneManager.hx`)
+- Manages Heaps.io scene lifecycle
+- Subscribes to GameEventBus for scene transitions
+- Scenes: LoadingScene, HomeScene, GameScene, test scenes
+
+**GameEventBus** (`src/game/eventbus/GameEventBus.hx`)
+- Game-specific event bus (separate from engine EventBus)
+- Handles UI/scene events: `LoadHomeSceneEvent`, `LoadGameSceneEvent`
+
+**Resource System** (`src/game/resource/Res.hx`)
+- Manages game asset loading (sprites, sounds, etc.)
+
+## Key Development Patterns
+
+### Adding New Entity Types
+
+1. Add entity type to `engine/domain/types/EntityType.hx`
+2. Create domain entity in `engine/domain/entities/[type]/`
+3. Create infrastructure entity in `engine/infrastructure/entities/[type]/`
+4. Create factory implementing domain interface
+5. Register manager in `GameModelState.setupManagers()`
+6. Add spawn logic to `UseCaseFactory.spawnEntity()`
+
+### Creating Use Cases
+
+1. Define in `engine/application/usecases/[category]/[Name]UseCase.hx`
+2. Inject ONLY domain repositories and services (no infrastructure)
+3. Keep focused on single operation (SRP)
+4. Register in `UseCaseFactory` constructor
+5. Wire to appropriate Service in `engine/application/services/`
+
+### Working with Services
+
+- Services are pure orchestrators with ZERO business logic
+- They call use cases and coordinate infrastructure (buffers, tick scheduling)
+- Services implement `IService` interface: `update(state, tick, dt)`, `shutdown()`
+- Register in `SeidhEngine.setupServices()` and `ServiceRegistry`
+
+### Event Publishing
+
+- Use `EventPublisher` from infrastructure layer
+- Define events in `engine/infrastructure/eventbus/events/`
+- Events include tick, entityId, and payload data
+- View/UI subscribes via `GameEventBus.instance.subscribe()`
+
+### Determinism Requirements
+
+- Use ONLY `state.rng` for all randomness
+- Keep execution order deterministic in `GameLoop.executeServices()`
+- Avoid floating point operations in gameplay logic
+- Test with `saveMemento()` / `restoreMemento()` for reproducibility
+
+## Project Structure
+
+```
+client/
+├── src/
+│   ├── Main.hx                         # Heaps.io app entry point
+│   ├── engine/                         # Portable game engine
+│   │   ├── SeidhEngine.hx             # Main engine facade
+│   │   ├── config/                    # Engine configuration
+│   │   ├── domain/                    # Business logic (pure)
+│   │   │   ├── entities/              # Domain entities
+│   │   │   ├── services/              # Domain services
+│   │   │   ├── repositories/          # Repository interfaces
+│   │   │   └── types/                 # Value objects, enums
+│   │   ├── application/               # Use cases and app services
+│   │   │   ├── usecases/              # Single-operation business rules
+│   │   │   ├── services/              # Orchestration services
+│   │   │   ├── dto/                   # Data transfer objects
+│   │   │   └── ports/                 # Interface adapters
+│   │   ├── infrastructure/            # Implementation details
+│   │   │   ├── entities/              # Infrastructure entity implementations
+│   │   │   ├── eventbus/              # Event system
+│   │   │   ├── state/                 # State management
+│   │   │   ├── persistence/           # Repositories
+│   │   │   └── config/                # Factories and registries
+│   │   └── presentation/              # Game loop and orchestration
+│   └── game/                          # Game-specific client code
+│       ├── config/                    # Client configuration
+│       ├── eventbus/                  # Client event bus
+│       ├── resource/                  # Asset management
+│       └── scene/                     # Heaps.io scenes
+├── ts/                                # TypeScript mobile utilities
+│   ├── main.ts                        # TS entry point
+│   └── mobileUtils.ts                 # Mobile helpers (touch, device info)
+├── res/                               # Game assets (sprites, audio, etc.)
+├── dist/                              # Build output
+├── docs/                              # Architecture documentation
+├── index.html                         # Mobile-optimized HTML
+├── compile.hxml                       # Haxe build config (client)
+├── vite.config.js                     # Vite bundler config
+├── package.json                       # NPM dependencies and scripts
+└── tsconfig.build.json                # TypeScript build config
+```
+
+## Vite Build Process
+
+Vite orchestrates a multi-stage build:
+
+1. **TypeScript Compilation** (`tsc --project tsconfig.build.json`)
+   - Compiles `ts/` → `dist/main.js` with source maps
+2. **Bundle** (`esbuild dist/main.js → dist/bundle.js`)
+   - Bundles TS output to ESM format
+3. **Haxe Compilation** (manual: `haxe compile.hxml`)
+   - Compiles `src/` → `game.js`
+4. **Vite Bundle Plugin** (`vite.config.js`)
+   - Reads `game.js` and prepends it to the main bundle
+   - Minifies game.js with terser in production
+   - Generates production `index.html` with correct script tags
+5. **Production Output** (`dist/bundle.min.js` + `dist/index.html`)
+
+## Important Notes
+
+### Dependency Rules
+
+- **Domain layer** depends on NOTHING
+- **Application layer** depends on domain only
+- **Infrastructure layer** depends on domain and application
+- **Presentation layer** depends on all layers but contains no business logic
+
+### Never Put Business Logic In
+
+- Services (orchestration only)
+- GameLoop (deterministic scheduling only)
+- Factories (object creation only)
+- EventBus handlers (reactive only)
+
+### Always Put Business Logic In
+
+- Domain entities and value objects
+- Domain services
+- Use Cases
+
+### Testing Strategy
+
+- Domain layer: pure unit tests (no mocks needed)
+- Use Cases: test with mock repositories
+- Services: integration tests with real use cases
+- Full engine: deterministic replay tests with snapshots
+
+### Multiplayer Architecture
+
+Engine supports three modes:
+- **SINGLEPLAYER**: Local engine, no networking
+- **SERVER**: Authoritative server, emits snapshots every N ticks
+- **CLIENT_PREDICTION**: Client-side prediction with rollback/reconciliation
+
+Client prediction workflow:
+1. Client applies input locally (optimistic)
+2. Sends input to server
+3. Receives authoritative snapshot from server
+4. Calls `rollbackAndReplay(anchorTick, pendingInputs)`
+5. Emits `EntityCorrectionEvent` for view smoothing
+
+## Mobile Considerations
+
+- Touch event handling in `ts/mobileUtils.ts`
+- Wake lock support for screen always-on
+- High DPI display support in CSS
+- Viewport configuration in `index.html`
+- Battery monitoring via Telegram SDK (`@telegram-apps/sdk`)
+
+## Common Workflows
+
+### Running Development Server
 ```powershell
-# Get local IP
-ipconfig
+# Compile Haxe first (required)
+haxe compile.hxml
 
-# Visit http://<YOUR_IP>:3000 on mobile device
+# Then start dev server
+npm run dev
 ```
 
-### File Compilation Flow
+### Making Engine Changes
+1. Edit Haxe files in `src/engine/`
+2. Recompile: `haxe compile.hxml`
+3. Refresh browser (Vite hot-reloads)
 
-**Client Build:**
-1. `haxe compile.hxml` → `game.js` (Heaps game code)
-2. `tsc --project tsconfig.build.json` → `dist/main.js` (TS utilities)
-3. `esbuild dist/main.js` → `dist/bundle.js` (bundled TS)
-4. Vite dev server serves both at `localhost:3000`
+### Making UI Changes
+1. Edit scene files in `src/game/scene/`
+2. Recompile Haxe: `haxe compile.hxml`
+3. Refresh browser
 
-**Production Build:**
-1. Haxe compiles to `game.js`
-2. TS compiles and minifies to `dist/bundle.min.js` (via terser)
-3. Vite plugin combines `game.js` + `bundle.min.js` → single `bundle.min.js`
-4. Output in `dist/` with production `index.html`
+### Making TypeScript Changes
+1. Edit files in `ts/`
+2. Vite auto-recompiles on save (in dev mode)
 
-## Important Patterns
+### Production Build
+```powershell
+# Full production build
+npm run vite:build:prod
 
-### Engine Determinism
-
-The Necroton Engine is **deterministic** and designed for client prediction + server reconciliation:
-- Fixed timestep simulation
-- Deterministic RNG (`engine/model/DeterministicRng`)
-- Snapshot system for rollback/replay
-- Client prediction workflow: capture input → local predict → send to server → reconcile snapshot
-
-When working with engine code:
-- **Never** add non-deterministic operations (Date.now, Math.random)
-- **Never** reference Heaps types in `engine/` code
-- Use `EventBus` for all View communication
-- Test determinism: same inputs + RNG seed = identical state
-
-### Scene Transitions
-
-Use `EventManager` for scene changes:
-```haxe
-EventManager.instance.publish(EventManager.EVENT_LOAD_GAME_SCENE, null);
+# Output: dist/bundle.min.js, dist/index.html
 ```
 
-### Entity Management
+## Documentation
 
-Entities are managed through type-specific managers:
-- Each entity type has a dedicated manager (e.g., `CharacterEntityManager`)
-- Spawn via: `engine.spawnEntity(spec)` where spec includes `type`, `pos`, `ownerId`, etc.
-- Managers handle pooling, lifecycle, and per-tick updates
+Detailed architecture docs in `docs/`:
+- `docs/engine/1-engine-basics.md` - MVP architecture, contracts, module structure
+- `docs/game/1-game-architecture.md` - Heaps.io client integration patterns
+- `docs/map-and-units/` - Game-specific entity details
+- `docs/networking/` - Multiplayer and reconciliation
 
-### Vite Custom Plugins
-
-The Vite config includes custom plugins that:
-- Bundle `game.js` (Haxe output) with TypeScript bundle
-- Minify game.js for production using terser
-- Generate production `index.html` with correct script tags
-- Clean up unnecessary intermediate files
-
-## Common Pitfalls
-
-- **Don't commit without explicit request** - The codebase uses version control; only commit when user explicitly asks
-- **Build order matters** - Haxe must compile before running Vite dev server
-- **TypeScript paths** - Use `@/*` alias for `ts/*` directory
-- **Engine mode** - Engine supports `SINGLEPLAYER`, `SERVER`, and `CLIENT_PREDICTION` modes
-- **Event bus timing** - Events are emitted during simulation tick; View handlers should not block
-
-## Technology Stack
-
-- **Haxe 4.0+** - Compiles to JavaScript for both client and backend
-- **Heaps.io** - 2D game framework for rendering (client only)
-- **TypeScript 5.0** - Client utilities and type safety
-- **Vite 7** - Dev server and build tool
-- **esbuild** - Fast TypeScript bundler
-- **Telegram Apps SDK** - Mobile integration (`@telegram-apps/sdk`)
-
-## Configuration Files
-
-- `compile.hxml` - Client Heaps.io build (debug mode)
-- `compile-backend.hxml` - Backend engine build with source maps
-- `tsconfig.json` - TypeScript config for IDE/type checking (noEmit: true)
-- `tsconfig.build.json` - TypeScript build config (outputs to dist/)
-- `vite.config.js` - Dev server and production build configuration
-- `package.json` - Scripts, dependencies, and project metadata
+Read these docs before making architectural changes to understand the strict layering and dependency rules.
