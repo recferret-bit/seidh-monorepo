@@ -16,7 +16,3 @@ class CharacterStats {
         this.castSpeed = castSpeed;
     }
 }
-
-
-
-

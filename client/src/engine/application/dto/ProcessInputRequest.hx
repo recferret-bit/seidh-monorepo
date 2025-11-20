@@ -11,4 +11,3 @@ typedef ProcessInputRequest = {
     var tick: Int;
     var deltaTime: Float;
 }
-

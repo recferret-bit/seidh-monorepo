@@ -23,7 +23,7 @@ class AIService implements IService {
      */
     public function update(state: GameModelState, tick: Int, dt: Float): Void {
         final config = state.config;
-        final interval = config != null ? config.aiUpdateInterval : SeidhEngine.DEFAULT_CONFIG.aiUpdateInterval;
+        final interval = config != null ? config.aiUpdateInterval : SeidhEngine.Default_Config.aiUpdateInterval;
 
         // Only update AI every N ticks (configuration concern, not business logic)
         if (interval > 0 && tick % interval != 0) {

@@ -14,4 +14,3 @@ typedef SpawnConsumableRequest = {
     var charges: Int;
     var useRange: Float;
 }
-

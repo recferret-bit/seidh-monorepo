@@ -4,7 +4,6 @@ import engine.infrastructure.state.GameModelState;
 import engine.application.usecases.input.ProcessInputUseCase;
 import engine.infrastructure.utilities.ClientEntityMappingService;
 import engine.infrastructure.utilities.InputBufferService;
-import engine.application.dto.ProcessInputRequest;
 import engine.presentation.InputMessage;
 
 /**

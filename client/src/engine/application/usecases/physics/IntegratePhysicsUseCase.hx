@@ -1,9 +1,8 @@
 package engine.application.usecases.physics;
 
-import engine.domain.repositories.IEntityRepository;
 import engine.application.ports.output.IEventPublisher;
+import engine.domain.repositories.IEntityRepository;
 import engine.domain.services.PhysicsCalculationService;
-import engine.domain.valueobjects.Position;
 
 /**
  * Use case: Integrate physics (velocity to position)

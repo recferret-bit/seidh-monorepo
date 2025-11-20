@@ -10,4 +10,3 @@ typedef MoveCharacterRequest = {
     var deltaTime: Float;
     var tick: Int;
 }
-

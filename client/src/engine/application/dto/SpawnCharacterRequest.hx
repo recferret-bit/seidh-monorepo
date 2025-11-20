@@ -14,4 +14,3 @@ typedef SpawnCharacterRequest = {
     var level: Int;
     var stats: CharacterStats;
 }
-

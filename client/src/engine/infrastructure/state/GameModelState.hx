@@ -54,7 +54,7 @@ class GameModelState {
     private var objectPool: ObjectPool;
     
     public function new(config: EngineConfig) {
-        this.config = config != null ? config : SeidhEngine.DEFAULT_CONFIG;
+        this.config = config != null ? config : SeidhEngine.Default_Config;
         tick = 0;
         nextEntityId = 1;
         rng = new DeterministicRng(this.config.rngSeed);

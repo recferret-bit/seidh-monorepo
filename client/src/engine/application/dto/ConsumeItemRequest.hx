@@ -8,4 +8,3 @@ typedef ConsumeItemRequest = {
     var consumerId: Int;
     var tick: Int;
 }
-

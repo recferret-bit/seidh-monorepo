@@ -12,4 +12,3 @@ typedef SpawnColliderRequest = {
     var passable: Bool;
     var isTrigger: Bool;
 }
-

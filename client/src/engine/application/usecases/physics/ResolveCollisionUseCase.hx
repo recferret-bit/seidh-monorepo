@@ -1,10 +1,9 @@
 package engine.application.usecases.physics;
 
-import engine.domain.repositories.IEntityRepository;
 import engine.application.ports.output.IEventPublisher;
+import engine.domain.repositories.IEntityRepository;
 import engine.domain.services.CollisionService;
 import engine.domain.entities.collider.ColliderEntity;
-import engine.domain.valueobjects.Position;
 
 /**
  * Use case: Resolve collisions
