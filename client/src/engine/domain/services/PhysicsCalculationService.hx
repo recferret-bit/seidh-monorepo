@@ -4,10 +4,13 @@ import engine.domain.valueobjects.Position;
 import engine.domain.valueobjects.Velocity;
 
 /**
- * Domain service for physics integration rules
+ * Domain service for physics calculation rules
  * Contains physics business logic (not technical implementation)
+ * 
+ * Renamed from PhysicsService to avoid naming collision with
+ * application layer PhysicsService (orchestrator)
  */
-class PhysicsService {
+class PhysicsCalculationService {
     
     public function new() {
     }

@@ -28,7 +28,7 @@ import engine.domain.entities.character.base.CharacterStats;
 import engine.domain.entities.character.factory.CharacterEntityFactory;
 import engine.domain.entities.consumable.factory.ConsumableEntityFactory;
 import engine.domain.entities.collider.ColliderEntityFactory;
-import engine.domain.services.PhysicsService as DomainPhysicsService;
+import engine.domain.services.PhysicsCalculationService;
 import engine.domain.services.CollisionService;
 import engine.domain.services.AIDecisionService;
 import engine.infrastructure.state.GameModelState;
@@ -53,7 +53,7 @@ class UseCaseFactory {
     public final idGenerator: IdGeneratorService;
     public final clientEntityMappingService: ClientEntityMappingService;
     public final inputBufferService: InputBufferService;
-    private final domainPhysicsService: DomainPhysicsService;
+    private final physicsCalculationService: PhysicsCalculationService;
     private final collisionService: CollisionService;
     private final aiDecisionService: AIDecisionService;
     private final targetingService: TargetingService;
@@ -92,7 +92,7 @@ class UseCaseFactory {
         this.idGenerator = new IdGeneratorService(state);
         this.clientEntityMappingService = new ClientEntityMappingService();
         this.inputBufferService = new InputBufferService();
-        this.domainPhysicsService = new DomainPhysicsService();
+        this.physicsCalculationService = new PhysicsCalculationService();
         this.collisionService = new CollisionService();
         this.targetingService = new TargetingService(characterRepository);
         this.aiDecisionService = new AIDecisionService(targetingService);
@@ -113,7 +113,7 @@ class UseCaseFactory {
         this.consumeItemUseCase = new ConsumeItemUseCase(entityRepository, eventPublisher);
         this.updateAIBehaviorUseCase = new UpdateAIBehaviorUseCase(characterRepository, moveCharacterUseCase, attackCharacterUseCase, aiDecisionService, rng);
         this.processInputUseCase = new ProcessInputUseCase(moveCharacterUseCase, attackCharacterUseCase, characterRepository, targetingService);
-        this.integratePhysicsUseCase = new IntegratePhysicsUseCase(entityRepository, eventPublisher, domainPhysicsService);
+        this.integratePhysicsUseCase = new IntegratePhysicsUseCase(entityRepository, eventPublisher, physicsCalculationService);
         this.resolveCollisionUseCase = new ResolveCollisionUseCase(entityRepository, eventPublisher, collisionService);
     }
 

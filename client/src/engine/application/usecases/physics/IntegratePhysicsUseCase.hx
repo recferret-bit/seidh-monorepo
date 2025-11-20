@@ -2,7 +2,7 @@ package engine.application.usecases.physics;
 
 import engine.domain.repositories.IEntityRepository;
 import engine.application.ports.output.IEventPublisher;
-import engine.domain.services.PhysicsService;
+import engine.domain.services.PhysicsCalculationService;
 import engine.domain.valueobjects.Position;
 
 /**
@@ -11,12 +11,12 @@ import engine.domain.valueobjects.Position;
 class IntegratePhysicsUseCase {
     private final entityRepository: IEntityRepository;
     private final eventPublisher: IEventPublisher;
-    private final physicsService: PhysicsService;
+    private final physicsService: PhysicsCalculationService;
     
     public function new(
         entityRepository: IEntityRepository,
         eventPublisher: IEventPublisher,
-        physicsService: PhysicsService
+        physicsService: PhysicsCalculationService
     ) {
         this.entityRepository = entityRepository;
         this.eventPublisher = eventPublisher;
