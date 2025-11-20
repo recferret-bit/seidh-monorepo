@@ -1,7 +1,7 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.config.EngineMode;
+import engine.domain.config.EngineMode;
 import engine.presentation.InputMessage;
 import game.mvp.model.GameClientState;
 import hxd.Key;

@@ -1,4 +1,4 @@
-package engine.config;
+package engine.domain.config;
 
 /**
  * Configuration for the Necroton Engine

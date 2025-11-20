@@ -1,7 +1,7 @@
 package game.mvp.presenter;
 
 import engine.SeidhEngine;
-import engine.config.EngineMode;
+import engine.domain.config.EngineMode;
 import engine.infrastructure.adapters.events.IEventBus;
 import engine.infrastructure.adapters.events.events.ColliderTriggerEvent;
 import engine.infrastructure.adapters.events.events.EntityCollisionEvent;
