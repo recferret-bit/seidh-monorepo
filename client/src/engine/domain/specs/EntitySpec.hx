@@ -4,56 +4,32 @@ import engine.domain.geometry.Vec2;
 import engine.domain.types.EntityType;
 
 /**
- * Base entity specification type definition
+ * Base entity specification
+ * Contains fields common to ALL entity types
  * 
- * Used for both entity creation/specification and runtime entity data.
- * All fields are optional to support flexible entity creation, with defaults
- * applied during conversion to runtime state.
+ * For entity-specific fields, use:
+ * - CharacterSpec for character entities
+ * - ConsumableSpec for consumable entities
+ * - ColliderSpec for collider entities
+ * 
+ * For serialization, use SerializedEntityData (memento pattern)
  */
-typedef BaseEntitySpec = {
+typedef EntitySpec = {
+    // Identity
     ?id: Int,
-    ?type: EntityType,
+    type: EntityType,
+    
+    // Position and movement
     pos: Vec2,
     vel: Vec2,
     ?rotation: Float,
+    
+    // Ownership and state
     ownerId: String,
     ?isAlive: Bool,
-    ?isInputDriven: Bool,
+    
+    // Collision bounds
     ?colliderWidth: Float,
     ?colliderHeight: Float,
     ?colliderOffset: Vec2
-}
-
-/**
- * Full entity specification extending base spec
- * Provides strongly-typed specifications for different entity types,
- * replacing Dynamic spec parameters with compile-time type safety.
- */
-typedef EntitySpec = BaseEntitySpec & {
-    // Character fields
-    ?maxHp: Int,
-    ?hp: Int,
-    ?level: Int,
-    ?stats: {power: Int, armor: Int, speed: Int, castSpeed: Int},
-    ?attackDefs: Array<Dynamic>,
-    ?spellBook: Array<Dynamic>,
-    ?aiProfile: String,
-    // Consumable fields
-    ?effectId: String,
-    ?durationTicks: Int,
-    ?stackable: Bool,
-    ?charges: Int,
-    ?useRange: Float,
-    ?consumableType: String,
-    ?quantity: Int,
-    ?effectValue: Dynamic, // Can be Int or Float depending on context
-    // Effect fields
-    ?effectType: String,
-    ?intensity: Int,
-    ?targetId: Int,
-    ?casterId: Int,
-    ?duration: Int,
-    // Collider fields
-    ?passable: Bool,
-    ?isTrigger: Bool
 }

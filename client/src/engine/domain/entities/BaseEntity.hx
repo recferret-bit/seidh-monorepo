@@ -6,7 +6,6 @@ import engine.domain.types.EntityType;
 import engine.domain.valueobjects.Position;
 import engine.domain.valueobjects.Velocity;
 import engine.domain.specs.EntitySpec;
-import engine.domain.specs.EntitySpec.BaseEntitySpec;
 
 /**
  * Abstract base entity with common fields and default implementations.
@@ -14,7 +13,7 @@ import engine.domain.specs.EntitySpec.BaseEntitySpec;
  */
 abstract class BaseEntity {
     /** Base entity data */
-    public var base: BaseEntitySpec;
+    public var base: EntitySpec;
     
     /** Collider rectangle instance (kept and updated automatically) */
     public var colliderRect: Rect;
@@ -127,16 +126,15 @@ abstract class BaseEntity {
     /**
      * Create default base entity data
      */
-    private function createDefaultBaseData(): BaseEntitySpec {
+    private function createDefaultBaseData(): EntitySpec {
         return {
-            id: 0,
             type: EntityType.GENERIC,
             pos: new Vec2(0, 0),
             vel: new Vec2(0, 0),
-            rotation: 0,
             ownerId: "",
+            id: 0,
+            rotation: 0,
             isAlive: false,
-            isInputDriven: false,
             colliderWidth: 1,
             colliderHeight: 1,
             colliderOffset: null // No longer stored in base, stored in rect
@@ -146,16 +144,15 @@ abstract class BaseEntity {
     /**
      * Convert spec to base data with defaults applied
      */
-    private function specToBaseData(spec: BaseEntitySpec): BaseEntitySpec {
+    private function specToBaseData(spec: EntitySpec): EntitySpec {
         return {
+            type: spec.type,
+            pos: spec.pos,
+            vel: spec.vel,
+            ownerId: spec.ownerId,
             id: spec.id != null ? spec.id : 0,
-            type: spec.type != null ? spec.type : EntityType.GENERIC,
-            pos: spec.pos != null ? spec.pos : new Vec2(0, 0),
-            vel: spec.vel != null ? spec.vel : new Vec2(0, 0),
             rotation: spec.rotation != null ? spec.rotation : 0,
-            ownerId: spec.ownerId != null ? spec.ownerId : "",
             isAlive: spec.isAlive != null ? spec.isAlive : true,
-            isInputDriven: spec.isInputDriven != null ? spec.isInputDriven : false,
             colliderWidth: spec.colliderWidth != null ? spec.colliderWidth : 1,
             colliderHeight: spec.colliderHeight != null ? spec.colliderHeight : 1,
             colliderOffset: null // No longer stored in base, stored in rect
