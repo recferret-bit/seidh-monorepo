@@ -1,9 +1,9 @@
-package engine.infrastructure.services.physics;
+package engine.infrastructure.utilities.physics;
 
 import engine.domain.geometry.Rect;
 import engine.domain.geometry.Vec2;
-import engine.infrastructure.services.physics.CollisionTypes.CollisionObject;
-import engine.infrastructure.services.physics.CollisionTypes.CollisionResult;
+import engine.infrastructure.utilities.physics.CollisionTypes.CollisionObject;
+import engine.infrastructure.utilities.physics.CollisionTypes.CollisionResult;
 import engine.SeidhEngine;
 
 /**

@@ -1,4 +1,4 @@
-package engine.infrastructure.services;
+package engine.infrastructure.utilities;
 
 import engine.presentation.InputBuffer;
 import engine.presentation.InputMessage;

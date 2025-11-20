@@ -1,4 +1,4 @@
-package engine.infrastructure.eventbus;
+package engine.infrastructure.adapters.events;
 
 /**
  * Event bus contract for publishing and subscribing to events

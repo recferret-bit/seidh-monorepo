@@ -1,4 +1,4 @@
-package engine.infrastructure.services.physics;
+package engine.infrastructure.utilities.physics;
 
 import engine.domain.entities.BaseEntity;
 import engine.domain.geometry.Rect;

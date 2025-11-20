@@ -1,7 +1,7 @@
 package game.eventbus;
 
-import engine.infrastructure.eventbus.EventBus;
-import engine.infrastructure.eventbus.IEventBus;
+import engine.infrastructure.adapters.events.EventBus;
+import engine.infrastructure.adapters.events.IEventBus;
 
 /**
  * Singleton EventBus instance for game client-side events

@@ -2,7 +2,7 @@ package engine.application.usecases.consumable;
 
 import engine.domain.repositories.IEntityRepository;
 import engine.application.ports.output.IEventPublisher;
-import engine.infrastructure.services.IdGeneratorService;
+import engine.infrastructure.utilities.IdGeneratorService;
 import engine.application.dto.SpawnConsumableRequest;
 import engine.domain.entities.consumable.base.BaseConsumableEntity;
 import engine.domain.entities.consumable.factory.ConsumableEntityFactory;

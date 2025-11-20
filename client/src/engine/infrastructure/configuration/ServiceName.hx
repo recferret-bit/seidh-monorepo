@@ -1,4 +1,4 @@
-package engine.infrastructure.config;
+package engine.infrastructure.configuration;
 
 /**
  * Service name definitions as abstract string enum

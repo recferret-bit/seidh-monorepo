@@ -1,11 +1,11 @@
 package engine.presentation;
 
-import engine.infrastructure.eventbus.IEventBus;
-import engine.infrastructure.eventbus.events.TickCompleteEvent;
+import engine.infrastructure.adapters.events.IEventBus;
+import engine.infrastructure.adapters.events.events.TickCompleteEvent;
 import engine.infrastructure.state.GameModelState;
-import engine.infrastructure.config.ServiceRegistry;
+import engine.infrastructure.configuration.ServiceRegistry;
 import engine.application.services.IService;
-import engine.infrastructure.config.ServiceName;
+import engine.infrastructure.configuration.ServiceName;
 
 /**
  * Fixed timestep game loop

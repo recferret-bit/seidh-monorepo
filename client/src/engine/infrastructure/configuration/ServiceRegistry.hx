@@ -1,7 +1,7 @@
-package engine.infrastructure.config;
+package engine.infrastructure.configuration;
 
 import engine.application.services.IService;
-import engine.infrastructure.config.ServiceName;
+import engine.infrastructure.configuration.ServiceName;
 
 /**
  * Registry for engine services

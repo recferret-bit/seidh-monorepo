@@ -2,8 +2,8 @@ package game.scene.impl.test;
 
 import engine.domain.entities.BaseEntity;
 import engine.domain.entities.collider.ColliderEntity;
-import engine.infrastructure.services.physics.CollisionDetector;
-import engine.infrastructure.services.physics.CollisionTypes.CollisionObject;
+import engine.infrastructure.utilities.physics.CollisionDetector;
+import engine.infrastructure.utilities.physics.CollisionTypes.CollisionObject;
 import game.mvp.model.entities.ColliderModel;
 import game.mvp.view.entities.collider.ColliderEntityView;
 import hxd.Key;

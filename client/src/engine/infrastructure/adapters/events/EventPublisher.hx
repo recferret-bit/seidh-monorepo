@@ -1,15 +1,15 @@
-package engine.infrastructure.events;
+package engine.infrastructure.adapters.events;
 
 import engine.application.ports.output.IEventPublisher;
-import engine.infrastructure.eventbus.IEventBus;
+import engine.infrastructure.adapters.events.IEventBus;
 import engine.domain.events.EntitySpawned;
 import engine.domain.events.EntityMoved;
 import engine.domain.events.EntityDied;
 import engine.domain.events.DamageDealt;
-import engine.infrastructure.eventbus.events.EntitySpawnEvent;
-import engine.infrastructure.eventbus.events.EntityMoveEvent;
-import engine.infrastructure.eventbus.events.EntityDeathEvent;
-import engine.infrastructure.eventbus.events.EntityDamageEvent;
+import engine.infrastructure.adapters.events.events.EntitySpawnEvent;
+import engine.infrastructure.adapters.events.events.EntityMoveEvent;
+import engine.infrastructure.adapters.events.events.EntityDeathEvent;
+import engine.infrastructure.adapters.events.events.EntityDamageEvent;
 import engine.infrastructure.state.GameModelState;
 
 /**

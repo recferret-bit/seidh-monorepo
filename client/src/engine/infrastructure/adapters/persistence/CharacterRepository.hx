@@ -1,4 +1,4 @@
-package engine.infrastructure.persistence;
+package engine.infrastructure.adapters.persistence;
 
 import engine.domain.repositories.ICharacterRepository;
 import engine.domain.repositories.IEntityRepository;

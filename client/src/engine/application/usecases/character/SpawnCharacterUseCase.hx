@@ -2,7 +2,7 @@ package engine.application.usecases.character;
 
 import engine.domain.repositories.IEntityRepository;
 import engine.application.ports.output.IEventPublisher;
-import engine.infrastructure.services.IdGeneratorService;
+import engine.infrastructure.utilities.IdGeneratorService;
 import engine.application.dto.SpawnCharacterRequest;
 import engine.domain.entities.character.base.BaseCharacterEntity;
 import engine.domain.entities.character.factory.CharacterEntityFactory;

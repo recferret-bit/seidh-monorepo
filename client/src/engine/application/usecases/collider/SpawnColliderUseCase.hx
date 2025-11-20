@@ -2,7 +2,7 @@ package engine.application.usecases.collider;
 
 import engine.domain.repositories.IEntityRepository;
 import engine.application.ports.output.IEventPublisher;
-import engine.infrastructure.services.IdGeneratorService;
+import engine.infrastructure.utilities.IdGeneratorService;
 import engine.application.dto.SpawnColliderRequest;
 import engine.domain.entities.collider.ColliderEntity;
 import engine.domain.entities.collider.ColliderEntityFactory;

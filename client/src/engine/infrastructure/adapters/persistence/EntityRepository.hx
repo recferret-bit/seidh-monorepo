@@ -1,4 +1,4 @@
-package engine.infrastructure.persistence;
+package engine.infrastructure.adapters.persistence;
 
 import engine.domain.entities.BaseEntity;
 import engine.domain.entities.character.factory.CharacterEntityFactory;

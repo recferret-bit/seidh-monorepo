@@ -1,4 +1,4 @@
-package engine.infrastructure.eventbus;
+package engine.infrastructure.adapters.events;
 
 import engine.infrastructure.logging.Logger;
 

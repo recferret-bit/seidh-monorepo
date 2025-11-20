@@ -2,8 +2,8 @@ package engine.application.services;
 
 import engine.infrastructure.state.GameModelState;
 import engine.application.usecases.input.ProcessInputUseCase;
-import engine.infrastructure.services.ClientEntityMappingService;
-import engine.infrastructure.services.InputBufferService;
+import engine.infrastructure.utilities.ClientEntityMappingService;
+import engine.infrastructure.utilities.InputBufferService;
 import engine.application.dto.ProcessInputRequest;
 import engine.presentation.InputMessage;
 

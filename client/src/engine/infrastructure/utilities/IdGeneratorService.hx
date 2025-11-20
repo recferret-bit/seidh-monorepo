@@ -1,4 +1,4 @@
-package engine.infrastructure.services;
+package engine.infrastructure.utilities;
 
 import engine.infrastructure.state.GameModelState;
 

@@ -1,4 +1,4 @@
-package engine.infrastructure.eventbus.events;
+package engine.infrastructure.adapters.events.events;
 
 class ActionIntentEvent {
     public static inline final NAME = "action:intent";

@@ -1,4 +1,4 @@
-package engine.infrastructure.config;
+package engine.infrastructure.configuration;
 
 import engine.domain.repositories.IEntityRepository;
 import engine.domain.repositories.ICharacterRepository;
@@ -31,10 +31,10 @@ import engine.domain.services.AIDecisionService;
 import engine.infrastructure.state.GameModelState;
 import engine.domain.services.DeterministicRng;
 import engine.domain.services.TargetingService;
-import engine.infrastructure.services.IdGeneratorService;
-import engine.infrastructure.services.ClientEntityMappingService;
-import engine.infrastructure.services.InputBufferService;
-import engine.infrastructure.persistence.CharacterRepository;
+import engine.infrastructure.utilities.IdGeneratorService;
+import engine.infrastructure.utilities.ClientEntityMappingService;
+import engine.infrastructure.utilities.InputBufferService;
+import engine.infrastructure.adapters.persistence.CharacterRepository;
 import engine.domain.entities.character.factory.DefaultCharacterEntityFactory;
 import engine.domain.entities.consumable.factory.DefaultConsumableEntityFactory;
 import engine.domain.entities.collider.DefaultColliderEntityFactory;

@@ -1,4 +1,4 @@
-package engine.infrastructure.eventbus.events;
+package engine.infrastructure.adapters.events.events;
 
 import engine.domain.geometry.Vec2;
 
