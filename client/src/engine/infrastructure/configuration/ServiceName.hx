@@ -7,6 +7,6 @@ enum abstract ServiceName(String) from String to String {
     var INPUT = "input";
     var PHYSICS = "physics";
     var AI = "ai";
-    var SPAWN = "spawn";
+    var ENTITY_LIFECYCLE = "entity_lifecycle";
 }
 

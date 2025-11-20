@@ -4,7 +4,6 @@ import engine.infrastructure.adapters.events.IEventBus;
 import engine.infrastructure.adapters.events.events.TickCompleteEvent;
 import engine.infrastructure.state.GameModelState;
 import engine.infrastructure.configuration.ServiceRegistry;
-import engine.application.services.IService;
 import engine.infrastructure.configuration.ServiceName;
 
 /**
@@ -88,10 +87,10 @@ class GameLoop {
             physicsService.update(state, tick, dt);
         }
         
-        // 4. Spawn service - orchestrates CleanupDeadEntitiesUseCase
-        final spawnService = services.get(ServiceName.SPAWN);
-        if (spawnService != null) {
-            spawnService.update(state, tick, dt);
+        // 4. Entity lifecycle service - orchestrates CleanupDeadEntitiesUseCase
+        final entityLifecycleService = services.get(ServiceName.ENTITY_LIFECYCLE);
+        if (entityLifecycleService != null) {
+            entityLifecycleService.update(state, tick, dt);
         }
     }
 }

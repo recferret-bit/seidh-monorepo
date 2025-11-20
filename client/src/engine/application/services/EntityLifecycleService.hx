@@ -4,13 +4,13 @@ import engine.infrastructure.state.GameModelState;
 import engine.application.usecases.character.CleanupDeadEntitiesUseCase;
 
 /**
- * Spawn service for entity lifecycle
+ * Entity lifecycle service
  * Pure orchestrator - delegates all logic to CleanupDeadEntitiesUseCase
  * 
- * This service handles entity cleanup orchestration.
- * All entity lifecycle logic is in CleanupDeadEntitiesUseCase.
+ * This service handles entity lifecycle orchestration (currently cleanup only).
+ * All entity lifecycle logic is in use cases.
  */
-class SpawnService implements IService {
+class EntityLifecycleService implements IService {
     private final cleanupDeadEntitiesUseCase: CleanupDeadEntitiesUseCase;
     
     public function new(cleanupDeadEntitiesUseCase: CleanupDeadEntitiesUseCase) {

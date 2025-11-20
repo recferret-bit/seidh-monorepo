@@ -1,13 +1,9 @@
 package engine;
 
 import engine.domain.config.EngineConfig;
-import engine.domain.config.EngineMode;
-import engine.domain.entities.BaseEntity;
 import engine.infrastructure.adapters.events.EventBus;
 import engine.infrastructure.adapters.events.IEventBus;
 import engine.infrastructure.adapters.events.events.EntityCorrectionEvent;
-import engine.infrastructure.adapters.events.events.EntityDeathEvent;
-import engine.infrastructure.adapters.events.events.EntitySpawnEvent;
 import engine.infrastructure.adapters.events.events.SnapshotEvent;
 import engine.infrastructure.state.GameModelState;
 import engine.domain.entities.BaseEntity;
@@ -18,7 +14,7 @@ import engine.infrastructure.configuration.ServiceName;
 import engine.application.services.InputService;
 import engine.application.services.AIService;
 import engine.application.services.PhysicsService;
-import engine.application.services.SpawnService;
+import engine.application.services.EntityLifecycleService;
 import engine.infrastructure.configuration.UseCaseFactory;
 import engine.infrastructure.adapters.persistence.EntityRepository;
 import engine.infrastructure.adapters.events.EventPublisher;
@@ -75,7 +71,7 @@ import engine.infrastructure.utilities.ClientEntityMappingService;
  */
 @:expose()
 class SeidhEngine {
-    public static final DEFAULT_CONFIG: EngineConfig = {
+    public static final Default_Config: EngineConfig = {
         mode: SINGLEPLAYER,
         tickRate: 60,
         unitPixels: 32,
@@ -87,7 +83,6 @@ class SeidhEngine {
     };
     public static var Config(default, null): EngineConfig;
 
-    private final config: EngineConfig;
     private var state: GameModelState;
     private var services: ServiceRegistry;
     private var eventBus: IEventBus;
@@ -99,7 +94,6 @@ class SeidhEngine {
     private var eventPublisher: EventPublisher;
     
     private function new(config: EngineConfig) {
-        this.config = config;
         SeidhEngine.Config = config;
         Logger.configure(config.debugLogging == true);
         
@@ -138,7 +132,7 @@ class SeidhEngine {
      * @return Engine instance
      */
     public static function create(?config: EngineConfig): SeidhEngine {
-        final engineConfig = config != null ? config : DEFAULT_CONFIG;
+        final engineConfig = config != null ? config : Default_Config;
         return new SeidhEngine(engineConfig);
     }
     
@@ -341,15 +335,16 @@ class SeidhEngine {
             useCaseFactory.resolveCollisionUseCase
         );
         final aiService = new AIService(useCaseFactory.updateAIBehaviorUseCase);
-        final spawnService = new SpawnService(useCaseFactory.cleanupDeadEntitiesUseCase);
+        final entityLifecycleService = new EntityLifecycleService(useCaseFactory.cleanupDeadEntitiesUseCase);
         
         services.register(ServiceName.INPUT, inputService);
         services.register(ServiceName.PHYSICS, physicsService);
         services.register(ServiceName.AI, aiService);
-        services.register(ServiceName.SPAWN, spawnService);
+        services.register(ServiceName.ENTITY_LIFECYCLE, entityLifecycleService);
     }
 
     private function emitSnapshotEvents(): Void {
+        final config = SeidhEngine.Config;
         switch (config.mode) {
             case SINGLEPLAYER:
                 // No snapshot events for singleplayer
