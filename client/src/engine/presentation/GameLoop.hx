@@ -59,9 +59,6 @@ class GameLoop {
         final dt = 1.0 / tickRate;
         executeServices(currentTick, dt);
         
-        // Update entity managers (infrastructure concern)
-        state.managers.updateAll(dt, currentTick, state);
-        
         // Emit tick complete event
         eventBus.emit(TickCompleteEvent.NAME, {tick: currentTick});
     }

@@ -13,7 +13,6 @@ import engine.infrastructure.state.GameModelState;
 import engine.domain.entities.BaseEntity;
 import engine.domain.specs.EntitySpec;
 import engine.domain.types.EntityType;
-import engine.infrastructure.managers.IEngineEntityManager;
 import engine.infrastructure.configuration.ServiceRegistry;
 import engine.infrastructure.configuration.ServiceName;
 import engine.application.services.InputService;
@@ -118,7 +117,7 @@ class SeidhEngine {
         final consumableFactory = new DefaultConsumableEntityFactory();
         final colliderFactory = new DefaultColliderEntityFactory();
         this.eventPublisher = new EventPublisher(eventBus, state);
-        this.entityRepository = new EntityRepository(state, characterFactory, consumableFactory, colliderFactory);
+        this.entityRepository = state.entityRepository;
         
         // Create use case factory (creates all use cases)
         this.useCaseFactory = new UseCaseFactory(
@@ -245,17 +244,13 @@ class SeidhEngine {
     }
     
     /**
-     * Get entity by ID and type
+     * Get entity by ID
      * @param id Entity ID
-     * @param type Entity type
+     * @param type Entity type (deprecated, kept for compatibility)
      * @return Entity or null
      */
     public function getEntityById(id: Int, type: EntityType): BaseEntity {
-        final manager: IEngineEntityManager<BaseEntity> = state.managers.get(type);
-        if (manager != null) {
-            return manager.find(id);
-        }
-        return null;
+        return state.entityRepository.findById(id);
     }
     
     /**
@@ -376,15 +371,13 @@ class SeidhEngine {
     
     private function emitCorrectionEvents(): Void {
         // Emit entity correction events for client prediction
-        for (manager in state.managers.getAll()) {
-            manager.iterate(function(entity) {
-                eventBus.emit(EntityCorrectionEvent.NAME, {
-                    tick: state.tick,
-                    entityId: entity.id,
-                    correctedPos: entity.pos,
-                    correctedVel: entity.vel
-                });
+        state.entityRepository.iterate(function(entity) {
+            eventBus.emit(EntityCorrectionEvent.NAME, {
+                tick: state.tick,
+                entityId: entity.id,
+                correctedPos: entity.pos,
+                correctedVel: entity.vel
             });
-        }
+        });
     }
 }
