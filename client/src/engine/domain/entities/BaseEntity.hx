@@ -209,7 +209,6 @@ abstract class BaseEntity {
             rotation: base.rotation,
             ownerId: base.ownerId,
             isAlive: base.isAlive,
-            isInputDriven: base.isInputDriven,
             colliderWidth: base.colliderWidth,
             colliderHeight: base.colliderHeight,
             colliderOffset: {x: offset.x, y: offset.y}
@@ -218,14 +217,13 @@ abstract class BaseEntity {
     
     public function deserialize(data: Dynamic): Void {
         base = {
-            id: data.id,
             type: data.type,
             pos: data.pos != null ? new Vec2(data.pos.x, data.pos.y) : new Vec2(0, 0),
             vel: data.vel != null ? new Vec2(data.vel.x, data.vel.y) : new Vec2(0, 0),
-            rotation: data.rotation,
             ownerId: data.ownerId,
+            id: data.id,
+            rotation: data.rotation,
             isAlive: data.isAlive,
-            isInputDriven: data.isInputDriven != null ? data.isInputDriven : false,
             colliderWidth: data.colliderWidth != null ? data.colliderWidth : 1,
             colliderHeight: data.colliderHeight != null ? data.colliderHeight : 1,
             colliderOffset: null // No longer stored in base, stored in rect

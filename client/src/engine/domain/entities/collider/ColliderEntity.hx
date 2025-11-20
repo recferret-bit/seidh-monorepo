@@ -2,6 +2,7 @@ package engine.domain.entities.collider;
 
 import engine.domain.entities.BaseEntity;
 import engine.domain.specs.EntitySpec;
+import engine.domain.specs.ColliderSpec;
 import engine.domain.valueobjects.Position;
 
 /**
@@ -39,7 +40,6 @@ class ColliderEntity extends BaseEntity {
         if (spec == null) {
             passable = false;
             isTrigger = false;
-            isInputDriven = false;
             vel.x = 0;
             vel.y = 0;
             colliderWidth = 2;
@@ -48,11 +48,13 @@ class ColliderEntity extends BaseEntity {
             return;
         }
 
-        passable = spec.passable != null ? spec.passable : false;
-        isTrigger = spec.isTrigger != null ? spec.isTrigger : false;
+        // Cast to ColliderSpec for type-safe access to collider fields
+        final colliderSpec: ColliderSpec = cast spec;
+        
+        passable = colliderSpec.passable != null ? colliderSpec.passable : false;
+        isTrigger = colliderSpec.isTrigger != null ? colliderSpec.isTrigger : false;
         
         // Colliders are always static
-        isInputDriven = false;
         vel.x = 0;
         vel.y = 0;
 
