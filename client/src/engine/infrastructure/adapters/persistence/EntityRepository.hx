@@ -185,29 +185,21 @@ class EntityRepository implements IEntityRepository {
             }
             
             for (entityMemento in entityMementos) {
-                // Convert memento to spec
+                // Create base spec for entity instantiation
                 final spec: EntitySpec = {
-                    id: entityMemento.id,
                     type: entityMemento.type,
                     pos: entityMemento.pos,
                     vel: entityMemento.vel,
-                    rotation: entityMemento.rotation,
-                    ownerId: entityMemento.ownerId,
-                    isAlive: entityMemento.isAlive,
-                    maxHp: entityMemento.maxHp,
-                    hp: entityMemento.hp,
-                    level: entityMemento.level,
-                    stats: entityMemento.stats,
-                    attackDefs: entityMemento.attackDefs,
-                    spellBook: entityMemento.spellBook,
-                    aiProfile: entityMemento.aiProfile,
-                    effectType: entityMemento.effectType,
-                    duration: entityMemento.duration,
-                    consumableType: entityMemento.consumableType,
-                    quantity: entityMemento.quantity
+                    ownerId: entityMemento.ownerId
                 };
                 
+                // Create entity (this will call entity constructor and reset())
                 final entity = entityFactory.create(entityMemento.type, spec);
+                
+                // Deserialize full state (includes entity-specific fields)
+                entity.deserialize(entityMemento);
+                
+                // Store in repository
                 entities.get(type).set(entity.id, entity);
                 
                 // Update nextId to ensure no ID collision

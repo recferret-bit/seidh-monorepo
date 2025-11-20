@@ -6,6 +6,9 @@ import engine.infrastructure.utilities.IdGeneratorService;
 import engine.application.dto.SpawnColliderRequest;
 import engine.domain.entities.collider.ColliderEntity;
 import engine.domain.entities.collider.ColliderEntityFactory;
+import engine.domain.geometry.Vec2;
+import engine.domain.specs.ColliderSpec;
+import engine.domain.types.EntityType;
 import engine.domain.valueobjects.Position;
 import engine.domain.events.EntitySpawned;
 
@@ -39,22 +42,28 @@ class SpawnColliderUseCase {
         // 1. Generate ID
         final entityId = idGenerator.generate();
 
-        // 2. Create domain entity
+        // 2. Build ColliderSpec
         final position = new Position(request.x, request.y);
-        final collider = colliderFactory.create(
-            entityId,
-            position,
-            request.ownerId,
-            request.width,
-            request.height,
-            request.passable,
-            request.isTrigger
-        );
+        final spec: ColliderSpec = {
+            type: EntityType.COLLIDER,
+            pos: new Vec2(Std.int(position.x), Std.int(position.y)),
+            vel: new Vec2(0, 0),
+            ownerId: request.ownerId,
+            id: entityId,
+            isAlive: true,
+            colliderWidth: request.width,
+            colliderHeight: request.height,
+            passable: request.passable,
+            isTrigger: request.isTrigger
+        };
 
-        // 3. Persist entity
+        // 3. Create domain entity
+        final collider = colliderFactory.create(spec);
+
+        // 4. Persist entity
         entityRepository.save(collider);
 
-        // 4. Publish domain event
+        // 5. Publish domain event
         eventPublisher.publish(new EntitySpawned(
             entityId,
             "collider",

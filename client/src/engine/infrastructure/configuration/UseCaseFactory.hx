@@ -20,6 +20,9 @@ import engine.application.dto.SpawnCharacterRequest;
 import engine.application.dto.SpawnConsumableRequest;
 import engine.application.dto.SpawnColliderRequest;
 import engine.domain.specs.EntitySpec;
+import engine.domain.specs.CharacterSpec;
+import engine.domain.specs.ConsumableSpec;
+import engine.domain.specs.ColliderSpec;
 import engine.domain.types.EntityType;
 import engine.domain.entities.character.base.CharacterStats;
 import engine.domain.entities.character.factory.CharacterEntityFactory;
@@ -150,42 +153,48 @@ class UseCaseFactory {
     }
 
     private function spawnCharacter(spec: EntitySpec): Int {
+        // Cast to CharacterSpec for type-safe access
+        final charSpec: CharacterSpec = cast spec;
         final request: SpawnCharacterRequest = {
             entityType: spec.type,
             x: spec.pos.x,
             y: spec.pos.y,
             ownerId: spec.ownerId,
-            maxHp: spec.maxHp != null ? spec.maxHp : 100,
-            level: spec.level != null ? spec.level : 1,
-            stats: buildCharacterStats(spec.stats)
+            maxHp: charSpec.maxHp != null ? charSpec.maxHp : 100,
+            level: charSpec.level != null ? charSpec.level : 1,
+            stats: charSpec.stats
         };
         return spawnCharacterUseCase.execute(request);
     }
 
     private function spawnConsumable(spec: EntitySpec): Int {
+        // Cast to ConsumableSpec for type-safe access
+        final consumeSpec: ConsumableSpec = cast spec;
         final request: SpawnConsumableRequest = {
             entityType: spec.type,
             x: spec.pos.x,
             y: spec.pos.y,
             ownerId: spec.ownerId,
-            effectId: spec.effectId != null ? spec.effectId : "",
-            durationTicks: spec.durationTicks != null ? spec.durationTicks : 0,
-            stackable: spec.stackable != null ? spec.stackable : false,
-            charges: spec.charges != null ? spec.charges : 1,
-            useRange: spec.useRange != null ? spec.useRange : 16.0
+            effectId: consumeSpec.effectId,
+            durationTicks: consumeSpec.durationTicks != null ? consumeSpec.durationTicks : 0,
+            stackable: consumeSpec.stackable != null ? consumeSpec.stackable : false,
+            charges: consumeSpec.charges != null ? consumeSpec.charges : 1,
+            useRange: consumeSpec.useRange != null ? consumeSpec.useRange : 16.0
         };
         return spawnConsumableUseCase.execute(request);
     }
 
     private function spawnCollider(spec: EntitySpec): Int {
+        // Cast to ColliderSpec for type-safe access
+        final colliderSpec: ColliderSpec = cast spec;
         final request: SpawnColliderRequest = {
             x: spec.pos.x,
             y: spec.pos.y,
             width: spec.colliderWidth != null ? spec.colliderWidth : 2.0,
             height: spec.colliderHeight != null ? spec.colliderHeight : 2.0,
             ownerId: spec.ownerId,
-            passable: spec.passable != null ? spec.passable : false,
-            isTrigger: spec.isTrigger != null ? spec.isTrigger : false
+            passable: colliderSpec.passable != null ? colliderSpec.passable : false,
+            isTrigger: colliderSpec.isTrigger != null ? colliderSpec.isTrigger : false
         };
         return spawnColliderUseCase.execute(request);
     }
@@ -208,16 +217,5 @@ class UseCaseFactory {
         return value != null ? cast value : null;
     }
 
-    private function buildCharacterStats(stats: Dynamic): CharacterStats {
-        if (stats == null) {
-            return null;
-        }
-        return new CharacterStats(
-            stats.power,
-            stats.armor,
-            stats.speed,
-            stats.castSpeed
-        );
-    }
 }
 

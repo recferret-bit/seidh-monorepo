@@ -6,6 +6,8 @@ import engine.infrastructure.utilities.IdGeneratorService;
 import engine.application.dto.SpawnConsumableRequest;
 import engine.domain.entities.consumable.base.BaseConsumableEntity;
 import engine.domain.entities.consumable.factory.ConsumableEntityFactory;
+import engine.domain.geometry.Vec2;
+import engine.domain.specs.ConsumableSpec;
 import engine.domain.valueobjects.Position;
 import engine.domain.events.EntitySpawned;
 
@@ -39,24 +41,29 @@ class SpawnConsumableUseCase {
         // 1. Generate ID
         final entityId = idGenerator.generate();
 
-        // 2. Create domain entity using factory
+        // 2. Build ConsumableSpec
         final position = new Position(request.x, request.y);
-        final consumable = consumableFactory.create(
-            request.entityType,
-            entityId,
-            position,
-            request.ownerId,
-            request.effectId,
-            request.durationTicks,
-            request.stackable,
-            request.charges,
-            request.useRange
-        );
+        final spec: ConsumableSpec = {
+            type: cast request.entityType,
+            pos: new Vec2(Std.int(position.x), Std.int(position.y)),
+            vel: new Vec2(0, 0),
+            ownerId: request.ownerId,
+            id: entityId,
+            isAlive: true,
+            effectId: request.effectId,
+            durationTicks: request.durationTicks,
+            stackable: request.stackable,
+            charges: request.charges,
+            useRange: request.useRange
+        };
 
-        // 3. Persist entity
+        // 3. Create domain entity
+        final consumable = consumableFactory.create(spec);
+
+        // 4. Persist entity
         entityRepository.save(consumable);
 
-        // 4. Publish domain event
+        // 5. Publish domain event
         eventPublisher.publish(new EntitySpawned(
             entityId,
             request.entityType,

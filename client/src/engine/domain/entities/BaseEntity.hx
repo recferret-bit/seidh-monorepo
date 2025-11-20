@@ -18,6 +18,9 @@ abstract class BaseEntity {
     /** Collider rectangle instance (kept and updated automatically) */
     public var colliderRect: Rect;
     
+    /** Is this entity input-driven (vs physics-driven) */
+    public var isInputDriven: Bool = false;
+    
     // Property accessors for backward compatibility
     public var id(get, set): Int;
     public var type(get, set): EntityType;
@@ -26,7 +29,6 @@ abstract class BaseEntity {
     public var rotation(get, set): Float;
     public var ownerId(get, set): String;
     public var isAlive(get, set): Bool;
-    public var isInputDriven(get, set): Bool;
     public var colliderWidth(get, set): Float;
     public var colliderHeight(get, set): Float;
 
@@ -63,8 +65,6 @@ abstract class BaseEntity {
     private function set_ownerId(v: String): String return base.ownerId = v;
     private function get_isAlive(): Bool return base.isAlive;
     private function set_isAlive(v: Bool): Bool return base.isAlive = v;
-    private function get_isInputDriven(): Bool return base.isInputDriven;
-    private function set_isInputDriven(v: Bool): Bool return base.isInputDriven = v;
     private function get_colliderWidth(): Float return base.colliderWidth;
     private function set_colliderWidth(v: Float): Float {
         base.colliderWidth = v;

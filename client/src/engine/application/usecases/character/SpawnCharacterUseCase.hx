@@ -6,8 +6,9 @@ import engine.infrastructure.utilities.IdGeneratorService;
 import engine.application.dto.SpawnCharacterRequest;
 import engine.domain.entities.character.base.BaseCharacterEntity;
 import engine.domain.entities.character.factory.CharacterEntityFactory;
+import engine.domain.geometry.Vec2;
+import engine.domain.specs.CharacterSpec;
 import engine.domain.valueobjects.Position;
-import engine.domain.valueobjects.Health;
 import engine.domain.events.EntitySpawned;
 
 /**
@@ -40,24 +41,28 @@ class SpawnCharacterUseCase {
         // 1. Generate ID
         final entityId = idGenerator.generate();
         
-        // 2. Create domain entity
+        // 2. Build CharacterSpec
         final position = new Position(request.x, request.y);
-        final health = new Health(request.maxHp, request.maxHp);
-        final character = characterFactory.create(
-            request.entityType,
-            entityId,
-            position,
-            health,
-            request.ownerId,
-            request.level,
-            request.stats
-        );
+        final spec: CharacterSpec = {
+            type: cast request.entityType,
+            pos: new Vec2(Std.int(position.x), Std.int(position.y)),
+            vel: new Vec2(0, 0),
+            ownerId: request.ownerId,
+            id: entityId,
+            isAlive: true,
+            maxHp: request.maxHp,
+            hp: request.maxHp,
+            level: request.level,
+            stats: request.stats
+        };
         
-        // 3. Persist entity
+        // 3. Create domain entity
+        final character = characterFactory.create(spec);
+        
+        // 4. Persist entity
         entityRepository.save(character);
         
-        // 4. Publish domain event
-        // Note: tick should be passed from caller, but for now we'll use 0 and let EventPublisher set it
+        // 5. Publish domain event
         eventPublisher.publish(new EntitySpawned(
             entityId,
             request.entityType,
